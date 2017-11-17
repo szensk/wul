@@ -17,28 +17,46 @@ namespace Wul.Interpreter
         }
         #endregion Static Methods
 
+        public readonly double Value;
+
         // Constructors
         private Number(int i)
         {
-            
+            Value = (double) i;
         }
 
         private Number(double d)
         {
-            
+            Value = d;
         }
 
         // Conversions
         public static implicit operator int(Number i)
         {
-            throw new NotImplementedException();
+            return (int) i.Value;
         }
 
         public static implicit operator Number(int i)
         {
-            return i < 256 ? SmallNumberCache[i] : new Number(i);
+            return i < 256 && i >= 0 ? SmallNumberCache[i] : new Number(i);
+        }
+
+        public static implicit operator Number(double d)
+        {
+            if (Math.Floor(d) == d && d < 256 && d > -0.1)
+            {
+                return SmallNumberCache[(int) d];
+            }
+            else
+            {
+                return new Number(d);
+            }
         }
 
         // Comparisons
+        public string AsString()
+        {
+            return $"{Value}";
+        }
     }
 }

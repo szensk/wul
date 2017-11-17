@@ -12,7 +12,7 @@ namespace Wul.Parser
     {
         public static bool Literal(string token)
         {
-            var match = Regex.Match(token, @"^[0-9]+$");
+            var match = Regex.Match(token, @"^\-?[0-9]+$");
             return match.Success;
         }    
     }
@@ -21,7 +21,7 @@ namespace Wul.Parser
     {
         public static bool Literal(string token)
         {
-            var match = Regex.Match(token, @"^[0-9]*\.[0-9]+$");
+            var match = Regex.Match(token, @"^\-?[0-9]*\.[0-9]+$");
             return match.Success;
         }
     }

@@ -5,7 +5,7 @@ namespace Wul.Interpreter
 {
     class ListTable : Table
     {
-        private List<IValue> _list;
+        private readonly List<IValue> _list;
 
         public ListTable()
         {

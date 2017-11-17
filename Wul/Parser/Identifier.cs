@@ -17,7 +17,7 @@ namespace Wul.Parser
         public override SyntaxNode Parse(string token)
         {
             //Regex lol
-            var match = Regex.Match(token, @"^([a-zA-Z\>\<\+\-\!\@\#\$\%\^\&\*~?\.=]+[a-zA-Z0-9\>\<\+\-\!\@\#\$\%\^\&\*~?\.=]*)$");
+            var match = Regex.Match(token, @"^([a-zA-Z\>\<\+\-\!\@\#\$\%\^\&\*~?\.=`]+[a-zA-Z0-9\>\<\+\-\!\@\#\$\%\^\&\*~?\.=]*)$");
 
             if (match.Success)
             {

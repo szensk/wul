@@ -12,6 +12,11 @@ namespace Wul.Interpreter
 
         public abstract Number Count { get; }
 
+        public string AsString()
+        {
+            return $"List[{Count.Value}]";
+        }
+
         public abstract IValue this[IValue key] { get; set; }
     }
 }

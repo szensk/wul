@@ -3,22 +3,6 @@ using System.Collections.Generic;
 
 namespace Wul.Parser
 {
-    class StartList
-    {
-        public static bool Literal(string token)
-        {
-            return token == "(";
-        }    
-    }
-
-    class EndList
-    {
-        public static bool Literal(string token)
-        {
-            return token == ")";
-        }
-    }
-
     public class ListNode : SyntaxNode
     {
         public List<SyntaxNode> Children { get; }
@@ -33,54 +17,6 @@ namespace Wul.Parser
     {
         private readonly IdentifierParser identifierParser = new IdentifierParser();
         private readonly NumericParser numericParser = new NumericParser();
-
-
-        //public override SyntaxNode Parse(string token)
-        //{
-        //    if (token.Length < 2) return null;
-
-        //    //Assume token has been trimmed
-        //    string first = token.Substring(0,1);
-        //    string last = token.Substring(token.Length - 1, 1);
-
-        //    if (!StartList.Literal(first) || !EndList.Literal(last)) return null;
-
-        //    var inner = token.Substring(1, token.Length - 2);
-
-        //    int startIndex = 0;
-        //    List<SyntaxNode> children = new List<SyntaxNode>();
-        //    while(startIndex <= inner.Length)
-        //    {
-        //        int wsIndex = inner.IndexOf(" ", startIndex, StringComparison.Ordinal);
-        //        int psIndex = inner.IndexOf("(", startIndex, StringComparison.Ordinal);
-
-        //        int endIndex = wsIndex;
-
-        //        if (wsIndex == -1 && psIndex == -1)
-        //        {
-        //            endIndex = inner.Length;
-        //        }
-        //        else
-        //        {
-        //            if (psIndex != -1 && (psIndex < wsIndex || wsIndex == -1))
-        //            {
-        //                endIndex = inner.IndexOf(")", psIndex, StringComparison.Ordinal) + 1;
-        //            }
-        //        }
-
-        //        string currentInner = inner.Substring(startIndex, endIndex - startIndex).Trim();
-
-        //        var item = Parse(currentInner) ?? identifierParser.Parse(currentInner) ?? numericParser.Parse(currentInner);
-
-        //        if (item != null)
-        //        {
-        //            children.Add(item);
-        //        }
-
-        //        startIndex = endIndex + 1;
-        //    }
-        //    return new ListNode(children);
-        //}
 
         public override SyntaxNode Parse(string token)
         {
