@@ -1,4 +1,4 @@
-namespace Wul
+namespace Wul.Parser
 {
     class Token
     {

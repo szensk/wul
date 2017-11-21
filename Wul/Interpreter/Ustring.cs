@@ -11,7 +11,7 @@ namespace Wul.Interpreter
 
         public string AsString()
         {
-            return Value;
+            return $"'{Value}'";
         }
     }
 }

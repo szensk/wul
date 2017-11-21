@@ -38,6 +38,12 @@
                 Scope["+"] = StdLib.Arithmetic.Add;
                 Scope["-"] = StdLib.Arithmetic.Subtract;
                 Scope["*"] = StdLib.Arithmetic.Multiply;
+
+                //String
+                Scope[".."] = StdLib.String.Concat;
+                Scope["substring"] = StdLib.String.Substring;
+                Scope["lower"] = StdLib.String.Lower;
+                Scope["upper"] = StdLib.String.Upper;
             }
         }
     }
