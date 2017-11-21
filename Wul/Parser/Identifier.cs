@@ -10,6 +10,11 @@ namespace Wul.Parser
         {
             Name = name;
         }
+
+        public override string AsString()
+        {
+            return $"Identifer[{Name}]";
+        }
     }
 
     public class IdentifierParser : SyntaxNodeParser

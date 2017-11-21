@@ -34,6 +34,10 @@ namespace Wul.Parser
         }
 
         public double Value { get; }
+        public override string AsString()
+        {
+            return $"Numeric[{Value}]";
+        }
     }
 
     class NumericParser : SyntaxNodeParser

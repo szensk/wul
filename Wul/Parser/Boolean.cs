@@ -18,6 +18,10 @@ namespace Wul.Parser
 
         public static BooleanNode False = new BooleanNode(false);
         public static BooleanNode True = new BooleanNode(true);
+        public override string AsString()
+        {
+            return $"{Value}";
+        }
     }
 
     public class BooleanParser : SyntaxNodeParser

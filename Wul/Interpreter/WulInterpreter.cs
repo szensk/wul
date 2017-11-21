@@ -49,12 +49,6 @@ namespace Wul.Interpreter
         {
             currentScope = currentScope ?? Global.Scope;
 
-            //If quoted, return an identifer value instead of evaluating the identifier
-            if (identifier.Name.StartsWith("`"))
-            {
-                return new UString(identifier.Name.Replace("`", ""));
-            }
-
             return currentScope[identifier.Name];
         }
 
@@ -85,8 +79,11 @@ namespace Wul.Interpreter
             }
 
             IFunction function = value as IFunction;
-            MagicNetFunction magicFunction = value as MagicNetFunction;
-            if (function != null && magicFunction == null)
+            //TODO make an IMagicFunction interface
+            MagicFunction magicFunction = value as MagicFunction;
+            MagicNetFunction magicNetFunction = value as MagicNetFunction;
+
+            if (function != null && magicNetFunction == null && magicFunction == null)
             {
                 //Invoke a regular function
                 var remaining = list.Children.Skip(1).Select(node => Interpret(node, currentScope)).ToList();
@@ -95,8 +92,13 @@ namespace Wul.Interpreter
             else if (magicFunction != null)
             {
                 //Invoke a magic function
-                //Magic functions do not have their arguments evaluated, it's up the function to do so
                 value = magicFunction.Execute(list, currentScope);
+            }
+            else if (magicNetFunction != null)
+            {
+                //Invoke a magic function
+                //Magic functions do not have their arguments evaluated, it's up the function to do so
+                value = magicNetFunction.Execute(list, currentScope);
             }
             else
             {

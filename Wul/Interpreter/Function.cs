@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using Wul.Parser;
 
 namespace Wul.Interpreter
@@ -28,17 +28,57 @@ namespace Wul.Interpreter
             {
                 string argName = ArgumentNames[i];
                 currentScope[argName] = arguments[i];
-                Debug.WriteLine($"Binding {argName} = {arguments[i].AsString()}");
             }
 
             IValue result = WulInterpreter.Interpret(Body, currentScope);
-            Debug.WriteLine($"Returning {result.AsString()}");
             return result;
         }
 
         public virtual IValue Execute(ListNode list, Scope scope)
         {
             throw new NotImplementedException();
+        }
+
+        public string AsString()
+        {
+            return $"Function[{Name}]";
+        }
+    }
+
+    class MagicFunction : IFunction
+    {
+        public ListNode Body;
+
+        public MagicFunction(ListNode body, string name, List<string> argumentNames)
+        {
+            Name = name;
+            Body = body;
+            ArgumentNames = argumentNames;
+        }
+
+        public string Name { get; }
+        public List<string> ArgumentNames { get; }
+
+        public IValue Evaluate(List<IValue> arguments, Scope scope)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual IValue Execute(ListNode list, Scope scope)
+        {
+            Scope currentScope = scope.EmptyChildScope();
+
+            var arguments = list.Children.Skip(1).ToArray();
+
+            //Bind arguments to names
+            for (int i = 0; i < arguments.Length; ++i)
+            {
+                string argName = ArgumentNames[i];
+                currentScope[argName] = arguments[i];
+            }
+
+            IValue result = WulInterpreter.Interpret(Body, currentScope);
+            return result;
         }
 
         public string AsString()

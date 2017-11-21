@@ -29,6 +29,11 @@ namespace Wul.Parser
         {
             Expressions = expressions;
         }
+
+        public override string AsString()
+        {
+            return $"Program[{Expressions.Count}]";
+        }
     }
 
     public class ProgramParser : SyntaxNodeParser
@@ -38,9 +43,6 @@ namespace Wul.Parser
         public override SyntaxNode Parse(string token)
         {
             //TODO make a tokenizer to remove all this junk
-            //string program = Regex.Replace(token, @"\s+", @" ");
-            //program = Regex.Replace(program, @"\(\s+", "(");
-            //program = Regex.Replace(program, @"\s+\)", ")").Trim();
             string program = token.Trim();
 
             if (program == "")
@@ -48,6 +50,7 @@ namespace Wul.Parser
                 return new ProgramNode(new List<ListNode>());
             }
 
+            //TODO use the list parser here
             List<ListNode> expressions = new List<ListNode>();
             int currentIndex = 0;
             int openParenthesis = 0;

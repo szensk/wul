@@ -34,6 +34,23 @@ namespace Wul.StdLib
             return function;
         }, "def");
 
+        internal static IFunction DefineMagicFunction = new MagicNetFunction((list, scope) =>
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            var nameIdentifier = children[0] as IdentifierNode;
+            string name = nameIdentifier.Name;
+
+            var arguments = children[1] as ListNode;
+            var argNames = arguments.Children.Select(a => a as IdentifierNode).Select(a => a.Name);
+
+            var body = children[2] as ListNode;
+            var function = new MagicFunction(body, name, argNames.ToList());
+            scope[name] = function;
+
+            return function;
+        }, "def!");
+
         internal static IFunction Then = new NetFunction((list, scope) =>
         {
             if (list.Count == 1)
@@ -69,5 +86,17 @@ namespace Wul.StdLib
 
             return returnValue;
         }, "if");
+
+        internal static IFunction Evaluate = new MagicNetFunction((list, scope) =>
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            IValue result = WulInterpreter.Interpret(children[0], scope);
+            while (result is SyntaxNode)
+            {
+                result = WulInterpreter.Interpret(result as SyntaxNode, scope);
+            }
+            return result;
+        }, "eval");
     }
 }

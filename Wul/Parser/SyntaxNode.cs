@@ -1,7 +1,10 @@
-﻿namespace Wul.Parser
+﻿using Wul.Interpreter;
+
+namespace Wul.Parser
 {
-    public abstract class SyntaxNode
+    public abstract class SyntaxNode : IValue
     {
+        public abstract string AsString();
     }
 
     public abstract class SyntaxNodeParser

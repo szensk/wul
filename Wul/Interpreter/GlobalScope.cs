@@ -14,6 +14,8 @@
                 Scope["nil"] = Value.Nil;
                 Scope["let"] = StdLib.General.Let;
                 Scope["def"] = StdLib.General.Define;
+                Scope["def!"] = StdLib.General.DefineMagicFunction;
+                Scope["eval"] = StdLib.General.Evaluate;
 
                 //Comparison
                 Scope["="] = StdLib.Comparison.Equal;

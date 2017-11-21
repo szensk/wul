@@ -11,6 +11,11 @@ namespace Wul.Parser
         {
             Children = children;
         }
+
+        public override string AsString()
+        {
+            return $"List[{Children.Count}]";
+        }
     }
 
     public class ListParser : SyntaxNodeParser
