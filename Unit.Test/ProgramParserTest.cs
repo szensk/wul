@@ -45,7 +45,7 @@ namespace Unit.Test
         {
             ProgramParser parser = new ProgramParser();
             const string program = @"
-                (def fact a (
+                (def fact (a) (
                     (if (< a 2) 
                       (then 1)
                       (else (fact (- a 1)))

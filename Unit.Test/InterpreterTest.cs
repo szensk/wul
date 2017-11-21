@@ -15,8 +15,7 @@ namespace Unit.Test
 
             ProgramNode node = (ProgramNode) parser.Parse(program);
 
-            WulInterpreter interpreter = new WulInterpreter();
-            interpreter.Interpret(node);
+            WulInterpreter.Interpret(node);
         }
     }
 }

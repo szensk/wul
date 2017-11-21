@@ -6,49 +6,78 @@ namespace Wul.Interpreter
 {
     public class WulInterpreter
     {
-        private readonly Scope Globals;
-
         public WulInterpreter()
         {
-            Globals = Global.Scope;
-            Global.RegisterDefaultFunctions();
         }
 
-        public IValue Interpret(ProgramNode program)
+        public static IValue Interpret(ProgramNode program)
         {
             IValue lastResult = null;
             foreach (var list in program.Expressions)
             {
-                lastResult = Evaluate(list);       
+                lastResult = Evaluate(list, Global.Scope);       
             }
 
             return lastResult;
         }
 
-        //TODO polymorphic dispatch 
-        private IValue Evaluate(IdentifierNode identifier)
+        internal static IValue Interpret(ListNode list, Scope currentScope)
         {
+            return Evaluate(list, currentScope);
+        }
+
+        internal static IValue Interpret(SyntaxNode node, Scope currentScope)
+        {
+            switch (node)
+            {
+                case IdentifierNode i:
+                    return Evaluate(i, currentScope);
+                case NumericNode n:
+                    return Evaluate(n);
+                case BooleanNode b:
+                    return Evaluate(b);
+                case ListNode l:
+                    return Evaluate(l, currentScope);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        //TODO polymorphic dispatch for Evaluate
+
+        private static IValue Evaluate(IdentifierNode identifier, Scope currentScope = null)
+        {
+            currentScope = currentScope ?? Global.Scope;
+
+            //If quoted, return an identifer value instead of evaluating the identifier
             if (identifier.Name.StartsWith("`"))
             {
                 return new UString(identifier.Name.Replace("`", ""));
             }
-            return Globals[identifier.Name];
+
+            return currentScope[identifier.Name];
         }
 
-        private IValue Evaluate(NumericNode numeric)
+        private static IValue Evaluate(NumericNode numeric)
         {
             return (Number) numeric.Value;
         }
 
-        private IValue Evaluate(ListNode list)
+        private static IValue Evaluate(BooleanNode boolean)
         {
+            return boolean.Value ? Bool.True : Bool.False;
+        }
+
+        private static IValue Evaluate(ListNode list, Scope currentScope = null)
+        {
+            currentScope = currentScope ?? Global.Scope;
             var first = list.Children.First();
             IValue value = Value.Nil;
             if (first is IdentifierNode)
             {
                 IdentifierNode identifier = first as IdentifierNode;
                 string key = identifier.Name;
-                value = Globals[key];
+                value = currentScope[key];
             } 
             else if (first is ListNode)
             {
@@ -56,40 +85,24 @@ namespace Wul.Interpreter
             }
 
             IFunction function = value as IFunction;
-            if (function != null)
+            MagicNetFunction magicFunction = value as MagicNetFunction;
+            if (function != null && magicFunction == null)
             {
-                var remaining = list.Children.Skip(1).Select(node =>
-                {
-                    switch (node)
-                    {
-                        case IdentifierNode i:
-                            return Evaluate(i);
-                        case NumericNode n:
-                            return Evaluate(n);
-                        case ListNode l:
-                            return Evaluate(l);
-                        default:
-                            throw new NotImplementedException();
-                    }
-                }).ToList();
-                value = function.Evaluate(remaining);
+                //Invoke a regular function
+                var remaining = list.Children.Skip(1).Select(node => Interpret(node, currentScope)).ToList();
+                value = function.Evaluate(remaining, currentScope);
+            }
+            else if (magicFunction != null)
+            {
+                //Invoke a magic function
+                //Magic functions do not have their arguments evaluated, it's up the function to do so
+                magicFunction.Execute(list, currentScope);
+                value = Value.Nil;
             }
             else
             {
-                var remaining = list.Children.Select(node =>
-                {
-                    switch (node)
-                    {
-                        case IdentifierNode i:
-                            return Evaluate(i);
-                        case NumericNode n:
-                            return Evaluate(n);
-                        case ListNode l:
-                            return Evaluate(l);
-                        default:
-                            throw new NotImplementedException();
-                    }
-                }).ToArray();
+                //Evaluate a list
+                var remaining = list.Children.Select(node => Interpret(node, currentScope)).ToArray();
                 value = new ListTable(remaining);
             }
             

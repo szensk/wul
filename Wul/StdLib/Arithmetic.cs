@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Wul.Interpreter;
 
 namespace Wul.StdLib
@@ -15,7 +14,7 @@ namespace Wul.StdLib
             }
             double sum = numbers.Sum(x => x.Value);
             return (Number) sum;
-        }, "+", new List<string>());
+        }, "+");
 
         internal static IFunction LessThan = new NetFunction((list, scope) =>
         {
@@ -29,7 +28,7 @@ namespace Wul.StdLib
             {
                 return (Number) 0;
             }
-        }, "<", new List<string>());
+        }, "<");
 
         internal static IFunction Subtract = new NetFunction((list, scope) =>
         {
@@ -41,6 +40,6 @@ namespace Wul.StdLib
             }
             double sum = numbers.Sum(x => x.Value);
             return (Number) (first.Value - sum);
-        }, "+", new List<string>());
+        }, "+");
     }
 }

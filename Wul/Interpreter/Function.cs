@@ -8,19 +8,31 @@ namespace Wul.Interpreter
     {
         public ListNode Body;
 
-        public Function(ListNode body, string name, List<string> argumentNames, Scope scope)
+        public Function(ListNode body, string name, List<string> argumentNames)
         {
             Name = name;
             Body = body;
-            Scope = scope;
             ArgumentNames = argumentNames;
         }
 
         public string Name { get; }
-        public Scope Scope { get; }
         public List<string> ArgumentNames { get; }
 
-        public IValue Evaluate(List<IValue> arguments)
+        public IValue Evaluate(List<IValue> arguments, Scope scope)
+        {
+            Scope currentScope = scope.EmptyChildScope();
+
+            //Bind arguments to names
+            for (int i = 0; i < arguments.Count; ++i)
+            {
+                string argName = ArgumentNames[i];
+                currentScope[argName] = arguments[i];
+            }
+
+            return WulInterpreter.Interpret(Body, currentScope);
+        }
+
+        public virtual void Execute(ListNode list, Scope scope)
         {
             throw new NotImplementedException();
         }
@@ -35,21 +47,53 @@ namespace Wul.Interpreter
     {
         private readonly Func<List<IValue>, Scope, IValue> Body;
 
-        public NetFunction(Func<List<IValue>, Scope, IValue> body, string name, List<string> argumentNames)
+        public NetFunction(Func<List<IValue>, Scope, IValue> body, string name)
         {
-            Scope = Global.Scope;
             Name = name;
-            ArgumentNames = argumentNames;
+            ArgumentNames = null;
             Body = body;
         }
 
         public string Name { get; }
-        public Scope Scope { get; }
         public List<string> ArgumentNames { get; }
 
-        public IValue Evaluate(List<IValue> arguments)
+        public IValue Evaluate(List<IValue> arguments, Scope scope)
         {
-            return Body(arguments, Scope);
+            return Body(arguments, scope);
+        }
+
+        public virtual void Execute(ListNode list, Scope scope)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string AsString()
+        {
+            return $"Function[{Name}]";
+        }
+    }
+
+    class MagicNetFunction : IFunction
+    {
+        private readonly Func<ListNode, Scope, IValue> Body;
+
+        public MagicNetFunction(Func<ListNode, Scope, IValue> body, string name) 
+        {
+            Name = name;
+            ArgumentNames = null;
+            Body = body;
+        }
+        public string Name { get; }
+        public List<string> ArgumentNames { get; }
+
+        public IValue Evaluate(List<IValue> arguments, Scope scope)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void Execute(ListNode list, Scope scope)
+        {
+            Body(list, scope);
         }
 
         public string AsString()

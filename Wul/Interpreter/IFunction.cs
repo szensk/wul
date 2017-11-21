@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using Wul.Parser;
 
 namespace Wul.Interpreter
 {
     interface IFunction : IValue
     {
         string Name { get; }
-        Scope Scope { get; }
         List<string> ArgumentNames { get; }
-        IValue Evaluate(List<IValue> arguments);
+        IValue Evaluate(List<IValue> arguments, Scope scope);
+        void Execute(ListNode list, Scope scope);
     }
 }

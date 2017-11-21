@@ -8,18 +8,29 @@
 
         public static void RegisterDefaultFunctions()
         {
-            //General
-            Scope["nil"] = Value.Nil;
-            Scope["let"] = StdLib.General.Let;
+            if (Scope.Parent == null)
+            {
+                //General
+                Scope["nil"] = Value.Nil;
+                Scope["let"] = StdLib.General.Let;
+                Scope["def"] = StdLib.General.Define;
 
-            //IO
-            Scope["print"] = StdLib.IO.Print;
-            Scope["clear"] = StdLib.IO.Clear;
+                //Comparison
+                Scope["="] = StdLib.Comparison.Equal;
 
-            //Arith
-            Scope["+"] = StdLib.Arithmetic.Add;
-            Scope["-"] = StdLib.Arithmetic.Subtract;
-            Scope["<"] = StdLib.Arithmetic.LessThan;
+                //Bools
+                Scope["true"] = Bool.True;
+                Scope["false"] = Bool.False;
+
+                //IO
+                Scope["print"] = StdLib.IO.Print;
+                Scope["clear"] = StdLib.IO.Clear;
+
+                //Arith
+                Scope["+"] = StdLib.Arithmetic.Add;
+                Scope["-"] = StdLib.Arithmetic.Subtract;
+                Scope["<"] = StdLib.Arithmetic.LessThan;
+            }
         }
     }
 }

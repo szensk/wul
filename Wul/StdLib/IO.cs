@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Wul.Interpreter;
 
 namespace Wul.StdLib
@@ -13,12 +12,12 @@ namespace Wul.StdLib
                 Console.WriteLine(value.AsString());
             }
             return Value.Nil;
-        }, "print", new List<string>());
+        }, "print");
 
         internal static IFunction Clear = new NetFunction((list, scope) =>
         {
             Console.Clear();
             return Value.Nil;
-        }, "clear", new List<string>());
+        }, "clear");
     }
 }
