@@ -76,12 +76,12 @@ namespace Wul.StdLib
             if (result != Value.Nil && result != Bool.False)
             {
                 var thenBlock = listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "then");
-                returnValue = WulInterpreter.Interpret(thenBlock, scope);
+                if (thenBlock != null) returnValue = WulInterpreter.Interpret(thenBlock, scope);
             }
             else
             {
                 var elseBlock = listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "else");
-                returnValue = WulInterpreter.Interpret(elseBlock, scope);
+                if (elseBlock != null) returnValue = WulInterpreter.Interpret(elseBlock, scope);
             }
 
             return returnValue;

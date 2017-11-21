@@ -17,6 +17,11 @@ namespace Wul.Interpreter
             _list = array.ToList();
         }
 
+        public List<IValue> AsList()
+        {
+            return _list;
+        }
+
         public override IValue Get(IValue key)
         {
             int index = (Number) key;

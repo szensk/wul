@@ -72,6 +72,9 @@ namespace Wul.Interpreter
         private static IValue Evaluate(ListNode list, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
+
+            if (list.Children.Count == 0) return new ListTable();
+
             var first = list.Children.First();
             IValue value = Value.Nil;
             if (first is IdentifierNode)

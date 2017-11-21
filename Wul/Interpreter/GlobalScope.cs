@@ -8,43 +8,45 @@
 
         public static void RegisterDefaultFunctions()
         {
-            if (Scope.Parent == null)
-            {
-                //General
-                Scope["nil"] = Value.Nil;
-                Scope["let"] = StdLib.General.Let;
-                Scope["def"] = StdLib.General.Define;
-                Scope["def!"] = StdLib.General.DefineMagicFunction;
-                Scope["eval"] = StdLib.General.Evaluate;
+            //General
+            Scope["nil"] = Value.Nil;
+            Scope["let"] = StdLib.General.Let;
+            Scope["def"] = StdLib.General.Define;
+            Scope["def!"] = StdLib.General.DefineMagicFunction;
+            Scope["eval"] = StdLib.General.Evaluate;
 
-                //Comparison
-                Scope["="] = StdLib.Comparison.Equal;
-                Scope["<"] = StdLib.Comparison.LessThan;
+            //Comparison
+            Scope["="] = StdLib.Comparison.Equal;
+            Scope["<"] = StdLib.Comparison.LessThan;
 
-                //Conditional
-                Scope["if"] = StdLib.General.If;
-                Scope["then"] = StdLib.General.Then;
-                Scope["else"] = StdLib.General.Then; //Not a typo!
+            //Conditional
+            Scope["if"] = StdLib.General.If;
+            Scope["then"] = StdLib.General.Then;
+            Scope["else"] = StdLib.General.Then; //Not a typo!
 
-                //Bools
-                Scope["true"] = Bool.True;
-                Scope["false"] = Bool.False;
+            //Bools
+            Scope["true"] = Bool.True;
+            Scope["false"] = Bool.False;
 
-                //IO
-                Scope["print"] = StdLib.IO.Print;
-                Scope["clear"] = StdLib.IO.Clear;
+            //IO
+            Scope["print"] = StdLib.IO.Print;
+            Scope["clear"] = StdLib.IO.Clear;
 
-                //Arith
-                Scope["+"] = StdLib.Arithmetic.Add;
-                Scope["-"] = StdLib.Arithmetic.Subtract;
-                Scope["*"] = StdLib.Arithmetic.Multiply;
+            //Arith
+            Scope["+"] = StdLib.Arithmetic.Add;
+            Scope["-"] = StdLib.Arithmetic.Subtract;
+            Scope["*"] = StdLib.Arithmetic.Multiply;
 
-                //String
-                Scope[".."] = StdLib.String.Concat;
-                Scope["substring"] = StdLib.String.Substring;
-                Scope["lower"] = StdLib.String.Lower;
-                Scope["upper"] = StdLib.String.Upper;
-            }
+            //String
+            Scope[".."] = StdLib.String.Concat;
+            Scope["substring"] = StdLib.String.Substring;
+            Scope["lower"] = StdLib.String.Lower;
+            Scope["upper"] = StdLib.String.Upper;
+
+            //List
+            Scope["concat"] = StdLib.List.Concat;
+            Scope["first"] = StdLib.List.First;
+            Scope["rem"] = StdLib.List.Remainder;
         }
     }
 }

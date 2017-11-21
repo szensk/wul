@@ -24,10 +24,11 @@ namespace Wul.Interpreter
             Scope currentScope = scope.EmptyChildScope();
 
             //Bind arguments to names
-            for (int i = 0; i < arguments.Count; ++i)
+            for (int i = 0; i < ArgumentNames.Count; ++i)
             {
                 string argName = ArgumentNames[i];
-                currentScope[argName] = arguments[i];
+                IValue argValue = i >= arguments.Count ? Value.Nil : arguments[i];
+                currentScope[argName] = argValue;
             }
 
             IValue result = WulInterpreter.Interpret(Body, currentScope);
