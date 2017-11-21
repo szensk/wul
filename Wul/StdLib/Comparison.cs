@@ -12,5 +12,14 @@ namespace Wul.StdLib
             bool equal = first.Equals(second);
             return equal ? Bool.True : Bool.False;
         }, "=");
+
+        internal static IFunction LessThan = new NetFunction((list, scope) =>
+        {
+            Number first = list[0] as Number;
+            Number second = list[1] as Number;
+            //TODO make all IValue override Equals
+            bool lessThan = first.Value < second.Value;
+            return lessThan ? Bool.True : Bool.False;
+        }, "<");
     }
 }

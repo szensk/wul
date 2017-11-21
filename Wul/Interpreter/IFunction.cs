@@ -8,6 +8,6 @@ namespace Wul.Interpreter
         string Name { get; }
         List<string> ArgumentNames { get; }
         IValue Evaluate(List<IValue> arguments, Scope scope);
-        void Execute(ListNode list, Scope scope);
+        IValue Execute(ListNode list, Scope scope);
     }
 }

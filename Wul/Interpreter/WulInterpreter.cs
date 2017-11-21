@@ -81,7 +81,7 @@ namespace Wul.Interpreter
             } 
             else if (first is ListNode)
             {
-                value = Evaluate((ListNode) first);
+                value = Evaluate((ListNode) first, currentScope);
             }
 
             IFunction function = value as IFunction;
@@ -96,14 +96,20 @@ namespace Wul.Interpreter
             {
                 //Invoke a magic function
                 //Magic functions do not have their arguments evaluated, it's up the function to do so
-                magicFunction.Execute(list, currentScope);
-                value = Value.Nil;
+                value = magicFunction.Execute(list, currentScope);
             }
             else
             {
                 //Evaluate a list
                 var remaining = list.Children.Select(node => Interpret(node, currentScope)).ToArray();
-                value = new ListTable(remaining);
+                if (remaining.Length > 1)
+                {
+                    value = new ListTable(remaining);
+                }
+                else if (remaining.Length == 1)
+                {
+                    value = remaining[0];
+                }
             }
             
             return value;

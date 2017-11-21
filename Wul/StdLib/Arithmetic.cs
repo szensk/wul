@@ -16,20 +16,6 @@ namespace Wul.StdLib
             return (Number) sum;
         }, "+");
 
-        internal static IFunction LessThan = new NetFunction((list, scope) =>
-        {
-            var first = list.First() as Number;
-            var second = list.Skip(1).First() as Number;
-            if (first.Value < second.Value)
-            {
-                return (Number) 1;
-            }
-            else
-            {
-                return (Number) 0;
-            }
-        }, "<");
-
         internal static IFunction Subtract = new NetFunction((list, scope) =>
         {
             var first = list.First() as Number;
@@ -40,6 +26,21 @@ namespace Wul.StdLib
             }
             double sum = numbers.Sum(x => x.Value);
             return (Number) (first.Value - sum);
-        }, "+");
+        }, "-");
+
+        internal static IFunction Multiply = new NetFunction((list, scope) =>
+        {
+            var numbers = list.Select(x => x as Number).Where(x => x != null).ToArray();
+            if (!numbers.Any())
+            {
+                return Value.Nil;
+            }
+            double multiplied = numbers[0];
+            for (int i = 1; i < numbers.Length; ++i)
+            {
+                multiplied *= numbers[i];
+            }
+            return (Number)multiplied;
+        }, "*");
     }
 }

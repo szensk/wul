@@ -17,6 +17,12 @@
 
                 //Comparison
                 Scope["="] = StdLib.Comparison.Equal;
+                Scope["<"] = StdLib.Comparison.LessThan;
+
+                //Conditional
+                Scope["if"] = StdLib.General.If;
+                Scope["then"] = StdLib.General.Then;
+                Scope["else"] = StdLib.General.Then; //Not a typo!
 
                 //Bools
                 Scope["true"] = Bool.True;
@@ -29,7 +35,7 @@
                 //Arith
                 Scope["+"] = StdLib.Arithmetic.Add;
                 Scope["-"] = StdLib.Arithmetic.Subtract;
-                Scope["<"] = StdLib.Arithmetic.LessThan;
+                Scope["*"] = StdLib.Arithmetic.Multiply;
             }
         }
     }

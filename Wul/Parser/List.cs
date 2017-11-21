@@ -32,27 +32,27 @@ namespace Wul.Parser
             List<SyntaxNode> children = new List<SyntaxNode>();
             
             int currentIndex = 0;
-            int openParenthesis = 0;
-            int closeParenthesis = 0;
+            int openParentheses = 0;
+            int closeParentheses = 0;
             int startIndex = 0;
             while (currentIndex < inner.Length)
             {
                 if (inner[currentIndex] == '(')
                 {
-                    openParenthesis++;
+                    openParentheses++;
                 }
                 else if (inner[currentIndex] == ')')
                 {
-                    closeParenthesis++;
+                    closeParentheses++;
                 }
 
-                if (closeParenthesis > openParenthesis)
+                if (closeParentheses > openParentheses)
                 {
                     throw new Exception("Mismatched parenthesis, have fun");
                 }
 
                 currentIndex++;
-                if ((currentIndex == inner.Length || inner[currentIndex] == ' ' || inner[currentIndex] == ')') && openParenthesis == closeParenthesis)
+                if ((currentIndex == inner.Length || inner[currentIndex] == ' ' || inner[currentIndex] == ')') && openParentheses == closeParentheses)
                 {
                     string currentInner = inner.Substring(startIndex, currentIndex - startIndex);
                     var item = Parse(currentInner) ?? identifierParser.Parse(currentInner) ?? numericParser.Parse(currentInner);

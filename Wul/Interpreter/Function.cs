@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Wul.Parser;
 
 namespace Wul.Interpreter
@@ -27,12 +28,15 @@ namespace Wul.Interpreter
             {
                 string argName = ArgumentNames[i];
                 currentScope[argName] = arguments[i];
+                Debug.WriteLine($"Binding {argName} = {arguments[i].AsString()}");
             }
 
-            return WulInterpreter.Interpret(Body, currentScope);
+            IValue result = WulInterpreter.Interpret(Body, currentScope);
+            Debug.WriteLine($"Returning {result.AsString()}");
+            return result;
         }
 
-        public virtual void Execute(ListNode list, Scope scope)
+        public virtual IValue Execute(ListNode list, Scope scope)
         {
             throw new NotImplementedException();
         }
@@ -62,7 +66,7 @@ namespace Wul.Interpreter
             return Body(arguments, scope);
         }
 
-        public virtual void Execute(ListNode list, Scope scope)
+        public virtual IValue Execute(ListNode list, Scope scope)
         {
             throw new NotImplementedException();
         }
@@ -91,9 +95,9 @@ namespace Wul.Interpreter
             throw new NotImplementedException();
         }
 
-        public virtual void Execute(ListNode list, Scope scope)
+        public virtual IValue Execute(ListNode list, Scope scope)
         {
-            Body(list, scope);
+            return Body(list, scope);
         }
 
         public string AsString()

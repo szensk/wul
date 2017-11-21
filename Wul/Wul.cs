@@ -11,7 +11,7 @@ namespace Wul
     {
         static void Main(string[] args)
         {
-            //built ins: def, if, -, <, then, else
+            //built ins: if, then, else
             var parser = new ProgramParser();
             Global.RegisterDefaultFunctions();
 

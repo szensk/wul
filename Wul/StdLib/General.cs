@@ -33,5 +33,41 @@ namespace Wul.StdLib
 
             return function;
         }, "def");
+
+        internal static IFunction Then = new NetFunction((list, scope) =>
+        {
+            if (list.Count == 1)
+            {
+                return list.First();
+            }
+            else
+            {
+                return new ListTable(list.ToArray());
+            }
+        }, "then/else");
+
+        internal static IFunction If = new MagicNetFunction((list, scope) =>
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            var condition = children[0];
+            var result = WulInterpreter.Interpret(condition, scope);
+
+            var listChildren = children.OfType<ListNode>();
+
+            IValue returnValue = Value.Nil;
+            if (result != Value.Nil && result != Bool.False)
+            {
+                var thenBlock = listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "then");
+                returnValue = WulInterpreter.Interpret(thenBlock, scope);
+            }
+            else
+            {
+                var elseBlock = listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "else");
+                returnValue = WulInterpreter.Interpret(elseBlock, scope);
+            }
+
+            return returnValue;
+        }, "if");
     }
 }

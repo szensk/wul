@@ -56,6 +56,11 @@ namespace Wul.Interpreter
 
         public override Number Count => _list.Count;
 
+        public override string AsString()
+        {
+            return "(" + string.Join(", ", _list.Select(s => s.AsString()).ToList()) + ")";
+        }
+
         public override IValue this[IValue key]
         {
             get => Get(key);

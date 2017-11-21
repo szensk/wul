@@ -12,7 +12,7 @@ namespace Wul.Interpreter
 
         public abstract Number Count { get; }
 
-        public string AsString()
+        public virtual string AsString()
         {
             return $"List[{Count.Value}]";
         }

@@ -2,8 +2,8 @@
 {
     class Bool : IValue
     {
-        public static Bool True => new Bool(true);
-        public static Bool False => new Bool(false);
+        public static Bool True = new Bool(true);
+        public static Bool False = new Bool(false);
 
         public readonly bool Value;
 
