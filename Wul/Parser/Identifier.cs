@@ -22,7 +22,7 @@ namespace Wul.Parser
         public override SyntaxNode Parse(string token)
         {
             //TODO this is a mess
-            if (token == "..") return new IdentifierNode(token);
+            if (token.StartsWith("..") && token.EndsWith("..")) return new IdentifierNode(token);
             if (token.StartsWith("-"))
             {
                 if (Regex.Match(token, @"-[0-9]*\.?[0-9]+").Success) return null;

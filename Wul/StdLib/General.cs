@@ -6,6 +6,8 @@ namespace Wul.StdLib
 {
     class General
     {
+        internal static IFunction Identity = new NetFunction((list, scope) => list.FirstOrDefault() ?? Value.Nil, "identity");
+
         internal static IFunction Let = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();

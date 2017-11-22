@@ -27,8 +27,15 @@ namespace Wul.Interpreter
             for (int i = 0; i < ArgumentNames.Count; ++i)
             {
                 string argName = ArgumentNames[i];
-                IValue argValue = i >= arguments.Count ? Value.Nil : arguments[i];
-                currentScope[argName] = argValue;
+                if (argName == "...")
+                {
+                    currentScope[argName] = new ListTable(arguments.Skip(i));
+                }
+                else
+                {
+                    IValue argValue = i >= arguments.Count ? Value.Nil : arguments[i];
+                    currentScope[argName] = argValue;
+                }
             }
 
             IValue result = WulInterpreter.Interpret(Body, currentScope);
@@ -72,10 +79,18 @@ namespace Wul.Interpreter
             var arguments = list.Children.Skip(1).ToArray();
 
             //Bind arguments to names
-            for (int i = 0; i < arguments.Length; ++i)
+            for (int i = 0; i < ArgumentNames.Count; ++i)
             {
                 string argName = ArgumentNames[i];
-                currentScope[argName] = arguments[i];
+                if (argName == "...")
+                {
+                    currentScope[argName] = new ListNode(arguments.Skip(i).ToList());
+                }
+                else
+                {
+                    IValue argValue = i >= arguments.Length ? new IdentifierNode("nil"): arguments[i];
+                    currentScope[argName] = argValue;
+                }
             }
 
             IValue result = WulInterpreter.Interpret(Body, currentScope);

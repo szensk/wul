@@ -15,6 +15,7 @@
             Scope["@def"] = StdLib.General.DefineMagicFunction;
             Scope["eval"] = StdLib.General.Evaluate;
             Scope["lambda"] = StdLib.General.Lambda;
+            Scope["identity"] = StdLib.General.Identity;
 
             //Comparison
             Scope["="] = StdLib.Comparison.Equal;

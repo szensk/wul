@@ -93,5 +93,16 @@ namespace Unit.Test
 
             Assert.AreEqual(token, node.Name);
         }
+
+        [TestMethod]
+        public void Identifer_VariableArgument_IsValidIdentifier()
+        {
+            IdentifierParser parser = new IdentifierParser();
+            string token = "...";
+
+            IdentifierNode node = (IdentifierNode)parser.Parse(token);
+
+            Assert.AreEqual(token, node.Name);
+        }
     }
 }
