@@ -17,7 +17,6 @@ namespace Wul.StdLib
         {
             Number first = list[0] as Number;
             Number second = list[1] as Number;
-            //TODO make all IValue override Equals
             bool lessThan = first.Value < second.Value;
             return lessThan ? Bool.True : Bool.False;
         }, "<");

@@ -9,7 +9,7 @@
         public static void RegisterDefaultFunctions()
         {
             //General
-            Scope["nil"] = Value.Nil;
+            Scope["nil"] = Value.Nil; //unnecessary as anything undefined will return nil as well
             Scope["let"] = StdLib.General.Let;
             Scope["def"] = StdLib.General.Define;
             Scope["@def"] = StdLib.General.DefineMagicFunction;
@@ -47,6 +47,7 @@
             //List
             Scope["concat"] = StdLib.List.Concat;
             Scope["first"] = StdLib.List.First;
+            Scope["last"] = StdLib.List.Last;
             Scope["rem"] = StdLib.List.Remainder;
             Scope["empty?"] = StdLib.List.Empty;
             Scope["len"] = StdLib.List.Length;

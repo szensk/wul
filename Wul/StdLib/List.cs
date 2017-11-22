@@ -29,9 +29,20 @@ namespace Wul.StdLib
             {
                 return list.FirstOrDefault() ?? Value.Nil;
             }
-            IValue result = firstList.Count == 0 ? Value.Nil : firstList[(Number)0];
+            IValue result = firstList.AsList().FirstOrDefault() ?? Value.Nil;
             return result;
         }, "first");
+
+        internal static IFunction Last = new NetFunction((list, scope) =>
+        {
+            var firstList = list.FirstOrDefault() as ListTable;
+            if (firstList == null)
+            {
+                return list.FirstOrDefault() ?? Value.Nil;
+            }
+            IValue result = firstList.AsList().LastOrDefault() ?? Value.Nil;
+            return result;
+        }, "last");
 
         internal static IFunction Remainder = new NetFunction((list, scope) =>
         {

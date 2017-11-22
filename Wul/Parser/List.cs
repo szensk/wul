@@ -72,7 +72,7 @@ namespace Wul.Parser
                     {
                         children.Add(item);
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(currentInner))
                     {
                         throw new Exception("trash in list");
                     }
