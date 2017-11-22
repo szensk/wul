@@ -57,11 +57,18 @@ namespace Wul
                 while (input != "exit")
                 {
                     input = Console.ReadLine();
-                    var programNode = (ProgramNode) parser.Parse(input.Trim());
-                    var result = WulInterpreter.Interpret(programNode);
-                    if (result != null && result != Value.Nil)
+                    try
                     {
-                        StdLib.IO.Print.Evaluate(new List<IValue> {result}, Global.Scope);
+                        var programNode = (ProgramNode) parser.Parse(input.Trim());
+                        var result = WulInterpreter.Interpret(programNode);
+                        if (result != null && result != Value.Nil)
+                        {
+                            StdLib.IO.Print.Evaluate(new List<IValue> {result}, Global.Scope);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Error: {e}");
                     }
                 }
                 return 0;

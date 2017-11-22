@@ -68,7 +68,14 @@ namespace Wul.Parser
                                       ?? numericParser.Parse(currentInner)
                                       ?? stringParser.Parse(currentInner)
                                       ?? Parse(currentInner);
-                    if (item != null) children.Add(item);
+                    if (item != null)
+                    {
+                        children.Add(item);
+                    }
+                    else
+                    {
+                        throw new Exception("trash in list");
+                    }
                     startIndex = currentIndex + 1;
                 }
             }
