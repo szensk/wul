@@ -23,6 +23,8 @@ namespace Wul.Parser
         private static readonly IdentifierParser identifierParser = new IdentifierParser();
         private static readonly NumericParser numericParser = new NumericParser();
         private static readonly StringParser stringParser = new StringParser();
+        private static readonly CommentParser commentParser = new CommentParser();
+
 
         public override SyntaxNode Parse(string token)
         {
@@ -62,7 +64,10 @@ namespace Wul.Parser
                 {
                     string currentInner = inner.Substring(startIndex, currentIndex - startIndex);
                     if (stringParser.StartsString(currentInner)) continue;
-                    var item = Parse(currentInner) ?? identifierParser.Parse(currentInner) ?? numericParser.Parse(currentInner) ?? stringParser.Parse(currentInner);
+                    SyntaxNode item = Parse(currentInner)
+                               ?? identifierParser.Parse(currentInner)
+                               ?? numericParser.Parse(currentInner)
+                               ?? stringParser.Parse(currentInner);
                     if (item != null) children.Add(item);
                     startIndex = currentIndex + 1;
                 }

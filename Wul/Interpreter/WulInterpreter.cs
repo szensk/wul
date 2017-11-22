@@ -30,6 +30,8 @@ namespace Wul.Interpreter
         {
             switch (node)
             {
+                case CommentNode c:
+                    return Evaluate(c);
                 case IdentifierNode i:
                     return Evaluate(i, currentScope);
                 case NumericNode n:
@@ -64,6 +66,11 @@ namespace Wul.Interpreter
             return boolean.Value ? Bool.True : Bool.False;
         }
 
+        private static IValue Evaluate(CommentNode comment)
+        {
+            return null;
+        }
+
         private static IValue Evaluate(StringNode str, Scope currentScope = null)
         {
             return new UString(str.Value(currentScope));
@@ -89,6 +96,7 @@ namespace Wul.Interpreter
             }
 
             IFunction function = value as IFunction;
+
             //TODO make an IMagicFunction interface
             MagicFunction magicFunction = value as MagicFunction;
             MagicNetFunction magicNetFunction = value as MagicNetFunction;
@@ -96,7 +104,12 @@ namespace Wul.Interpreter
             if (function != null && magicNetFunction == null && magicFunction == null)
             {
                 //Invoke a regular function
-                var remaining = list.Children.Skip(1).Select(node => Interpret(node, currentScope)).ToList();
+                var remaining = list.Children
+                    .Skip(1)
+                    .Select(node => Interpret(node, currentScope))
+                    .Where(v => v != null)
+                    .ToList();
+
                 value = function.Evaluate(remaining, currentScope);
             }
             else if (magicFunction != null)
@@ -106,22 +119,21 @@ namespace Wul.Interpreter
             }
             else if (magicNetFunction != null)
             {
-                //Invoke a magic function
                 //Magic functions do not have their arguments evaluated, it's up the function to do so
                 value = magicNetFunction.Execute(list, currentScope);
             }
             else
             {
                 //Evaluate a list
-                var remaining = list.Children.Select(node => Interpret(node, currentScope)).ToArray();
+                var remaining = list.Children
+                    .Where(node => !(node is CommentNode))
+                    .Select(node => Interpret(node, currentScope))
+                    .ToArray();
+
                 if (remaining.Length > 0)
                 {
                     value = new ListTable(remaining);
                 }
-                //else if (remaining.Length == 1)
-                //{
-                //    value = remaining[0];
-                //}
             }
             
             return value;

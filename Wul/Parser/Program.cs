@@ -66,6 +66,13 @@ namespace Wul.Parser
                 {
                     closeParenthesis++;
                 }
+                else if (program[currentIndex] == ';')
+                {
+                    int endIndex = program.IndexOf('\n', currentIndex);
+                    currentIndex = endIndex == -1 ? program.Length : endIndex;
+                    continue;
+                }
+
                 if (closeParenthesis > openParenthesis)
                 {
                     throw new Exception("Mismatched parenthesis, have fun");

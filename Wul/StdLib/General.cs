@@ -12,7 +12,7 @@ namespace Wul.StdLib
             var children = list.Children.Skip(1).ToArray();
             var nameIdentifier = children[0] as IdentifierNode;
             string name = nameIdentifier.Name;
-            var value = WulInterpreter.Interpret(children[1], scope);
+            var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
             scope[name] = value;
             return value;
         }, "let");
@@ -68,7 +68,7 @@ namespace Wul.StdLib
             var children = list.Children.Skip(1).ToArray();
 
             var condition = children[0];
-            var result = WulInterpreter.Interpret(condition, scope);
+            var result = WulInterpreter.Interpret(condition, scope) ?? Value.Nil;
 
             var listChildren = children.OfType<ListNode>();
 
@@ -91,10 +91,10 @@ namespace Wul.StdLib
         {
             var children = list.Children.Skip(1).ToArray();
 
-            IValue result = WulInterpreter.Interpret(children[0], scope);
+            IValue result = WulInterpreter.Interpret(children[0], scope) ?? Value.Nil;
             while (result is SyntaxNode)
             {
-                result = WulInterpreter.Interpret(result as SyntaxNode, scope);
+                result = WulInterpreter.Interpret(result as SyntaxNode, scope) ?? Value.Nil;
             }
             return result;
         }, "eval");
