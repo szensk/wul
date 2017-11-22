@@ -51,8 +51,8 @@ namespace Wul
 
                 string input = "";
 
-                Console.WriteLine($"wul {Version}");
-                Console.WriteLine("type 'exit' to exit");
+                Console.WriteLine($"wul interpreter {Version}");
+                Console.WriteLine("to leave type 'exit'");
 
                 while (input != "exit")
                 {

@@ -6,7 +6,6 @@ namespace Wul.StdLib
 {
     class General
     {
-        //TODO Convert to magic function so that identifer doesn't need quoting
         internal static IFunction Let = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
