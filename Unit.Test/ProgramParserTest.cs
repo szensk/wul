@@ -59,5 +59,34 @@ namespace Unit.Test
 
             Assert.AreEqual(2, node.Expressions.Count);
         }
+
+        [TestMethod]
+        public void ProgramParser_AnotherExample()
+        {
+            //Arrange
+            const string program = @"
+                (def apply (func list)
+                  (if (empty? list) 
+                    (then ()) 
+                    (else 
+                      (concat 
+                        ((func (first list))) 
+                        (apply func (rem list))
+                      )
+                    )
+                  )
+                )
+
+                (let +1 (lambda (a) (+ a 1)))
+                (apply +1 (1 2 3)) ; returns (2 3 4)";
+
+            ProgramParser parser = new ProgramParser();
+            
+            //Act
+            ProgramNode node = (ProgramNode)parser.Parse(program);
+
+            //Assert
+            Assert.AreEqual(3, node.Expressions.Count);
+        }
     }
 }

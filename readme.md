@@ -30,5 +30,22 @@ Examples
   )
 )
 
-(inc (1 2 3)) ; prints (2 3 4)
+(inc (1 2 3)) ; returns (2 3 4)
+```
+
+```
+(def apply (func list)
+  (if (empty? list) 
+    (then ()) 
+    (else 
+      (concat 
+        ((func (first list))) 
+        (apply func (rem list))
+      )
+    )
+  )
+)
+
+(let +1 (lambda (a) (+ a 1)))
+(apply +1 (1 2 3)) ; returns (2 3 4)
 ```
