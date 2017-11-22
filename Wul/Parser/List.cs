@@ -64,10 +64,10 @@ namespace Wul.Parser
                 {
                     string currentInner = inner.Substring(startIndex, currentIndex - startIndex);
                     if (stringParser.StartsString(currentInner)) continue;
-                    SyntaxNode item = Parse(currentInner)
-                               ?? identifierParser.Parse(currentInner)
-                               ?? numericParser.Parse(currentInner)
-                               ?? stringParser.Parse(currentInner);
+                    SyntaxNode item = identifierParser.Parse(currentInner)
+                                      ?? numericParser.Parse(currentInner)
+                                      ?? stringParser.Parse(currentInner)
+                                      ?? Parse(currentInner);
                     if (item != null) children.Add(item);
                     startIndex = currentIndex + 1;
                 }

@@ -21,14 +21,21 @@ namespace Wul.Parser
     {
         public override SyntaxNode Parse(string token)
         {
-            //Regex lol
-            var match = Regex.Match(token, @"^([a-zA-Z\>\<\+\-\!\@\#\$\%\^\&\*~?\.=\|/]+[a-zA-Z0-9\>\<\+\-\!\@\#\$\%\^\&\*~?\.=\|/]*)$");
+            //TODO this is a mess
+            if (token == "..") return new IdentifierNode(token);
+            if (token.StartsWith("-"))
+            {
+                if (Regex.Match(token, @"-[0-9]*\.?[0-9]+").Success) return null;
+            }
+
+            var match = Regex.Match(token, @"^([a-zA-Z\>\<\+\-\!\@\#\$\%\^\&\*~?=\|/]+[a-zA-Z0-9\>\<\+\-\!\@\#\$\%\^\&\*~?\.=\|/]*)$");
 
             if (match.Success)
             {
                 string name = match.Groups[1].Value;
                 return new IdentifierNode(name);
             }
+            
 
             return null;
         }
