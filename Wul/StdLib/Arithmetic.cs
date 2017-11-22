@@ -47,7 +47,7 @@ namespace Wul.StdLib
             double multiplied = numbers[0];
             for (int i = 1; i < numbers.Length; ++i)
             {
-                multiplied *= numbers[i];
+                multiplied *= numbers[i].Value;
             }
             return (Number)multiplied;
         }, "*");
