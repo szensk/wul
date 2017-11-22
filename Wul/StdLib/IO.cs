@@ -9,7 +9,14 @@ namespace Wul.StdLib
         {
             foreach (var value in list)
             {
-                Console.WriteLine(value.AsString());
+                if (value is UString)
+                {
+                    Console.WriteLine($"'{value.AsString()}'");
+                }
+                else
+                {
+                    Console.WriteLine(value.AsString());
+                }
             }
             return Value.Nil;
         }, "print");

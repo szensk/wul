@@ -17,6 +17,11 @@ namespace Wul.Interpreter
             _list = array.ToList();
         }
 
+        public ListTable(IEnumerable<IValue> enumerable)
+        {
+            _list = enumerable.ToList();
+        }
+
         public List<IValue> AsList()
         {
             return _list;

@@ -37,7 +37,7 @@ namespace Wul.Interpreter
                 case BooleanNode b:
                     return Evaluate(b);
                 case StringNode s:
-                    return Evaluate(s);
+                    return Evaluate(s, currentScope);
                 case ListNode l:
                     return Evaluate(l, currentScope);
                 default:
@@ -64,9 +64,9 @@ namespace Wul.Interpreter
             return boolean.Value ? Bool.True : Bool.False;
         }
 
-        private static IValue Evaluate(StringNode str)
+        private static IValue Evaluate(StringNode str, Scope currentScope = null)
         {
-            return new UString(str.Value);
+            return new UString(str.Value(currentScope));
         }
 
         private static IValue Evaluate(ListNode list, Scope currentScope = null)
@@ -114,14 +114,14 @@ namespace Wul.Interpreter
             {
                 //Evaluate a list
                 var remaining = list.Children.Select(node => Interpret(node, currentScope)).ToArray();
-                if (remaining.Length > 1)
+                if (remaining.Length > 0)
                 {
                     value = new ListTable(remaining);
                 }
-                else if (remaining.Length == 1)
-                {
-                    value = remaining[0];
-                }
+                //else if (remaining.Length == 1)
+                //{
+                //    value = remaining[0];
+                //}
             }
             
             return value;

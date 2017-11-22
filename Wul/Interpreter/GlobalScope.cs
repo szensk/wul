@@ -12,7 +12,7 @@
             Scope["nil"] = Value.Nil;
             Scope["let"] = StdLib.General.Let;
             Scope["def"] = StdLib.General.Define;
-            Scope["def!"] = StdLib.General.DefineMagicFunction;
+            Scope["@def"] = StdLib.General.DefineMagicFunction;
             Scope["eval"] = StdLib.General.Evaluate;
 
             //Comparison
@@ -47,6 +47,13 @@
             Scope["concat"] = StdLib.List.Concat;
             Scope["first"] = StdLib.List.First;
             Scope["rem"] = StdLib.List.Remainder;
+            Scope["empty?"] = StdLib.List.Empty;
+            Scope["len"] = StdLib.List.Length;
+            Scope["#"] = StdLib.List.Length;
+
+            //Logical
+            Scope["!"] = StdLib.Logical.Not;
+            Scope["not"] = StdLib.Logical.Not;
         }
     }
 }

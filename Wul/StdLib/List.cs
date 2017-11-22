@@ -47,5 +47,27 @@ namespace Wul.StdLib
 
             return new ListTable(firstList.AsList().Skip(1).ToArray());
         }, "rem");
+
+        internal static IFunction Empty = new NetFunction((list, scope) =>
+        {
+            ListTable firstList = list.FirstOrDefault() as ListTable;
+            if (firstList == null)
+            {
+                return Value.Nil;
+            }
+
+            return firstList.Count == 0 ? Bool.True : Bool.False;
+        }, "empty?");
+
+        internal static IFunction Length = new NetFunction((list, scope) =>
+        {
+            ListTable firstList = list.FirstOrDefault() as ListTable;
+            if (firstList == null)
+            {
+                return Value.Nil;
+            }
+
+            return firstList.Count;
+        }, "length");
     }
 }

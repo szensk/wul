@@ -1,6 +1,6 @@
 namespace Wul.Interpreter
 {
-    internal class UString : IValue
+    public class UString : IValue
     {
         public UString(string value)
         {
@@ -11,7 +11,7 @@ namespace Wul.Interpreter
 
         public string AsString()
         {
-            return $"'{Value}'";
+            return Value;
         }
     }
 }

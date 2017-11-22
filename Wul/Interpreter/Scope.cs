@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Wul.Interpreter
 {
-    class Scope
+    public class Scope
     {
         public Scope Parent;
         private readonly Dictionary<string, IValue> BoundVariables;

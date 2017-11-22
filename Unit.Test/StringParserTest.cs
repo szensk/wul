@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Wul.Interpreter;
 using Wul.Parser;
 
 namespace Unit.Test
@@ -36,7 +37,7 @@ namespace Unit.Test
 
             StringNode node = (StringNode)parser.Parse(token);
 
-            Assert.AreEqual("true", node.Value);
+            Assert.AreEqual("true", node.Value());
         }
 
         [TestMethod]
@@ -47,7 +48,7 @@ namespace Unit.Test
 
             StringNode node = (StringNode)parser.Parse(token);
 
-            Assert.AreEqual("", node.Value);
+            Assert.AreEqual("", node.Value());
         }
 
         [TestMethod]
@@ -58,7 +59,45 @@ namespace Unit.Test
 
             StringNode node = (StringNode)parser.Parse(token);
 
-            Assert.AreEqual("\t", node.Value);
+            Assert.AreEqual("\t", node.Value());
+        }
+
+        [TestMethod]
+        public void StringParser_Interpolated()
+        {
+            StringParser parser = new StringParser();
+            string token = "\"hello {{{world}}}\"";
+
+            StringNode node = (StringNode)parser.Parse(token);
+
+           Assert.IsTrue(node.Interpolated);
+        }
+
+
+        [TestMethod]
+        public void StringParser_Interpolated_Correct()
+        {
+            StringParser parser = new StringParser();
+            string expected = "hello {world}. OK!";
+
+            string token = "\"hello {{{world}}}. OK!\"";
+
+            InterpolatedStringNode node = (InterpolatedStringNode)parser.Parse(token);
+
+            Scope scope = new Scope {["world"] = new UString("world")};
+
+            Assert.AreEqual(expected, node.Value(scope));
+        }
+
+        [TestMethod]
+        public void StringParser_NotInterpolated()
+        {
+            StringParser parser = new StringParser();
+            string token = "'hello {world}'";
+
+            StringNode node = (StringNode)parser.Parse(token);
+
+            Assert.IsFalse(node.Interpolated);
         }
     }
 }
