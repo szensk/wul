@@ -18,13 +18,22 @@ namespace Wul.StdLib
 
         internal static IFunction Subtract = new NetFunction((list, scope) =>
         {
-            var first = list.First() as Number;
-            var numbers = list.Skip(1).Select(x => x as Number).Where(x => x != null);
-            if (!numbers.Any())
+            if (list.Count < 1)
             {
-                return first;
+                return Value.Nil;
             }
-            double sum = numbers.Sum(x => x.Value);
+            Number first;
+            double sum;
+            if (list.Count < 2)
+            {
+                first = 0;
+                sum = ((Number) list.First()).Value;
+            }
+            else
+            {
+                first = list.First() as Number;
+                sum = list.Skip(1).OfType<Number>().Sum(x => x.Value);
+            }
             return (Number) (first.Value - sum);
         }, "-");
 
