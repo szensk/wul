@@ -13,18 +13,21 @@ Examples
   )
 )
 
-(print (fact 10))
+(print (fact 10)) ; prints 3628800
 ```
 
 ```
-(def inc (a)
-	(if (= a nil)
-	(then 0)
-	(else 
-		(concat 
-			(+ (first a) 1) 
-			(inc (rem a))
-		)		
+(def inc (a) 
+	(if (empty? a) 
+		(then ()) 
+		(else 
+			(concat 
+				((+ (first a) 1)) 
+				(inc (rem a))
+			)
+		)
 	)
 )
+
+(inc (1 2 3)) ; prints (2 3 4)
 ```

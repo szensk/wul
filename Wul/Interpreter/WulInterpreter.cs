@@ -6,10 +6,6 @@ namespace Wul.Interpreter
 {
     public class WulInterpreter
     {
-        public WulInterpreter()
-        {
-        }
-
         public static IValue Interpret(ProgramNode program)
         {
             IValue lastResult = null;
