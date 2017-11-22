@@ -28,7 +28,6 @@ namespace Wul
             return true; //TODO 
         }
 
-
         private static void PrintHelp()
         {
             Console.WriteLine("wul - worthless unnecessary language");
@@ -51,6 +50,10 @@ namespace Wul
                 Global.RegisterDefaultFunctions();
 
                 string input = "";
+
+                Console.WriteLine($"wul {Version}");
+                Console.WriteLine("type 'exit' to exit");
+
                 while (input != "exit")
                 {
                     input = Console.ReadLine();

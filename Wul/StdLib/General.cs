@@ -34,6 +34,19 @@ namespace Wul.StdLib
             return function;
         }, "def");
 
+        internal static IFunction Lambda = new MagicNetFunction((list, scope) =>
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            var arguments = children[0] as ListNode;
+            var argNames = arguments.Children.Select(a => a as IdentifierNode).Select(a => a.Name);
+
+            var body = children[1] as ListNode;
+            var function = new Function(body, "unnamed function", argNames.ToList());
+
+            return function;
+        }, "lambda");
+
         internal static IFunction DefineMagicFunction = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
