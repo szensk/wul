@@ -5,11 +5,12 @@ A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. I
 Examples
 =======
 ```
-(def fact (a) (
-	(if (< a 2) 
-	  (then 1)
-	  (else (* a (fact (- a 1))))
-	)
+(def fact (a) 
+  (
+    (if (< a 2) 
+      (then 1)
+      (else (* a (fact (- a 1))))
+    )
   )
 )
 
@@ -18,15 +19,15 @@ Examples
 
 ```
 (def inc (a) 
-	(if (empty? a) 
-		(then ()) 
-		(else 
-			(concat 
-				((+ (first a) 1)) 
-				(inc (rem a))
-			)
-		)
-	)
+  (if (empty? a) 
+    (then ()) 
+    (else 
+      (concat 
+        ((+ (first a) 1)) 
+        (inc (rem a))
+      )
+    )
+  )
 )
 
 (inc (1 2 3)) ; prints (2 3 4)
