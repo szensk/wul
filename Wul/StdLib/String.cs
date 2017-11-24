@@ -12,9 +12,16 @@ namespace Wul.StdLib
             return first.MetaType.Concat.Invoke(list, scope);
         }, "..");
 
+        internal static IFunction STring = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            return first.MetaType.AsString.Invoke(list, scope);
+        }, "string");
+
         internal static IFunction Substring = new NetFunction((list, scope) =>
         {
-            string value = (list[0] as UString).Value;
+            string value = ((UString) list[0]).Value;
             Number start = list[1] as Number;
             Number length = list.Skip(2).FirstOrDefault() as Number;
 
@@ -25,13 +32,13 @@ namespace Wul.StdLib
 
         internal static IFunction Lower = new NetFunction((list, scope) =>
         {
-            string value = (list[0] as UString).Value;
+            string value = ((UString) list[0]).Value;
             return new UString(value.ToLower());
         }, "lower");
 
         internal static IFunction Upper = new NetFunction((list, scope) =>
         {
-            string value = (list[0] as UString).Value;
+            string value = ((UString) list[0]).Value;
             return new UString(value.ToUpper());
         }, "upper");
     }

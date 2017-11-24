@@ -103,15 +103,4 @@ namespace Wul.Interpreter
             return new UString(first.AsString());
         }
     }
-
-    public class MapMetaType : MetaType
-    {
-        //TODO 
-    }
-
-    public class SyntaxNodeMetaType : MetaType
-    {
-        //TODO as string
-        
-    }
 }

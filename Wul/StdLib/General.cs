@@ -11,7 +11,7 @@ namespace Wul.StdLib
         internal static IFunction Let = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
-            var nameIdentifier = children[0] as IdentifierNode;
+            var nameIdentifier = (IdentifierNode) children[0];
             string name = nameIdentifier.Name;
             var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
             scope[name] = value;
@@ -22,13 +22,13 @@ namespace Wul.StdLib
         {
             var children = list.Children.Skip(1).ToArray();
 
-            var nameIdentifier = children[0] as IdentifierNode;
+            var nameIdentifier = (IdentifierNode) children[0];
             string name = nameIdentifier.Name;
 
-            var arguments = children[1] as ListNode;
-            var argNames = arguments.Children.Select(a => a as IdentifierNode).Select(a => a.Name);
+            var arguments = (ListNode) children[1];
+            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
 
-            var body = children[2] as ListNode;
+            var body = (ListNode) children[2];
             var function = new Function(body, name, argNames.ToList());
             scope[name] = function;
 
@@ -39,10 +39,10 @@ namespace Wul.StdLib
         {
             var children = list.Children.Skip(1).ToArray();
 
-            var arguments = children[0] as ListNode;
-            var argNames = arguments.Children.Select(a => a as IdentifierNode).Select(a => a.Name);
+            var arguments = (ListNode) children[0];
+            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
 
-            var body = children[1] as ListNode;
+            var body = (ListNode) children[1];
             var function = new Function(body, "unnamed function", argNames.ToList());
 
             return function;
@@ -52,13 +52,13 @@ namespace Wul.StdLib
         {
             var children = list.Children.Skip(1).ToArray();
 
-            var nameIdentifier = children[0] as IdentifierNode;
+            var nameIdentifier = (IdentifierNode) children[0];
             string name = nameIdentifier.Name;
 
-            var arguments = children[1] as ListNode;
-            var argNames = arguments.Children.Select(a => a as IdentifierNode).Select(a => a.Name);
+            var arguments = (ListNode) children[1];
+            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
 
-            var body = children[2] as ListNode;
+            var body = (ListNode) children[2];
             var function = new MagicFunction(body, name, argNames.ToList());
             scope[name] = function;
 
