@@ -80,7 +80,7 @@ namespace Wul.Interpreter
                 throw new InvalidOperationException("All arguments must be numbers");
             }
 
-            double multiplied = numbers[0];
+            double multiplied = numbers[0].Value;
             for (int i = 1; i < numbers.Length; ++i)
             {
                 multiplied *= numbers[i].Value;

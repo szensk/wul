@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Wul.Parser;
+using Wul.StdLib;
 
 namespace Wul.Interpreter
 {
@@ -22,6 +23,7 @@ namespace Wul.Interpreter
             return Evaluate(list, currentScope);
         }
 
+        //TODO polymorphic dispatch for Evaluate
         internal static IValue Interpret(SyntaxNode node, Scope currentScope)
         {
             switch (node)
@@ -43,7 +45,6 @@ namespace Wul.Interpreter
             }
         }
 
-        //TODO polymorphic dispatch for Evaluate
 
         private static IValue Evaluate(IdentifierNode identifier, Scope currentScope = null)
         {
@@ -80,6 +81,8 @@ namespace Wul.Interpreter
 
             var first = list.Children.First();
             IValue value = Value.Nil;
+
+            //TODO Really this is an recursive call to Interpret
             if (first is IdentifierNode)
             {
                 IdentifierNode identifier = first as IdentifierNode;
@@ -107,9 +110,8 @@ namespace Wul.Interpreter
             }
             else if (isMagicFunction)
             {
+                //Magic functions do not have their arguments 
                 IFunction function = (IFunction) value;
-                //Invoke a magic function
-                //Magic functions do not have their arguments evaluated, it's up the function to do so
                 value = function.Execute(list, currentScope);
             }
             else
