@@ -1,4 +1,5 @@
-﻿using Wul.Interpreter;
+﻿using System.Linq;
+using Wul.Interpreter;
 
 namespace Wul.StdLib
 {
@@ -6,19 +7,47 @@ namespace Wul.StdLib
     {
         internal static IFunction Equal = new NetFunction((list, scope) =>
         {
-            IValue first = list[0];
-            IValue second = list[1];
-            //TODO make all IValue override Equals
-            bool equal = first.Equals(second);
-            return equal ? Bool.True : Bool.False;
+            IValue first = list.First();
+
+            return first.MetaType.Equal.Invoke(list, scope);
         }, "=");
 
         internal static IFunction LessThan = new NetFunction((list, scope) =>
         {
-            Number first = list[0] as Number;
-            Number second = list[1] as Number;
-            bool lessThan = first.Value < second.Value;
-            return lessThan ? Bool.True : Bool.False;
+            IValue first = list.First();
+
+            Number comparison = (Number) first.MetaType.Compare.Invoke(list, scope);
+            int value = (int)comparison.Value;
+            return value == -1 ? Bool.True : Bool.False;
         }, "<");
+
+        internal static IFunction LessThanEqualTo = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            Number comparison = (Number)first.MetaType.Compare.Invoke(list, scope);
+            int value = (int)comparison.Value;
+        
+            return value == -1 || value == 0 ? Bool.True : Bool.False;
+        }, "<=");
+
+        internal static IFunction GreaterThan = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            Number comparison = (Number)first.MetaType.Compare.Invoke(list, scope);
+            int value = (int)comparison.Value;
+            return value == 1 ? Bool.True : Bool.False;
+        }, ">");
+
+        internal static IFunction GreaterThanEqualTo = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            Number comparison = (Number)first.MetaType.Compare.Invoke(list, scope);
+            int value = (int)comparison.Value;
+
+            return value == 1 || value == 0 ? Bool.True : Bool.False;
+        }, ">=");
     }
 }

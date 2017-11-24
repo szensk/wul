@@ -5,6 +5,9 @@
         public static Bool True = new Bool(true);
         public static Bool False = new Bool(false);
 
+        private static readonly BoolMetaType metaType = new BoolMetaType();
+        public MetaType MetaType => metaType;
+
         public readonly bool Value;
 
         private Bool(bool value)

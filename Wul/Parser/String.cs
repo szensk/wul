@@ -42,7 +42,7 @@ namespace Wul.Parser
             var strings = _chunks.Select(c =>
                 {
                     if (c.String != null) return c.String;
-                    if (c.Interpolation != null) return WulInterpreter.Interpret(c.Interpolation, scope).AsString();
+                    if (c.Interpolation != null) return WulInterpreter.Interpret(c.Interpolation, scope).AsString(); //TODO call tostring metamethod
                     return null;
                 })
                 .Where(s => s != null);

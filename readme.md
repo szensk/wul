@@ -21,27 +21,11 @@ Examples
 ```
 
 ```lisp
-(def inc (a) 
-  (if (empty? a) 
-    (then ()) 
-    (else 
-      (concat 
-        ((+ (first a) 1)) 
-        (inc (rem a))
-      )
-    )
-  )
-)
-
-(inc (1 2 3)) ; returns (2 3 4)
-```
-
-```lisp
 (def apply (func list)
   (if (empty? list) 
     (then ()) 
     (else 
-      (concat 
+      (.. ; aka concat function
         ((func (first list))) 
         (apply func (rem list))
       )

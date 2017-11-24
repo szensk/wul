@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Wul.Interpreter
 {
-    class MapTable : Table
+    class MapTable : IValue
     {
         private readonly Dictionary<IValue, IValue> _map;
 
@@ -26,23 +27,23 @@ namespace Wul.Interpreter
             throw new NotImplementedException();
         }
 
-        public override IValue Get(IValue key)
+        public IValue Get(IValue key)
         {
             _map.TryGetValue(key, out IValue val);
             return val ?? Value.Nil;
         }
 
-        public override void Add(IValue key, IValue value)
+        public void Add(IValue key, IValue value)
         {
             _map.Add(key, value);
         }
 
-        protected override void Remove(IValue key)
+        protected void Remove(IValue key)
         {
             _map.Remove(key);
         }
 
-        public override void Assign(IValue key, IValue value)
+        public void Assign(IValue key, IValue value)
         {
             if (value == Value.Nil)
             {
@@ -54,9 +55,18 @@ namespace Wul.Interpreter
             }
         }
 
-        public override Number Count => _map.Count;
+        public Number Count => _map.Count;
 
-        public override IValue this[IValue key]
+        public string AsString()
+        {
+            //TODO call as string metamethod
+            return "(" + string.Join(", ", _map.Select(s => $"{s.Key.AsString()}:{s.Value.AsString()}").ToList()) + ")";
+        }
+
+        private static readonly MapMetaType metaType = new MapMetaType();
+        public MetaType MetaType => metaType;
+
+        public IValue this[IValue key]
         {
             get => Get(key);
 

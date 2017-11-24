@@ -91,32 +91,26 @@ namespace Wul.Interpreter
                 value = Evaluate((ListNode) first, currentScope);
             }
 
-            IFunction function = value as IFunction;
-
-            //TODO make an IMagicFunction interface
-            MagicFunction magicFunction = value as MagicFunction;
-            MagicNetFunction magicNetFunction = value as MagicNetFunction;
-
-            if (function != null && magicNetFunction == null && magicFunction == null)
+            bool isFunction = value.MetaType?.Invoke?.IsDefined ?? false;
+            bool isMagicFunction = value.MetaType?.InvokeMagic?.IsDefined ?? false;
+            if (isFunction)
             {
-                //Invoke a regular function
-                var remaining = list.Children
-                    .Skip(1)
+                IFunction function = (IFunction) value;
+                var remaining = list.Children.Skip(1);
+
+                var evaluatedRemaining = remaining
                     .Select(node => Interpret(node, currentScope))
                     .Where(v => v != null)
                     .ToList();
 
-                value = function.Evaluate(remaining, currentScope);
+                value = function.Evaluate(evaluatedRemaining, currentScope);
             }
-            else if (magicFunction != null)
+            else if (isMagicFunction)
             {
+                IFunction function = (IFunction) value;
                 //Invoke a magic function
-                value = magicFunction.Execute(list, currentScope);
-            }
-            else if (magicNetFunction != null)
-            {
                 //Magic functions do not have their arguments evaluated, it's up the function to do so
-                value = magicNetFunction.Execute(list, currentScope);
+                value = function.Execute(list, currentScope);
             }
             else
             {

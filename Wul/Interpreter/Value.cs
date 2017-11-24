@@ -2,10 +2,13 @@
 {
     abstract class Value : IValue
     {
-        //GetMetatable
-        
-        //SetMetatable
-        public abstract string AsString();
+        //TODO do we want a nil meta type?
+        public MetaType MetaType => null;
+
+        public virtual string AsString()
+        {
+            throw new System.NotImplementedException();
+        }
 
         public static Value Nil = new Nill();
     }

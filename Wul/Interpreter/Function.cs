@@ -51,6 +51,9 @@ namespace Wul.Interpreter
         {
             return $"Function[{Name}]";
         }
+
+        private static readonly FunctionMetaType metaType = new FunctionMetaType();
+        public MetaType MetaType => metaType;
     }
 
     class MagicFunction : IFunction
@@ -97,6 +100,9 @@ namespace Wul.Interpreter
             return result;
         }
 
+        private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
+        public MetaType MetaType => metaType;
+
         public string AsString()
         {
             return $"Function[{Name}]";
@@ -131,6 +137,9 @@ namespace Wul.Interpreter
         {
             return $"Function[{Name}]";
         }
+
+        private static readonly FunctionMetaType metaType = new FunctionMetaType();
+        public MetaType MetaType => metaType;
     }
 
     class MagicNetFunction : IFunction
@@ -155,10 +164,13 @@ namespace Wul.Interpreter
         {
             return Body(list, scope);
         }
-
+        
         public string AsString()
         {
             return $"Function[{Name}]";
         }
+
+        private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
+        public MetaType MetaType => metaType;
     }
 }

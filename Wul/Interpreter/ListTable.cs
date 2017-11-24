@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Wul.Interpreter
 {
-    class ListTable : Table
+    class ListTable : IValue
     {
         private readonly List<IValue> _list;
 
@@ -27,7 +27,7 @@ namespace Wul.Interpreter
             return _list;
         }
 
-        public override IValue Get(IValue key)
+        public IValue Get(IValue key)
         {
             int index = (Number) key;
             if (index >= Count || index < 0)
@@ -40,19 +40,19 @@ namespace Wul.Interpreter
             }
         }
 
-        public override void Add(IValue key, IValue value)
+        public void Add(IValue key, IValue value)
         {
             //TODO check if need to convert to MapTable
             _list.Add(value);
         }
 
-        protected override void Remove(IValue key)
+        protected void Remove(IValue key)
         {
             //TODO check if need to convert to MapTable
             _list.RemoveAt((Number)key);
         }
 
-        public override void Assign(IValue key, IValue value)
+        public void Assign(IValue key, IValue value)
         {
             if (value == Value.Nil)
             {
@@ -64,14 +64,18 @@ namespace Wul.Interpreter
             }
         }
 
-        public override Number Count => _list.Count;
+        public Number Count => _list.Count;
 
-        public override string AsString()
+        public string AsString()
         {
+            //TODO call as string metamethod
             return "(" + string.Join(", ", _list.Select(s => s.AsString()).ToList()) + ")";
         }
 
-        public override IValue this[IValue key]
+        private static readonly ListMetaType metaType = new ListMetaType();
+        public MetaType MetaType => metaType;
+
+        public IValue this[IValue key]
         {
             get => Get(key);
 

@@ -7,12 +7,9 @@ namespace Wul.StdLib
     {
         internal static IFunction Concat = new NetFunction((list, scope) =>
         {
-            var strings = list.OfType<UString>().Select(s => s.Value);
-            if (!strings.Any())
-            {
-                return Value.Nil;
-            }
-            return new UString(string.Join("", strings));
+            IValue first = list.First();
+
+            return first.MetaType.Concat.Invoke(list, scope);
         }, "..");
 
         internal static IFunction Substring = new NetFunction((list, scope) =>

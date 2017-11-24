@@ -3,7 +3,7 @@ using Wul.Parser;
 
 namespace Wul.Interpreter
 {
-    interface IFunction : IValue
+    public interface IFunction : IValue
     {
         string Name { get; }
         List<string> ArgumentNames { get; }

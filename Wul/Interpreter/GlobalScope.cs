@@ -46,7 +46,7 @@
             Scope["upper"] = StdLib.String.Upper;
 
             //List
-            Scope["concat"] = StdLib.List.Concat;
+            //Scope["concat"] = StdLib.List.Concat;
             Scope["first"] = StdLib.List.First;
             Scope["last"] = StdLib.List.Last;
             Scope["rem"] = StdLib.List.Remainder;

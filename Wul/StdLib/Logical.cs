@@ -7,18 +7,9 @@ namespace Wul.StdLib
     {
         internal static IFunction Not = new NetFunction((list, scope) =>
         {
-            var bools = list.OfType<Bool>();
+            IValue first = list.First();
 
-            var notBools = bools.Select(b => b.Value ? Bool.False : Bool.True);
-
-            if (notBools.Count() <= 1)
-            {
-                return (IValue) notBools.FirstOrDefault() ?? Value.Nil;
-            }
-            else
-            {
-                return new ListTable(notBools);
-            }
+            return first.MetaType.Not.Invoke(list, scope);
         }, "not");
     }
 }
