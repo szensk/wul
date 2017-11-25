@@ -6,6 +6,8 @@ namespace Wul.StdLib
 {
     internal class List
     {
+        internal static IFunction Listify = new NetFunction((list, Scope) => new ListTable(list), "list");
+
         internal static IFunction First = new NetFunction((list, scope) =>
         {
             IValue first = list.First();

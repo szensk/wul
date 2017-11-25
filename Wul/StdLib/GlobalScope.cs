@@ -62,6 +62,7 @@ namespace Wul.StdLib
             Scope["empty?"] = List.Empty;
             Scope["len"] = List.Length;
             Scope["#"] = List.Length;
+            Scope["list"] = List.Listify;
 
             //Logical
             Scope["!"] = Logical.Not;
