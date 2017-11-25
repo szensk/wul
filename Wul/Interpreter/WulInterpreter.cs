@@ -100,12 +100,17 @@ namespace Wul.Interpreter
             if (isFunction)
             {
                 var evalutedList = list.Children
+                    .Skip(1)
                     .Select(node => Interpret(node, currentScope))
                     .Where(v => v != null)
                     .ToList();
 
                 var function = value.MetaType.Invoke.Method;
-                value = function.Evaluate(evalutedList, currentScope);
+
+                var finalList = new List<IValue> {value};
+                finalList.AddRange(evalutedList);
+
+                value = function.Evaluate(finalList, currentScope);
             }
             else if (isMagicFunction)
             {

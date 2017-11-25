@@ -131,7 +131,8 @@ namespace Wul.Parser
 
         private static string Unescape(string text)
         {
-            if (string.IsNullOrEmpty(text)) { return text; }
+            if (string.IsNullOrEmpty(text)) return text;
+
             StringBuilder sb = new StringBuilder(text.Length);
             for (int i = 0; i < text.Length;)
             {
@@ -155,6 +156,7 @@ namespace Wul.Parser
                 }
                 i = j + 2;
             }
+
             return sb.ToString();
         }
 
