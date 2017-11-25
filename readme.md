@@ -31,9 +31,9 @@ Examples
 ```lisp
 (def apply (func list)
   (if (empty? list) 
-    (then ()) 
+    (then list) 
     (else 
-      (.. ; aka concat function
+      (concat ; also known as ..
         ((func (first list))) 
         (apply func (rem list))
       )
@@ -47,5 +47,5 @@ Examples
 
 ```lisp
 ; Call a .NET function
-(:: System.String.Join (' ', ('a' 'b' 'c'))) ; returns ('a b c')
+(:: System.String.Join (' ' ('a' 'b' 'c'))) ; returns ('a b c')
 ```

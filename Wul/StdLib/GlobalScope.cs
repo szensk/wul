@@ -18,6 +18,7 @@ namespace Wul.StdLib
             Scope["eval"] = General.Evaluate;
             Scope["lambda"] = General.Lambda;
             Scope["identity"] = General.Identity;
+            Scope["??"] = General.Coalesce;
 
             //Interop
             Scope["::"] = Interop.CallFrameworkFunction;

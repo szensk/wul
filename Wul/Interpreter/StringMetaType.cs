@@ -11,8 +11,9 @@ namespace Wul.Interpreter
             Equal.Method = new NetFunction(AreEqual, Equal.Name);
             Compare.Method = new NetFunction(Comparison, Compare.Name);
 
-            // Concat
+            At.Method = new NetFunction(CharacterAtIndex, At.Name);
             Concat.Method = new NetFunction(JoinStrings, Concat.Name);
+            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
 
             // Count
             Count.Method = new NetFunction(Length, Count.Name);
@@ -44,6 +45,25 @@ namespace Wul.Interpreter
                 return Value.Nil;
             }
             return new UString(string.Join("", strings));
+        }
+
+        public IValue Remaining(List<IValue> arguments, Scope s)
+        {
+            var first = (UString)arguments[0];
+            if (first.Value.Length == 0)
+            {
+                return Value.Nil;
+            }
+
+            return new UString(first.Value.Substring(1));
+        }
+
+        public IValue CharacterAtIndex(List<IValue> arguments, Scope s)
+        {
+            UString str = (UString)arguments.First();
+            Number index = (Number)arguments.Skip(1).First();
+
+            return new UString(str.Value[index].ToString());
         }
 
         public IValue Length(List<IValue> arguments, Scope s)

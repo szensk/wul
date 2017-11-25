@@ -112,5 +112,19 @@ namespace Wul.StdLib
             }
             return result;
         }, "eval");
+
+        internal static IFunction Coalesce = new NetFunction((list, scope) =>
+        {
+            var firstNonNull = list.FirstOrDefault(i => i != Value.Nil);
+
+            if (firstNonNull != null)
+            {
+                return firstNonNull;
+            }
+            else
+            {
+                return Value.Nil;
+            }
+        }, "??");
     }
 }
