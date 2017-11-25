@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Wul.Interpreter;
 
 namespace Wul.Parser
@@ -128,6 +129,35 @@ namespace Wul.Parser
             return openQuoteIndex != -1 && closeQuoteIndex == openQuoteIndex;
         }
 
+        private static string Unescape(string text)
+        {
+            if (string.IsNullOrEmpty(text)) { return text; }
+            StringBuilder sb = new StringBuilder(text.Length);
+            for (int i = 0; i < text.Length;)
+            {
+                int j = text.IndexOf('\\', i);
+                if (j < 0 || j == text.Length - 1) j = text.Length;
+                sb.Append(text, i, j - i);
+                if (j >= text.Length) break;
+                switch (text[j + 1])
+                {
+                    case 'n':  sb.Append('\n');
+                        break;  
+                    case 'r':  sb.Append('\r');
+                        break;  
+                    case 't':  sb.Append('\t');
+                        break;  
+                    case '\\': sb.Append('\\');
+                        break;
+                    default:
+                        sb.Append('\\').Append(text[j + 1]);
+                        break;
+                }
+                i = j + 2;
+            }
+            return sb.ToString();
+        }
+
         public override SyntaxNode Parse(string token)
         {
             if (token.Length < 2) return null;
@@ -147,7 +177,7 @@ namespace Wul.Parser
 
             if (closeQuoteIndex == -1 || openQuoteIndex == closeQuoteIndex) return null;
 
-            string value = token.Substring(openQuoteIndex + 1, closeQuoteIndex - (openQuoteIndex + 1));
+            string value = Unescape(token.Substring(openQuoteIndex + 1, closeQuoteIndex - (openQuoteIndex + 1)));
             
             return interpolated ? new InterpolatedStringNode(value) : new StringNode(value);
         }
