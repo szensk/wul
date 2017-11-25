@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wul.Interpreter;
+using Wul.Interpreter.Types;
 using Wul.Parser;
 
 namespace Unit.Test

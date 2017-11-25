@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Wul.Interpreter
+namespace Wul.Interpreter.Types
 {
     abstract class Value : IValue
     {

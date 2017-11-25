@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wul.Interpreter.MetaTypes;
 using Wul.Parser;
 
-namespace Wul.Interpreter
+namespace Wul.Interpreter.Types
 {
     class Function : IFunction
     {

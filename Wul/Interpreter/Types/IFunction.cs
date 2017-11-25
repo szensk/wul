@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Wul.Parser;
 
-namespace Wul.Interpreter
+namespace Wul.Interpreter.Types
 {
     public interface IFunction : IValue
     {

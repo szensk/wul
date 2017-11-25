@@ -1,4 +1,6 @@
 ﻿using Wul.Interpreter;
+using Wul.Interpreter.MetaTypes;
+using Wul.Interpreter.Types;
 
 namespace Wul.Parser
 {

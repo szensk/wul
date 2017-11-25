@@ -1,4 +1,6 @@
-namespace Wul.Interpreter
+using Wul.Interpreter.MetaTypes;
+
+namespace Wul.Interpreter.Types
 {
     public class UString : IValue
     {

@@ -1,4 +1,4 @@
-﻿namespace Wul.Interpreter
+﻿namespace Wul.Interpreter.Types
 {
     public interface IValue
     {

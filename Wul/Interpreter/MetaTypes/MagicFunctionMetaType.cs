@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Wul.Interpreter.Types;
 using Wul.Parser;
 
-namespace Wul.Interpreter
+namespace Wul.Interpreter.MetaTypes
 {
     public class MagicFunctionMetaType : MetaType
     {

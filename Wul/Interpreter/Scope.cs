@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Wul.Interpreter.Types;
 
 namespace Wul.Interpreter
 {

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wul.Interpreter.MetaTypes;
 
-namespace Wul.Interpreter
+namespace Wul.Interpreter.Types
 {
     class MapTable : IValue
     {

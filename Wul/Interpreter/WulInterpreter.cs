@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wul.Interpreter.Types;
 using Wul.Parser;
 using Wul.StdLib;
 

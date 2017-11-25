@@ -1,4 +1,4 @@
-﻿namespace Wul.Interpreter
+﻿namespace Wul.Interpreter.MetaTypes
 {
     public class SyntaxNodeMetaType : MetaType
     {

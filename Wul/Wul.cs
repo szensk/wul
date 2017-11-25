@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Wul.Interpreter;
+using Wul.Interpreter.Types;
 using Wul.Parser;
 using Wul.StdLib;
 

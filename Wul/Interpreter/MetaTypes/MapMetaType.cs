@@ -1,4 +1,6 @@
-﻿namespace Wul.Interpreter
+﻿using Wul.Interpreter.Types;
+
+namespace Wul.Interpreter.MetaTypes
 {
     public class MapMetaType : MetaType
     {

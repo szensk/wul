@@ -1,6 +1,7 @@
 using System;
+using Wul.Interpreter.MetaTypes;
 
-namespace Wul.Interpreter
+namespace Wul.Interpreter.Types
 {
     class Number : IValue
     {
