@@ -52,11 +52,7 @@ namespace Wul.StdLib
             string name = nameIdentifier.Name;
 
             var arguments = (ListNode)children[1];
-            IValue evaluatedArguments = WulInterpreter.Interpret(arguments, scope) ?? Value.Nil;
-            while (evaluatedArguments is SyntaxNode)
-            {
-                evaluatedArguments = WulInterpreter.Interpret(evaluatedArguments as SyntaxNode, scope) ?? Value.Nil;
-            }
+            IValue evaluatedArguments = arguments.Eval(scope);
             var finalArguments = ((ListTable)evaluatedArguments).AsList().Select(i => i.ToObject()).ToArray();
 
             object result = InvokeNetFunction(name, finalArguments);

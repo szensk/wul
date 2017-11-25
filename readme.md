@@ -50,3 +50,14 @@ Examples
 ; Call a .NET function
 (:: System.String.Join (' ' ('a' 'b' 'c'))) ; returns ('a b c')
 ```
+
+```lisp
+; Metamethods
+; By default the concat operator .. does not work on strings
+
+(def join-numbers (a b) (.. (string a) (string b)))
+
+(set-metamethod 0 .. join-numbers)
+
+(.. 2 3) ; returns '23'
+```

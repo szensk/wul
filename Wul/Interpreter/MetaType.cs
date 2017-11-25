@@ -55,8 +55,32 @@ namespace Wul.Interpreter
             Concat = new MetaMethod("..");
 
             Invoke = new MetaMethod("()");
-            InvokeMagic = new MetaMethod("()");
+            InvokeMagic = new MetaMethod("@()");
             AsString = new MetaMethod("string");
+
+            var metaMethodList = new List<MetaMethod>
+            {
+                Add, Subtract, Multiply, Divide, Modulus, Power,
+                Not, And, Or, Xor,
+                Equal, Compare,
+                At, Remainder, Count, Concat,
+                Invoke, InvokeMagic, AsString
+            };
+
+            _metaMethods = metaMethodList.ToDictionary(key => key.Name);
+        }
+
+        public MetaType Clone()
+        {
+            return (MetaType) MemberwiseClone();
+        }
+
+        private readonly Dictionary<string, MetaMethod> _metaMethods;
+
+        public MetaMethod Get(string name)
+        {
+            _metaMethods.TryGetValue(name, out MetaMethod metaMethod);
+            return metaMethod;
         }
 
         // Arithmetic
@@ -75,6 +99,7 @@ namespace Wul.Interpreter
         public MetaMethod Xor { get; }
 
         // Bitwise
+        //TODO
 
         // Comparison
         public MetaMethod Equal { get; }

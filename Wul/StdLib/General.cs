@@ -106,12 +106,7 @@ namespace Wul.StdLib
         {
             var children = list.Children.Skip(1).ToArray();
 
-            IValue result = WulInterpreter.Interpret(children[0], scope) ?? Value.Nil;
-            while (result is SyntaxNode)
-            {
-                result = WulInterpreter.Interpret(result as SyntaxNode, scope) ?? Value.Nil;
-            }
-            return result;
+            return children[0].Eval(scope);
         }, "eval");
 
         internal static IFunction Coalesce = new NetFunction((list, scope) =>

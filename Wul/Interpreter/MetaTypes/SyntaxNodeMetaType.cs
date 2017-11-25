@@ -1,8 +1,12 @@
-﻿namespace Wul.Interpreter.MetaTypes
+﻿using Wul.Interpreter.Types;
+
+namespace Wul.Interpreter.MetaTypes
 {
     public class SyntaxNodeMetaType : MetaType
     {
-        //TODO as string
-        
+        public SyntaxNodeMetaType()
+        {
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+        }
     }
 }

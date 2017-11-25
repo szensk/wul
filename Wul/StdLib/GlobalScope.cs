@@ -21,10 +21,11 @@ namespace Wul.StdLib
             Scope["identity"] = General.Identity;
             Scope["??"] = General.Coalesce;
 
+            //MetaMethod
+            Scope["set-metamethod"] = MetaType.SetMetaType;
+
             //Interop
             Scope["::"] = Interop.CallFrameworkFunction;
-            //todo := to set property/field
-            //todo :: to get property/field
 
             //Comparison
             Scope["="] = Comparison.Equal;
