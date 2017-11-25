@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Wul.Interpreter;
 using Wul.Parser;
 
@@ -7,7 +8,7 @@ namespace Wul.StdLib
 {
     class Interop
     {
-        private static ILookup<string, Type> _allTypes = null;
+        private static ILookup<string, Type> _allTypes;
 
         private static ILookup<string, Type> AllTypes => _allTypes ?? (_allTypes = AppDomain.CurrentDomain.GetAssemblies()
                                                .SelectMany(a => a.GetTypes()).ToLookup(key => key.FullName));
@@ -19,12 +20,27 @@ namespace Wul.StdLib
             string className = name.Substring(0, lastDot);
             string methodName = name.Substring(lastDot + 1);
 
-            //TODO type not found handling
-            Type t = AllTypes[className].First();
+            var types = AllTypes[className];
             Type[] argTypes = arguments.Select(a => a.GetType()).ToArray();
 
-            //TODO if not a method
-            return t.GetMethod(methodName, argTypes).Invoke(null, arguments);
+            //TODO if not a method?
+            foreach (var type in types)
+            {
+                MethodInfo methodInfo = null;
+                try
+                {
+                    methodInfo = type.GetMethod(methodName, argTypes);
+                }
+                catch
+                {
+                    //We might want to display something
+                }
+                if (methodInfo != null)
+                {
+                    return methodInfo.Invoke(null, arguments);
+                }
+            }
+            return null;
         }
 
         internal static IFunction CallFrameworkFunction = new MagicNetFunction((list, scope) =>
