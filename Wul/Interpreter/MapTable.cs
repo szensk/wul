@@ -63,6 +63,11 @@ namespace Wul.Interpreter
             return "(" + string.Join(", ", _map.Select(s => $"{s.Key.AsString()}:{s.Value.AsString()}").ToList()) + ")";
         }
 
+        public object ToObject()
+        {
+            return _map;
+        }
+
         private static readonly MapMetaType metaType = new MapMetaType();
         public MetaType MetaType => metaType;
 

@@ -19,6 +19,11 @@ namespace Wul.StdLib
             Scope["lambda"] = General.Lambda;
             Scope["identity"] = General.Identity;
 
+            //Interop
+            Scope["::"] = Interop.CallFrameworkFunction;
+            //todo := to set property/field
+            //todo :: to get property/field
+
             //Comparison
             Scope["="] = Comparison.Equal;
             Scope["<"] = Comparison.LessThan;
@@ -46,9 +51,10 @@ namespace Wul.StdLib
             Scope["substring"] = String.Substring;
             Scope["lower"] = String.Lower;
             Scope["upper"] = String.Upper;
+            Scope["string"] = String.Stringify;
 
             //List
-            //Scope["concat"] = StdLib.List.Concat;
+            Scope["concat"] = String.Concat;
             Scope["first"] = List.First;
             Scope["last"] = List.Last;
             Scope["rem"] = List.Remainder;

@@ -99,5 +99,27 @@ namespace Unit.Test
 
             Assert.IsFalse(node.Interpolated);
         }
+
+        [TestMethod]
+        public void StringParser_ListShouldNotBeAString()
+        {
+            StringParser parser = new StringParser();
+            string token = "('hello {world}')";
+
+            StringNode node = (StringNode)parser.Parse(token);
+
+            Assert.IsNull(node);
+        }
+
+        [TestMethod]
+        public void StringParser_ListOfTwoShouldNotBeAString()
+        {
+            StringParser parser = new StringParser();
+            string token = "('hello' 'world')";
+
+            StringNode node = (StringNode)parser.Parse(token);
+
+            Assert.IsNull(node);
+        }
     }
 }

@@ -16,6 +16,8 @@ namespace Wul.Interpreter
 
             // Count
             Count.Method = new NetFunction(Length, Count.Name);
+
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
         }
 
         public IValue AreEqual(List<IValue> arguments, Scope s)

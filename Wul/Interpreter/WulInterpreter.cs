@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Wul.Parser;
 using Wul.StdLib;
@@ -98,21 +99,19 @@ namespace Wul.Interpreter
             bool isMagicFunction = value.MetaType?.InvokeMagic?.IsDefined ?? false;
             if (isFunction)
             {
-                IFunction function = (IFunction) value;
-                var remaining = list.Children.Skip(1);
-
-                var evaluatedRemaining = remaining
+                var evalutedList = list.Children
                     .Select(node => Interpret(node, currentScope))
                     .Where(v => v != null)
                     .ToList();
 
-                value = function.Evaluate(evaluatedRemaining, currentScope);
+                var function = value.MetaType.Invoke.Method;
+                value = function.Evaluate(evalutedList, currentScope);
             }
             else if (isMagicFunction)
             {
-                //Magic functions do not have their arguments 
-                IFunction function = (IFunction) value;
-                value = function.Execute(list, currentScope);
+                //Magic functions are passed syntax nodes, not fully evaluated arguments
+                var function = value.MetaType.InvokeMagic.Method;
+                value = function.Evaluate(new List<IValue>{value, list}, currentScope);
             }
             else
             {

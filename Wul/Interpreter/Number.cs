@@ -59,6 +59,11 @@ namespace Wul.Interpreter
             return $"{Value}";
         }
 
+        public object ToObject()
+        {
+            return Value;
+        }
+
         private static readonly NumberMetaType metaType = new NumberMetaType();
         public MetaType MetaType => metaType;
     }

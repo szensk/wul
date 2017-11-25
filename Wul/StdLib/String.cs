@@ -12,7 +12,7 @@ namespace Wul.StdLib
             return first.MetaType.Concat.Invoke(list, scope);
         }, "..");
 
-        internal static IFunction STring = new NetFunction((list, scope) =>
+        internal static IFunction Stringify = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
 

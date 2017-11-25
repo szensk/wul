@@ -23,7 +23,6 @@ namespace Wul.Parser
         private static readonly IdentifierParser identifierParser = new IdentifierParser();
         private static readonly NumericParser numericParser = new NumericParser();
         private static readonly StringParser stringParser = new StringParser();
-        private static readonly CommentParser commentParser = new CommentParser();
 
 
         public override SyntaxNode Parse(string token)

@@ -16,5 +16,10 @@ namespace Wul.Interpreter
         {
             return Value;
         }
+
+        public object ToObject()
+        {
+            return Value;
+        }
     }
 }

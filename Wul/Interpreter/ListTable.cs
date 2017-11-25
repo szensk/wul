@@ -72,6 +72,12 @@ namespace Wul.Interpreter
             return "(" + string.Join(", ", _list.Select(s => s.AsString()).ToList()) + ")";
         }
 
+        public object ToObject()
+        {
+            //TODO Not good
+            return _list.Select(i => i.ToObject()).ToArray();
+        }
+
         private static readonly ListMetaType metaType = new ListMetaType();
         public MetaType MetaType => metaType;
 

@@ -52,6 +52,12 @@ namespace Wul.Interpreter
             return $"Function[{Name}]";
         }
 
+        public object ToObject()
+        {
+            //TODO
+            return null;
+        }
+
         private static readonly FunctionMetaType metaType = new FunctionMetaType();
         public MetaType MetaType => metaType;
     }
@@ -103,6 +109,12 @@ namespace Wul.Interpreter
         private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
         public MetaType MetaType => metaType;
 
+        public object ToObject()
+        {
+            //TODO
+            return null;
+        }
+
         public string AsString()
         {
             return $"Function[{Name}]";
@@ -131,6 +143,12 @@ namespace Wul.Interpreter
         public virtual IValue Execute(ListNode list, Scope scope)
         {
             throw new NotImplementedException();
+        }
+
+        public object ToObject()
+        {
+            //TODO
+            return null;
         }
 
         public string AsString()
@@ -164,7 +182,13 @@ namespace Wul.Interpreter
         {
             return Body(list, scope);
         }
-        
+
+        public object ToObject()
+        {
+            //TODO
+            return null;
+        }
+
         public string AsString()
         {
             return $"Function[{Name}]";

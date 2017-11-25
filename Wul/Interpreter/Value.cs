@@ -1,4 +1,6 @@
-﻿namespace Wul.Interpreter
+﻿using System;
+
+namespace Wul.Interpreter
 {
     abstract class Value : IValue
     {
@@ -7,7 +9,12 @@
 
         public virtual string AsString()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        public virtual object ToObject()
+        {
+            throw new NotImplementedException();
         }
 
         public static Value Nil = new Nill();
@@ -18,6 +25,11 @@
         public override string AsString()
         {
             return "nil";
+        }
+
+        public override object ToObject()
+        {
+            return null;
         }
     }
 }

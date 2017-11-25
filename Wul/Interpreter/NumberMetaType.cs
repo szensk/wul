@@ -23,7 +23,7 @@ namespace Wul.Interpreter
             Compare.Method = new NetFunction(Comparison, Compare.Name);
 
             //Other
-            AsString.Method = new NetFunction(ConvertToString, AsString.Name);
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
         }
 
         public IValue DoAdd(List<IValue> arguments, Scope s)
@@ -129,13 +129,6 @@ namespace Wul.Interpreter
             if (first.Value < second.Value) result = -1;
             if (first.Value > second.Value) result = 1;
             return result;
-        }
-
-        public IValue ConvertToString(List<IValue> arguments, Scope s)
-        {
-            var first = (Number) arguments.First();
-
-            return new UString(first.AsString());
         }
     }
 }

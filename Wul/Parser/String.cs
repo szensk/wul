@@ -131,6 +131,7 @@ namespace Wul.Parser
         public override SyntaxNode Parse(string token)
         {
             if (token.Length < 2) return null;
+            if (token[0] != '\"' && token[0] != '\'') return null;
 
             bool interpolated = true;
 

@@ -6,5 +6,7 @@
         MetaType MetaType { get; }
 
         string AsString();
+
+        object ToObject();
     }
 }

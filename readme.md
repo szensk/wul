@@ -1,11 +1,19 @@
 wul
 ========
-A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. I wrote this simple lisp-like language without reading about interpreters. It's very bad as a result but I learned a lot.
+A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. I wrote this simple language before reading books about interpreters. It's quite odd as a result. The syntax is stolen from Lisp and a number of features are inspired by Lua.
 
 Overview
 ========
 There are only bools, strings, numbers, lists and functions. There are, however, two types of functions. Magic functions are passed syntax nodes rather than evaluated arguments. 
 They can evaluate their arguments at their leisure. Strings in single quotes are not subject to interpolation. Strings in double quotes are interpolated. 
+
+MetaTypes
+=========
+All types have a metatype. A metatype defines how a value interacts with default functions. You can define new or override existing functions in the metatype. For example, you can define the `Invoke` metamethod on a given list value. This allows that list instance to be used like a function. 
+
+Calling .NET Functions
+======================
+Use the `::` function to invoke a .NET method. 
 
 Examples
 =======
@@ -33,6 +41,11 @@ Examples
   )
 )
 
-(let +1 (lambda (a) (+ a 1)))
+(let +1 (lambda (a) (+ a 1))) ; +1 is a valid identifier not a number
 (apply +1 (1 2 3)) ; returns (2 3 4)
+```
+
+```lisp
+; Call a .NET function
+(:: System.String.Join (' ', ('a' 'b' 'c'))) ; returns ('a b c')
 ```

@@ -88,5 +88,19 @@ namespace Unit.Test
             //Assert
             Assert.AreEqual(3, node.Expressions.Count);
         }
+
+        [TestMethod]
+        public void ProgramParser_ListOfOne()
+        {
+            //Arrange
+            const string program = "(:: System.Console.WriteLine ('ok'))";
+            ProgramParser parser = new ProgramParser();
+
+            //Act
+            ProgramNode node = (ProgramNode)parser.Parse(program);
+
+            //Assert
+            Assert.AreEqual(1, node.Expressions.Count);
+        }
     }
 }

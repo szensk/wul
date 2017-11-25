@@ -8,6 +8,8 @@ namespace Wul.Interpreter
         public FunctionMetaType()
         {
             Invoke.Method = new NetFunction(InvokeFunction, Invoke.Name);
+
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
         }
 
         public IValue InvokeFunction(List<IValue> arguments, Scope s)
@@ -15,7 +17,5 @@ namespace Wul.Interpreter
             IFunction function = (IFunction) arguments[0];
             return function.Evaluate(arguments.Skip(1).ToList(), s);
         }
-
-        //TODO AsString
     }
 }
