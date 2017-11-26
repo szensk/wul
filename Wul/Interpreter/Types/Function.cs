@@ -8,11 +8,22 @@ namespace Wul.Interpreter.Types
 {
     public class FunctionType : WulType
     {
-        public FunctionType() : base("Function", typeof(Function))
+        public FunctionType() : base("Function", typeof(IFunction))
         {
         }
 
         public static readonly FunctionType Instance = new FunctionType();
+        public override MetaType DefaultMetaType => FunctionMetaType.Instance;
+    }
+
+    public class MagicFunctionType : WulType
+    {
+        public MagicFunctionType() : base("Function", typeof(IFunction))
+        {
+        }
+
+        public static readonly MagicFunctionType Instance = new MagicFunctionType();
+        public override MetaType DefaultMetaType => MagicFunctionMetaType.Instance;
     }
 
     class Function : IFunction
@@ -24,7 +35,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            MetaType = metaType;
+            MetaType = FunctionMetaType.Instance;
         }
 
         public string Name { get; }
@@ -71,7 +82,6 @@ namespace Wul.Interpreter.Types
             return null;
         }
 
-        private static readonly FunctionMetaType metaType = new FunctionMetaType();
         public MetaType MetaType { get; set; }
     }
 
@@ -84,7 +94,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            MetaType = metaType;
+            MetaType = MagicFunctionMetaType.Instance;
         }
 
         public string Name { get; }
@@ -120,10 +130,9 @@ namespace Wul.Interpreter.Types
             return result;
         }
 
-        private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
         public MetaType MetaType { get; set; }
 
-        public WulType Type => FunctionType.Instance;
+        public WulType Type => MagicFunctionType.Instance;
 
         public object ToObject()
         {
@@ -146,7 +155,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             ArgumentNames = null;
             Body = body;
-            MetaType = metaType;
+            MetaType = FunctionMetaType.Instance;
         }
 
         public string Name { get; }
@@ -175,7 +184,6 @@ namespace Wul.Interpreter.Types
             return $"Function[{Name}]";
         }
 
-        private static readonly FunctionMetaType metaType = new FunctionMetaType();
         public MetaType MetaType { get; set; }
     }
 
@@ -188,7 +196,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             ArgumentNames = null;
             Body = body;
-            MetaType = metaType;
+            MetaType = MagicFunctionMetaType.Instance;
         }
         public string Name { get; }
         public List<string> ArgumentNames { get; }
@@ -203,7 +211,7 @@ namespace Wul.Interpreter.Types
             return Body(list, scope);
         }
 
-        public WulType Type => FunctionType.Instance;
+        public WulType Type => MagicFunctionType.Instance;
 
         public object ToObject()
         {
@@ -216,7 +224,6 @@ namespace Wul.Interpreter.Types
             return $"Function[{Name}]";
         }
 
-        private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
         public MetaType MetaType { get; set; }
     }
 }

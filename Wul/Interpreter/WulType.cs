@@ -16,7 +16,10 @@ namespace Wul.Interpreter
             MetaType = TypeMetaType.Instance;
         }
 
+        //MetaType of WulType itself
         public MetaType MetaType { get; set; }
+
+        public abstract MetaType DefaultMetaType { get; }
 
         public WulType Type => null;
 

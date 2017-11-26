@@ -9,17 +9,17 @@ namespace Wul.Interpreter.Types
         }
 
         public static readonly StringType Instance = new StringType();
+        public override MetaType DefaultMetaType => StringMetaType.Instance;
     }
 
     public class UString : IValue
     {
-        private static readonly StringMetaType metaType = new StringMetaType();
         public MetaType MetaType { get; set; }
 
         public UString(string value)
         {
             Value = value;
-            MetaType = metaType;
+            MetaType = StringMetaType.Instance;
         }
 
         public string Value { get; }

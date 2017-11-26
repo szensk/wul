@@ -4,8 +4,10 @@ namespace Wul.Interpreter.MetaTypes
 {
     public class MapMetaType : MetaType
     {
+        public static readonly MapMetaType Instance = new MapMetaType();
+
         //TODO 
-        public MapMetaType()
+        private MapMetaType()
         {
             //AsString
             AsString.Method = new NetFunction(IdentityString, AsString.Name);

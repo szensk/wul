@@ -9,12 +9,11 @@ namespace Wul.Interpreter.Types
         }
 
         public static readonly BoolType Instance = new BoolType();
+        public override MetaType DefaultMetaType => BoolMetaType.Instance;
     }
 
     class Bool : IValue
     {
-        private static readonly BoolMetaType metaType = new BoolMetaType();
-
         public static Bool True = new Bool(true);
         public static Bool False = new Bool(false);
 
@@ -25,7 +24,7 @@ namespace Wul.Interpreter.Types
         private Bool(bool value)
         {
             Value = value;
-            MetaType = metaType;
+            MetaType = BoolMetaType.Instance;
         }
 
         public static implicit operator bool(Bool b)

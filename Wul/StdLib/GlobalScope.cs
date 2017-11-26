@@ -18,6 +18,7 @@ namespace Wul.StdLib
             Scope["Map"] = MapType.Instance;
             Scope["String"] = StringType.Instance;
             Scope["Function"] = FunctionType.Instance;
+            Scope["SyntaxNode"] = SyntaxNodeType.Instance;
 
             //General
             Scope["nil"] = Value.Nil; //unnecessary as anything undefined will return nil as well

@@ -10,6 +10,7 @@ namespace Wul.Interpreter.Types
         }
 
         public static readonly NumberType Instance = new NumberType();
+        public override MetaType DefaultMetaType => NumberMetaType.Instance;
     }
 
     class Number : IValue
@@ -33,13 +34,13 @@ namespace Wul.Interpreter.Types
         private Number(int i)
         {
             Value = (double) i;
-            MetaType = metaType;
+            MetaType = NumberMetaType.Instance;
         }
 
         private Number(double d)
         {
             Value = d;
-            MetaType = metaType;
+            MetaType = NumberMetaType.Instance;
         }
 
         // Conversions
@@ -77,8 +78,6 @@ namespace Wul.Interpreter.Types
             return Value;
         }
 
-        //TODO do the same for other types
-        private static readonly NumberMetaType metaType = new NumberMetaType();
         public MetaType MetaType { get; set; }
     }
 }

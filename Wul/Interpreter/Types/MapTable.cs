@@ -12,6 +12,7 @@ namespace Wul.Interpreter.Types
         }
 
         public static readonly MapType Instance = new MapType();
+        public override MetaType DefaultMetaType => MapMetaType.Instance;
     }
 
     class MapTable : IValue
@@ -21,7 +22,7 @@ namespace Wul.Interpreter.Types
         public MapTable()
         {
             _map = new Dictionary<IValue, IValue>();
-            MetaType = metaType;
+            MetaType = MapMetaType.Instance;
         }
 
         public MapTable(ListTable list)
@@ -31,7 +32,7 @@ namespace Wul.Interpreter.Types
             {
                 _map.Add(i, list[i]);
             }
-            MetaType = metaType;
+            MetaType = MapMetaType.Instance;
         }
 
         public MapTable(object o)
@@ -82,7 +83,6 @@ namespace Wul.Interpreter.Types
             return _map;
         }
 
-        private static readonly MapMetaType metaType = new MapMetaType();
         public MetaType MetaType { get; set; }
 
         public IValue this[IValue key]

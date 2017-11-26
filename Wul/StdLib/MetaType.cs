@@ -1,4 +1,5 @@
-﻿using Wul.Interpreter.Types;
+﻿using Wul.Interpreter;
+using Wul.Interpreter.Types;
 using Wul.Parser;
 
 namespace Wul.StdLib
@@ -13,12 +14,21 @@ namespace Wul.StdLib
 
             string metaMethodName = identifier.Name;
 
-            var newMetaType = first.MetaType.Clone();
+            if (first is WulType type)
+            {
+                var metaMethod = type.DefaultMetaType.Get(metaMethodName);
+                metaMethod.Method = function;
+            }
+            else
+            {
+                //Set the metamethod on the value
+                var newMetaType = first.MetaType.Clone();
 
-            var metaMethod = newMetaType.Get(metaMethodName);
-            metaMethod.Method = function;
+                var metaMethod = newMetaType.Get(metaMethodName);
+                metaMethod.Method = function;
 
-            first.MetaType = newMetaType;
+                first.MetaType = newMetaType;
+            }
 
             return Value.Nil;
         }, "set-metamethod");

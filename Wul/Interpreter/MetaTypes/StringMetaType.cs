@@ -6,7 +6,9 @@ namespace Wul.Interpreter.MetaTypes
 {
     public class StringMetaType : MetaType
     {
-        public StringMetaType()
+        public static readonly StringMetaType Instance = new StringMetaType();
+
+        private StringMetaType()
         {
             // Comparison
             Equal.Method = new NetFunction(AreEqual, Equal.Name);

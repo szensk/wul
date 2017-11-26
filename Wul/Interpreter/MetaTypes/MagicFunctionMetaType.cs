@@ -6,7 +6,9 @@ namespace Wul.Interpreter.MetaTypes
 {
     public class MagicFunctionMetaType : MetaType
     {
-        public MagicFunctionMetaType()
+        public static readonly MagicFunctionMetaType Instance = new MagicFunctionMetaType();
+
+        private MagicFunctionMetaType()
         {
             InvokeMagic.Method = new NetFunction(InvokeMagicFunction, InvokeMagic.Name);
 

@@ -6,7 +6,9 @@ namespace Wul.Interpreter.MetaTypes
 {
     public class FunctionMetaType : MetaType
     {
-        public FunctionMetaType()
+        public static readonly FunctionMetaType Instance = new FunctionMetaType();
+
+        private FunctionMetaType()
         {
             Invoke.Method = new NetFunction(InvokeFunction, Invoke.Name);
 

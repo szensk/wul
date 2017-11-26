@@ -57,8 +57,14 @@ Examples
 
 (def join-numbers (a b) (.. (string a) (string b)))
 
+; Set the metamethod on a value
 (set-metamethod 2 .. join-numbers)
 
 (.. 2 3) ; returns '23'
 (.. 3 2) ; error, unable to call concat on type number
+
+; Set the metamethod on a type
+(set-metamethod Number .. join-numbers)
+(.. 3 2) ; returns '32'
+
 ```
