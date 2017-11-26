@@ -7,7 +7,9 @@ namespace Wul.Parser
     public abstract class SyntaxNode : IValue
     {
         private static readonly SyntaxNodeMetaType metaType = new SyntaxNodeMetaType();
-        public MetaType MetaType => metaType;
+        public MetaType ValueMetaType { get; set; } = metaType;
+        public MetaType MetaType => ValueMetaType;
+        
         public abstract string AsString();
 
         public object ToObject()

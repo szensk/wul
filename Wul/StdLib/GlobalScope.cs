@@ -20,6 +20,7 @@ namespace Wul.StdLib
             Scope["lambda"] = General.Lambda;
             Scope["identity"] = General.Identity;
             Scope["??"] = General.Coalesce;
+            Scope["type"] = General.Type;
 
             //MetaMethod
             Scope["set-metamethod"] = MetaType.SetMetaType;
@@ -30,6 +31,10 @@ namespace Wul.StdLib
             //Comparison
             Scope["="] = Comparison.Equal;
             Scope["<"] = Comparison.LessThan;
+            Scope["<="] = Comparison.LessThanEqualTo;
+            Scope[">"] = Comparison.GreaterThan;
+            Scope[">="] = Comparison.GreaterThanEqualTo;
+            Scope["compare"] = Comparison.Compare;
 
             //Conditional
             Scope["if"] = General.If;
@@ -48,6 +53,9 @@ namespace Wul.StdLib
             Scope["+"] = Arithmetic.Add;
             Scope["-"] = Arithmetic.Subtract;
             Scope["*"] = Arithmetic.Multiply;
+            Scope["/"] = Arithmetic.Divide;
+            Scope["%"] = Arithmetic.Modulus;
+            Scope["**"] = Arithmetic.Power;
 
             //String
             Scope[".."] = String.Concat;
@@ -69,6 +77,9 @@ namespace Wul.StdLib
             //Logical
             Scope["!"] = Logical.Not;
             Scope["not"] = Logical.Not;
+            Scope["or"] = Logical.Or;
+            Scope["and"] = Logical.And;
+            Scope["xor"] = Logical.Xor;
         }
     }
 }

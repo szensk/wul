@@ -122,5 +122,12 @@ namespace Wul.StdLib
                 return Value.Nil;
             }
         }, "??");
+
+        internal static IFunction Type = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            return first.MetaType.Type.Invoke(list, scope);
+        }, "type");
     }
 }

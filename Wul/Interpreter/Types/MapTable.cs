@@ -12,6 +12,7 @@ namespace Wul.Interpreter.Types
         public MapTable()
         {
             _map = new Dictionary<IValue, IValue>();
+            ValueMetaType = metaType;
         }
 
         public MapTable(ListTable list)
@@ -21,6 +22,7 @@ namespace Wul.Interpreter.Types
             {
                 _map.Add(i, list[i]);
             }
+            ValueMetaType = metaType;
         }
 
         public MapTable(object o)
@@ -70,7 +72,8 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly MapMetaType metaType = new MapMetaType();
-        public MetaType MetaType => metaType;
+        public MetaType ValueMetaType { get; set; }
+        public MetaType MetaType => ValueMetaType;
 
         public IValue this[IValue key]
         {

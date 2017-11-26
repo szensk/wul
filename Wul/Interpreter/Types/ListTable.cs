@@ -11,16 +11,19 @@ namespace Wul.Interpreter.Types
         public ListTable()
         {
             _list = new List<IValue>();
+            ValueMetaType = metaType;
         }
 
         public ListTable(IValue[] array)
         {
             _list = array.ToList();
+            ValueMetaType = metaType;
         }
 
         public ListTable(IEnumerable<IValue> enumerable)
         {
             _list = enumerable.ToList();
+            ValueMetaType = metaType;
         }
 
         public List<IValue> AsList()
@@ -43,13 +46,11 @@ namespace Wul.Interpreter.Types
 
         public void Add(IValue key, IValue value)
         {
-            //TODO check if need to convert to MapTable
             _list.Add(value);
         }
 
         protected void Remove(IValue key)
         {
-            //TODO check if need to convert to MapTable
             _list.RemoveAt((Number)key);
         }
 
@@ -75,12 +76,13 @@ namespace Wul.Interpreter.Types
 
         public object ToObject()
         {
-            //TODO Not good
+            //TODO Not ideal
             return _list.Select(i => i.ToObject()).ToArray();
         }
 
         private static readonly ListMetaType metaType = new ListMetaType();
-        public MetaType MetaType => metaType;
+        public MetaType ValueMetaType { get; set; }
+        public MetaType MetaType => ValueMetaType;
 
         public IValue this[IValue key]
         {

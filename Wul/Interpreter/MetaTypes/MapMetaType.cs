@@ -9,6 +9,7 @@ namespace Wul.Interpreter.MetaTypes
         {
             //AsString
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
         }
     }
 }

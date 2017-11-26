@@ -5,11 +5,13 @@ namespace Wul.Interpreter.Types
     public class UString : IValue
     {
         private static readonly StringMetaType metaType = new StringMetaType();
-        public MetaType MetaType => metaType;
+        public MetaType ValueMetaType { get; set; }
+        public MetaType MetaType => ValueMetaType;
 
         public UString(string value)
         {
             Value = value;
+            ValueMetaType = metaType;
         }
 
         public string Value { get; }

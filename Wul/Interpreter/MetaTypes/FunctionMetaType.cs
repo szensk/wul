@@ -11,6 +11,7 @@ namespace Wul.Interpreter.MetaTypes
             Invoke.Method = new NetFunction(InvokeFunction, Invoke.Name);
 
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
         }
 
         public IValue InvokeFunction(List<IValue> arguments, Scope s)

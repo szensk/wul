@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
@@ -26,5 +25,26 @@ namespace Wul.StdLib
 
             return first.MetaType.Multiply.Invoke(list, scope);
         }, "*");
+
+        internal static IFunction Divide = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            return first.MetaType.Divide.Invoke(list, scope);
+        }, "/");
+
+        internal static IFunction Modulus = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            return first.MetaType.Modulus.Invoke(list, scope);
+        }, "%");
+
+        internal static IFunction Power = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            return first.MetaType.Power.Invoke(list, scope);
+        }, "**");
     }
 }

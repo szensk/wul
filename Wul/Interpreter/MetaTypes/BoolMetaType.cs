@@ -22,6 +22,7 @@ namespace Wul.Interpreter.MetaTypes
 
             //String
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
         }
 
         public IValue DoNot(List<IValue> arguments, Scope s)

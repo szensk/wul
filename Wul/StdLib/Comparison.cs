@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
@@ -50,5 +49,12 @@ namespace Wul.StdLib
 
             return value == 1 || value == 0 ? Bool.True : Bool.False;
         }, ">=");
+
+        internal static IFunction Compare = new NetFunction((list, scope) =>
+        {
+            IValue first = list.First();
+
+            return first.MetaType.Compare.Invoke(list, scope);
+        }, "compare");
     }
 }

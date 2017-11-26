@@ -24,13 +24,13 @@ namespace Wul.Interpreter.Types
         private Number(int i)
         {
             Value = (double) i;
-            valueMetaType = metaType;
+            ValueMetaType = metaType;
         }
 
         private Number(double d)
         {
             Value = d;
-            valueMetaType = metaType;
+            ValueMetaType = metaType;
         }
 
         // Conversions
@@ -67,8 +67,9 @@ namespace Wul.Interpreter.Types
             return Value;
         }
 
+        //TODO do the same for other types
         private static readonly NumberMetaType metaType = new NumberMetaType();
-        public MetaType valueMetaType { get; set; }
-        public MetaType MetaType => valueMetaType;
+        public MetaType ValueMetaType { get; set; }
+        public MetaType MetaType => ValueMetaType;
     }
 }

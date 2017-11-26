@@ -2,7 +2,10 @@
 {
     public interface IValue
     {
-        //All metamethods go here
+        //Meta-type for this value
+        MetaType ValueMetaType { get; set; }
+        
+        //Meta-type
         MetaType MetaType { get; }
 
         string AsString();

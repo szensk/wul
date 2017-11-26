@@ -42,7 +42,6 @@ namespace Wul.Parser
 
         public override SyntaxNode Parse(string token)
         {
-            //TODO make a tokenizer to remove all this junk
             string program = token.Trim();
 
             if (program == "")
@@ -50,7 +49,6 @@ namespace Wul.Parser
                 return new ProgramNode(new List<ListNode>());
             }
 
-            //TODO use the list parser here
             List<ListNode> expressions = new List<ListNode>();
             int currentIndex = 0;
             int openParenthesis = 0;

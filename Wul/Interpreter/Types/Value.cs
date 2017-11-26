@@ -4,7 +4,8 @@ namespace Wul.Interpreter.Types
 {
     abstract class Value : IValue
     {
-        //TODO do we want a nil meta type?
+        //TODO do I want a nil meta type?
+        public MetaType ValueMetaType { get; set; } = null;
         public MetaType MetaType => null;
 
         public virtual string AsString()

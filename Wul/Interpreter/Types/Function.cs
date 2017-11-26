@@ -15,6 +15,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
+            ValueMetaType = metaType;
         }
 
         public string Name { get; }
@@ -60,7 +61,8 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly FunctionMetaType metaType = new FunctionMetaType();
-        public MetaType MetaType => metaType;
+        public MetaType ValueMetaType { get; set; }
+        public MetaType MetaType => ValueMetaType;
     }
 
     class MagicFunction : IFunction
@@ -72,6 +74,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
+            ValueMetaType = metaType;
         }
 
         public string Name { get; }
@@ -108,7 +111,8 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
-        public MetaType MetaType => metaType;
+        public MetaType ValueMetaType { get; set; }
+        public MetaType MetaType => ValueMetaType;
 
         public object ToObject()
         {
@@ -131,6 +135,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             ArgumentNames = null;
             Body = body;
+            ValueMetaType = metaType;
         }
 
         public string Name { get; }
@@ -158,7 +163,8 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly FunctionMetaType metaType = new FunctionMetaType();
-        public MetaType MetaType => metaType;
+        public MetaType ValueMetaType { get; set; }
+        public MetaType MetaType => ValueMetaType;
     }
 
     class MagicNetFunction : IFunction
@@ -170,6 +176,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             ArgumentNames = null;
             Body = body;
+            ValueMetaType = metaType;
         }
         public string Name { get; }
         public List<string> ArgumentNames { get; }
@@ -196,6 +203,7 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
-        public MetaType MetaType => metaType;
+        public MetaType ValueMetaType { get; set; }
+        public MetaType MetaType => ValueMetaType;
     }
 }

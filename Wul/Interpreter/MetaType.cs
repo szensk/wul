@@ -22,6 +22,12 @@ namespace Wul.Interpreter
             Name = name;
         }
 
+        public MetaMethod(MetaMethod other)
+        {
+            Method = other.Method;
+            Name = other.Name;
+        }
+
         public IValue Invoke(List<IValue> arguments, Scope s)
         {
             IValue lhs = arguments.First();
@@ -57,25 +63,61 @@ namespace Wul.Interpreter
             Invoke = new MetaMethod("()");
             InvokeMagic = new MetaMethod("@()");
             AsString = new MetaMethod("string");
+            Type = new MetaMethod("type");
 
+            InitializeDictionary();
+        }
+
+        //Surely there is a better way
+        public MetaType Clone()
+        {
+            var clone = (MetaType) MemberwiseClone();
+
+            clone.Add = new MetaMethod(Add);
+            clone.Subtract = new MetaMethod(Subtract);
+            clone.Multiply = new MetaMethod(Multiply);
+            clone.Divide = new MetaMethod(Divide);
+            clone.Modulus = new MetaMethod(Modulus);
+            clone.Power = new MetaMethod(Power);
+
+            clone.Not = new MetaMethod(Not);
+            clone.And = new MetaMethod(And);
+            clone.Or = new MetaMethod(Or);
+            clone.Xor = new MetaMethod(Xor);
+
+            clone.Equal = new MetaMethod(Equal);
+            clone.Compare = new MetaMethod(Compare);
+
+            clone.At = new MetaMethod(At);
+            clone.Remainder = new MetaMethod(Remainder);
+            clone.Count = new MetaMethod(Count);
+            clone.Concat = new MetaMethod(Concat);
+
+            clone.Invoke = new MetaMethod(Invoke);
+            clone.InvokeMagic = new MetaMethod(InvokeMagic);
+            clone.AsString = new MetaMethod(AsString);
+            clone.Type = new MetaMethod(Type);
+
+            clone.InitializeDictionary();
+
+            return clone;
+        }
+
+        private void InitializeDictionary()
+        {
             var metaMethodList = new List<MetaMethod>
             {
                 Add, Subtract, Multiply, Divide, Modulus, Power,
                 Not, And, Or, Xor,
                 Equal, Compare,
                 At, Remainder, Count, Concat,
-                Invoke, InvokeMagic, AsString
+                Invoke, InvokeMagic, AsString, Type
             };
 
             _metaMethods = metaMethodList.ToDictionary(key => key.Name);
         }
 
-        public MetaType Clone()
-        {
-            return (MetaType) MemberwiseClone();
-        }
-
-        private readonly Dictionary<string, MetaMethod> _metaMethods;
+        private Dictionary<string, MetaMethod> _metaMethods;
 
         public MetaMethod Get(string name)
         {
@@ -84,37 +126,38 @@ namespace Wul.Interpreter
         }
 
         // Arithmetic
-        public MetaMethod Add { get; }
-        public MetaMethod Subtract { get; }
-        public MetaMethod Multiply { get; }
-        public MetaMethod Divide { get; }
-        public MetaMethod Modulus { get; }
-        public MetaMethod Power { get; }
-        //public MetaMethod IntegerDivide { get; }
+        public MetaMethod Add { get; private set; }
+        public MetaMethod Subtract { get; private set; }
+        public MetaMethod Multiply { get; private set; }
+        public MetaMethod Divide { get; private set; }
+        public MetaMethod Modulus { get; private set; }
+        public MetaMethod Power { get; private set; }
+        //public MetaMethod IntegerDivide { get; private set; }
         
         // Logical
-        public MetaMethod Not { get; }
-        public MetaMethod And { get; }
-        public MetaMethod Or { get; }
-        public MetaMethod Xor { get; }
+        public MetaMethod Not { get; private set; }
+        public MetaMethod And { get; private set; }
+        public MetaMethod Or { get; private set; }
+        public MetaMethod Xor { get; private set; }
 
         // Bitwise
         //TODO
 
         // Comparison
-        public MetaMethod Equal { get; }
-        public MetaMethod Compare { get; }
+        public MetaMethod Equal { get; private set; }
+        public MetaMethod Compare { get; private set; }
 
         // List
-        public MetaMethod At { get; }
-        public MetaMethod Remainder { get; }
-        public MetaMethod Count { get; }
-        public MetaMethod Concat { get; }
+        public MetaMethod At { get; private set; }
+        public MetaMethod Remainder { get; private set; }
+        public MetaMethod Count { get; private set; }
+        public MetaMethod Concat { get; private set; }
 
         // Other
-        public MetaMethod Invoke { get; }
-        public MetaMethod InvokeMagic { get; }
-        public MetaMethod AsString { get; }
+        public MetaMethod Invoke { get; private set; }
+        public MetaMethod InvokeMagic { get; private set; }
+        public MetaMethod AsString { get; private set; }
+        public MetaMethod Type { get; private set; }
 
         protected IValue IdentityEqual (List<IValue> arguments, Scope s)
         {
@@ -127,6 +170,12 @@ namespace Wul.Interpreter
         {
             IValue first = arguments.First();
             return new UString(first.AsString());
+        }
+
+        protected IValue IdentityType(List<IValue> arguments, Scope s)
+        {
+            IValue first = arguments.First();
+            return new UString(first.GetType().Name);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Wul.Interpreter.MetaTypes
             InvokeMagic.Method = new NetFunction(InvokeMagicFunction, InvokeMagic.Name);
 
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
         }
 
         public IValue InvokeMagicFunction(List<IValue> arguments, Scope s)

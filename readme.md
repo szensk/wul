@@ -53,11 +53,12 @@ Examples
 
 ```lisp
 ; Metamethods
-; By default the concat operator .. does not work on strings
+; By default the concat operator .. does not work on numbers
 
 (def join-numbers (a b) (.. (string a) (string b)))
 
-(set-metamethod 0 .. join-numbers)
+(set-metamethod 2 .. join-numbers)
 
 (.. 2 3) ; returns '23'
+(.. 3 2) ; error, unable to call concat on type number
 ```
