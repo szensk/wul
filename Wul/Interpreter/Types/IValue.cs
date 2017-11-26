@@ -1,12 +1,11 @@
 ﻿namespace Wul.Interpreter.Types
 {
     public interface IValue
-    {
-        //Meta-type for this value
-        MetaType ValueMetaType { get; set; }
-        
+    {    
         //Meta-type
-        MetaType MetaType { get; }
+        MetaType MetaType { get; set; }
+
+        WulType Type { get; }
 
         string AsString();
 

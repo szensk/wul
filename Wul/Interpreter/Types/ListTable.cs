@@ -4,6 +4,15 @@ using Wul.Interpreter.MetaTypes;
 
 namespace Wul.Interpreter.Types
 {
+    public class ListType : WulType
+    {
+        public ListType() : base("List", typeof(ListTable))
+        {
+        }
+
+        public static readonly ListType Instance = new ListType();
+    }
+
     class ListTable : IValue
     {
         private readonly List<IValue> _list;
@@ -11,19 +20,19 @@ namespace Wul.Interpreter.Types
         public ListTable()
         {
             _list = new List<IValue>();
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         public ListTable(IValue[] array)
         {
             _list = array.ToList();
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         public ListTable(IEnumerable<IValue> enumerable)
         {
             _list = enumerable.ToList();
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         public List<IValue> AsList()
@@ -68,6 +77,8 @@ namespace Wul.Interpreter.Types
 
         public Number Count => _list.Count;
 
+        public WulType Type => ListType.Instance;
+
         public string AsString()
         {
             //TODO call as string metamethod
@@ -81,8 +92,7 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly ListMetaType metaType = new ListMetaType();
-        public MetaType ValueMetaType { get; set; }
-        public MetaType MetaType => ValueMetaType;
+        public MetaType MetaType { get; set; }
 
         public IValue this[IValue key]
         {

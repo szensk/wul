@@ -4,12 +4,23 @@ using Wul.Interpreter.Types;
 
 namespace Wul.Parser
 {
+    public class SyntaxNodeType : WulType
+    {
+        public SyntaxNodeType() : base("SyntaxNode", typeof(SyntaxNode))
+        {
+            
+        }
+
+        public static readonly SyntaxNodeType Instance = new SyntaxNodeType();
+    }
+
     public abstract class SyntaxNode : IValue
     {
         private static readonly SyntaxNodeMetaType metaType = new SyntaxNodeMetaType();
-        public MetaType ValueMetaType { get; set; } = metaType;
-        public MetaType MetaType => ValueMetaType;
-        
+        public MetaType MetaType { get; set; } = metaType;
+
+        public WulType Type => SyntaxNodeType.Instance;
+
         public abstract string AsString();
 
         public object ToObject()

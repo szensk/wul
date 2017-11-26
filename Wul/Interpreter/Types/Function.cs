@@ -6,6 +6,15 @@ using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
+    public class FunctionType : WulType
+    {
+        public FunctionType() : base("Function", typeof(Function))
+        {
+        }
+
+        public static readonly FunctionType Instance = new FunctionType();
+    }
+
     class Function : IFunction
     {
         public ListNode Body;
@@ -15,7 +24,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         public string Name { get; }
@@ -49,6 +58,8 @@ namespace Wul.Interpreter.Types
             throw new NotImplementedException();
         }
 
+        public WulType Type => FunctionType.Instance;
+
         public string AsString()
         {
             return $"Function[{Name}]";
@@ -61,8 +72,7 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly FunctionMetaType metaType = new FunctionMetaType();
-        public MetaType ValueMetaType { get; set; }
-        public MetaType MetaType => ValueMetaType;
+        public MetaType MetaType { get; set; }
     }
 
     class MagicFunction : IFunction
@@ -74,7 +84,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         public string Name { get; }
@@ -111,8 +121,9 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
-        public MetaType ValueMetaType { get; set; }
-        public MetaType MetaType => ValueMetaType;
+        public MetaType MetaType { get; set; }
+
+        public WulType Type => FunctionType.Instance;
 
         public object ToObject()
         {
@@ -135,7 +146,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             ArgumentNames = null;
             Body = body;
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         public string Name { get; }
@@ -151,6 +162,8 @@ namespace Wul.Interpreter.Types
             throw new NotImplementedException();
         }
 
+        public WulType Type => FunctionType.Instance;
+
         public object ToObject()
         {
             //TODO
@@ -163,8 +176,7 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly FunctionMetaType metaType = new FunctionMetaType();
-        public MetaType ValueMetaType { get; set; }
-        public MetaType MetaType => ValueMetaType;
+        public MetaType MetaType { get; set; }
     }
 
     class MagicNetFunction : IFunction
@@ -176,7 +188,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             ArgumentNames = null;
             Body = body;
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
         public string Name { get; }
         public List<string> ArgumentNames { get; }
@@ -191,6 +203,8 @@ namespace Wul.Interpreter.Types
             return Body(list, scope);
         }
 
+        public WulType Type => FunctionType.Instance;
+
         public object ToObject()
         {
             //TODO
@@ -203,7 +217,6 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly MagicFunctionMetaType metaType = new MagicFunctionMetaType();
-        public MetaType ValueMetaType { get; set; }
-        public MetaType MetaType => ValueMetaType;
+        public MetaType MetaType { get; set; }
     }
 }

@@ -5,6 +5,15 @@ using Wul.Interpreter.MetaTypes;
 
 namespace Wul.Interpreter.Types
 {
+    public class MapType : WulType
+    {
+        public MapType() : base("Map", typeof(MapType))
+        {
+        }
+
+        public static readonly MapType Instance = new MapType();
+    }
+
     class MapTable : IValue
     {
         private readonly Dictionary<IValue, IValue> _map;
@@ -12,7 +21,7 @@ namespace Wul.Interpreter.Types
         public MapTable()
         {
             _map = new Dictionary<IValue, IValue>();
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         public MapTable(ListTable list)
@@ -22,7 +31,7 @@ namespace Wul.Interpreter.Types
             {
                 _map.Add(i, list[i]);
             }
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         public MapTable(object o)
@@ -60,6 +69,8 @@ namespace Wul.Interpreter.Types
 
         public Number Count => _map.Count;
 
+        public WulType Type => MapType.Instance;
+
         public string AsString()
         {
             //TODO call as string metamethod
@@ -72,8 +83,7 @@ namespace Wul.Interpreter.Types
         }
 
         private static readonly MapMetaType metaType = new MapMetaType();
-        public MetaType ValueMetaType { get; set; }
-        public MetaType MetaType => ValueMetaType;
+        public MetaType MetaType { get; set; }
 
         public IValue this[IValue key]
         {

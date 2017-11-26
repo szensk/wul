@@ -3,6 +3,15 @@ using Wul.Interpreter.MetaTypes;
 
 namespace Wul.Interpreter.Types
 {
+    public class NumberType : WulType
+    {
+        public NumberType() : base("Number", typeof(Number))
+        {
+        }
+
+        public static readonly NumberType Instance = new NumberType();
+    }
+
     class Number : IValue
     {
         #region Static Methods
@@ -24,13 +33,13 @@ namespace Wul.Interpreter.Types
         private Number(int i)
         {
             Value = (double) i;
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         private Number(double d)
         {
             Value = d;
-            ValueMetaType = metaType;
+            MetaType = metaType;
         }
 
         // Conversions
@@ -56,7 +65,8 @@ namespace Wul.Interpreter.Types
             }
         }
 
-        // Comparisons
+        public WulType Type => NumberType.Instance;
+
         public string AsString()
         {
             return $"{Value}";
@@ -69,7 +79,6 @@ namespace Wul.Interpreter.Types
 
         //TODO do the same for other types
         private static readonly NumberMetaType metaType = new NumberMetaType();
-        public MetaType ValueMetaType { get; set; }
-        public MetaType MetaType => ValueMetaType;
+        public MetaType MetaType { get; set; }
     }
 }

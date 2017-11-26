@@ -18,7 +18,7 @@ namespace Wul.StdLib
             var metaMethod = newMetaType.Get(metaMethodName);
             metaMethod.Method = function;
 
-            first.ValueMetaType = newMetaType;
+            first.MetaType = newMetaType;
 
             return Value.Nil;
         }, "set-metamethod");
