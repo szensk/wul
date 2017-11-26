@@ -60,8 +60,8 @@ namespace Wul.Interpreter
             Count = new MetaMethod("len");
             Concat = new MetaMethod("..");
 
-            Invoke = new MetaMethod("()");
-            InvokeMagic = new MetaMethod("@()");
+            Invoke = new MetaMethod("invoke");
+            InvokeMagic = new MetaMethod("@invoke");
             AsString = new MetaMethod("string");
             Type = new MetaMethod("type");
 
