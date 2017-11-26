@@ -11,6 +11,14 @@ namespace Wul.StdLib
 
         public static void RegisterDefaultFunctions()
         {
+            //Types
+            Scope["Bool"] = BoolType.Instance;
+            Scope["Number"] = NumberType.Instance;
+            Scope["List"] = ListType.Instance;
+            Scope["Map"] = MapType.Instance;
+            Scope["String"] = StringType.Instance;
+            Scope["Function"] = FunctionType.Instance;
+
             //General
             Scope["nil"] = Value.Nil; //unnecessary as anything undefined will return nil as well
             Scope["let"] = General.Let;
@@ -21,6 +29,7 @@ namespace Wul.StdLib
             Scope["identity"] = General.Identity;
             Scope["??"] = General.Coalesce;
             Scope["type"] = General.Type;
+            Scope["quote"] = General.Quote;
 
             //MetaMethod
             Scope["set-metamethod"] = MetaType.SetMetaType;

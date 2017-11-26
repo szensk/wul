@@ -1,4 +1,5 @@
 ﻿using System;
+using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
 
 namespace Wul.Interpreter
@@ -12,9 +13,9 @@ namespace Wul.Interpreter
         {
             Name = name;
             RawType = type;
+            MetaType = TypeMetaType.Instance;
         }
 
-        //TODO TypeMetaType oof
         public MetaType MetaType { get; set; }
 
         public WulType Type => null;

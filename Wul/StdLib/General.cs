@@ -129,5 +129,12 @@ namespace Wul.StdLib
 
             return first.MetaType.Type.Invoke(list, scope);
         }, "type");
+
+        internal static IFunction Quote = new MagicNetFunction((list, scope) =>
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            return children[0];
+        }, "quote");
     }
 }

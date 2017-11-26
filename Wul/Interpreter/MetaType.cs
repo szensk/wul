@@ -175,7 +175,7 @@ namespace Wul.Interpreter
         protected IValue IdentityType(List<IValue> arguments, Scope s)
         {
             IValue first = arguments.First();
-            return first.Type;
+            return (IValue) first.Type ?? Value.Nil;
         }
     }
 }
