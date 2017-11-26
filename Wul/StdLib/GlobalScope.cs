@@ -22,9 +22,9 @@ namespace Wul.StdLib
 
             //General
             Scope["nil"] = Value.Nil; //unnecessary as anything undefined will return nil as well
-            Scope["let"] = General.Let;
             Scope["def"] = General.Define;
-            Scope["@def"] = General.DefineMagicFunction;
+            Scope["defn"] = General.DefineFunction;
+            Scope["@defn"] = General.DefineMagicFunction;
             Scope["eval"] = General.Evaluate;
             Scope["lambda"] = General.Lambda;
             Scope["identity"] = General.Identity;

@@ -9,7 +9,7 @@ namespace Wul.StdLib
     {
         internal static IFunction Identity = new NetFunction((list, scope) => list.FirstOrDefault() ?? Value.Nil, "identity");
 
-        internal static IFunction Let = new MagicNetFunction((list, scope) =>
+        internal static IFunction Define = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
             var nameIdentifier = (IdentifierNode) children[0];
@@ -17,9 +17,9 @@ namespace Wul.StdLib
             var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
             scope[name] = value;
             return value;
-        }, "let");
+        }, "def");
 
-        internal static IFunction Define = new MagicNetFunction((list, scope) =>
+        internal static IFunction DefineFunction = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
 
@@ -34,7 +34,7 @@ namespace Wul.StdLib
             scope[name] = function;
 
             return function;
-        }, "def");
+        }, "defn");
 
         internal static IFunction Lambda = new MagicNetFunction((list, scope) =>
         {
@@ -64,7 +64,7 @@ namespace Wul.StdLib
             scope[name] = function;
 
             return function;
-        }, "def!");
+        }, "@defn");
 
         internal static IFunction Then = new NetFunction((list, scope) =>
         {

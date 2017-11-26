@@ -19,7 +19,7 @@ Use the `::` function to invoke a .NET method.
 Examples
 =======
 ```lisp
-(def fact (a) 
+(defn fact (a) 
   (if (< a 2) 
     (then 1)
     (else (* a (fact (- a 1))))
@@ -30,7 +30,7 @@ Examples
 ```
 
 ```lisp
-(def apply (func list)
+(defn apply (func list)
   (if (empty? list) 
     (then list) 
     (else 
@@ -42,7 +42,7 @@ Examples
   )
 )
 
-(let +1 (lambda (a) (+ a 1))) ; +1 is a valid identifier not a number
+(def +1 (lambda (a) (+ a 1))) ; +1 is a valid identifier not a number
 (apply +1 (1 2 3)) ; returns (2 3 4)
 ```
 
@@ -52,10 +52,12 @@ Examples
 ```
 
 ```lisp
-; Metamethods
-; By default the concat operator .. does not work on numbers
+; Metamethod fun
 
-(def join-numbers (a b) (.. (string a) (string b)))
+; By default the concat operator .. does not work on numbers
+(.. 2 3) ; error, unable to call concat on type number 
+
+(defn join-numbers (a b) (.. (string a) (string b)))
 
 ; Set the metamethod on a value
 (set-metamethod 2 .. join-numbers)
@@ -66,5 +68,4 @@ Examples
 ; Set the metamethod on a type
 (set-metamethod Number .. join-numbers)
 (.. 3 2) ; returns '32'
-
 ```
