@@ -15,7 +15,16 @@ namespace Wul.StdLib
             var nameIdentifier = (IdentifierNode) children[0];
             string name = nameIdentifier.Name;
             var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
-            scope[name] = value;
+
+            if (value == Value.Nil)
+            {
+                scope.Remove(name);
+            }
+            else
+            {
+                scope[name] = value;
+            }
+
             return value;
         }, "def");
 

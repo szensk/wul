@@ -57,7 +57,9 @@ namespace Wul.Interpreter.Types
                 {
                     IValue argValue = i >= arguments.Count ? Value.Nil : arguments[i];
                     currentScope[argName] = argValue;
-                }
+                    //TODO is this correct
+                    //scope[argName] = Value.Nil;
+                } 
             }
 
             IValue result = WulInterpreter.Interpret(Body, currentScope);
@@ -121,8 +123,10 @@ namespace Wul.Interpreter.Types
                 }
                 else
                 {
-                    IValue argValue = i >= arguments.Length ? new IdentifierNode("nil"): arguments[i];
+                    IValue argValue = i >= arguments.Length ? new IdentifierNode("nil") : arguments[i];
                     currentScope[argName] = argValue;
+                    //TODO this removes value in parent
+                    //scope[argName] = Value.Nil;
                 }
             }
 

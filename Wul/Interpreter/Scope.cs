@@ -25,16 +25,14 @@ namespace Wul.Interpreter
             return new Scope(this);
         }
 
+        public void Remove(string key)
+        {
+            BoundVariables.Remove(key);
+        }
+
         public void Assign(string key, IValue value)
         {
-            if (value == Value.Nil)
-            {
-                BoundVariables.Remove(key);
-            }
-            else
-            {
-                BoundVariables[key] = value;
-            }
+            BoundVariables[key] = value;
         }
 
         public IValue this[string key]

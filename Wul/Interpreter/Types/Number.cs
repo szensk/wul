@@ -13,7 +13,7 @@ namespace Wul.Interpreter.Types
         public override MetaType DefaultMetaType => NumberMetaType.Instance;
     }
 
-    class Number : IValue
+    public class Number : IValue
     {
         #region Static Methods
         private static readonly Number[] SmallNumberCache;
@@ -47,6 +47,11 @@ namespace Wul.Interpreter.Types
         public static implicit operator int(Number i)
         {
             return (int) i.Value;
+        }
+
+        public static implicit operator double(Number i)
+        {
+            return i.Value;
         }
 
         public static implicit operator Number(int i)

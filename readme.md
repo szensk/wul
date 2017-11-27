@@ -4,13 +4,12 @@ A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. I
 
 Overview
 ========
-There are only bools, strings, numbers, lists and functions. There are, however, two types of functions. Magic functions are passed syntax nodes rather than evaluated arguments. 
+There existing types are bool, string, number, list, map, range and function. There are, however, two types of functions. Magic functions are passed syntax nodes rather than evaluated arguments. 
 They can evaluate their arguments at their leisure. Strings in single quotes are not subject to interpolation. Strings in double quotes are interpolated. 
 
 Types
 =========
 All types have a metatype. A metatype contains a methods that define how a value interacts with the default functions. You can define new or override existing functions in the metatype. For example, you can define the `Invoke` metamethod on a list value. This allows that list instance to be used like a function. Why? This greatly simplified the core interpreter.
-
 
 Calling .NET Functions
 ======================
@@ -59,6 +58,8 @@ Examples
 (= me bill) ; returns false
 (def me2 (make-person 'szensk' 26))
 (= me me2) ; returns true
+(at me 'age') ; returns 26
+(set me 'name' 'New Name') ; modifies map inplace 
 ```
 
 ```lisp

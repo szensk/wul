@@ -7,9 +7,16 @@ namespace Wul.StdLib
     {
         internal static IFunction Equal = new NetFunction((list, scope) =>
         {
-            IValue first = list.First();
+            IValue first = list[0];
 
-            return first.MetaType.Equal.Invoke(list, scope);
+            if (first.MetaType != null)
+            {
+                return first.MetaType.Equal.Invoke(list, scope);
+            }
+            else
+            {
+                return first == list[1] ? Bool.True : Bool.False;
+            }
         }, "=");
 
         internal static IFunction LessThan = new NetFunction((list, scope) =>

@@ -19,6 +19,7 @@ namespace Wul.StdLib
             Scope["String"] = StringType.Instance;
             Scope["Function"] = FunctionType.Instance;
             Scope["SyntaxNode"] = SyntaxNodeType.Instance;
+            Scope["Range"] = RangeType.Instance;
 
             //General
             Scope["nil"] = Value.Nil; //unnecessary as anything undefined will return nil as well
@@ -89,6 +90,9 @@ namespace Wul.StdLib
             //Map
             Scope["dict"] = Map.Dictionary;
             Scope["object"] = Map.Object;
+
+            //Range
+            Scope["range"] = Range.RangeFromArguments;
 
             //Logical
             Scope["!"] = Logical.Not;

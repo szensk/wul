@@ -7,7 +7,7 @@ namespace Wul.Interpreter.Types
 {
     public class MapType : WulType
     {
-        public MapType() : base("Map", typeof(MapType))
+        public MapType() : base("Map", typeof(MapTable))
         {
         }
 

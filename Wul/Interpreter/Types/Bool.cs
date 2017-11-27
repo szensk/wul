@@ -12,7 +12,7 @@ namespace Wul.Interpreter.Types
         public override MetaType DefaultMetaType => BoolMetaType.Instance;
     }
 
-    class Bool : IValue
+    public class Bool : IValue
     {
         public static Bool True = new Bool(true);
         public static Bool False = new Bool(false);

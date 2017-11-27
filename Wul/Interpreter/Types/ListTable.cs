@@ -14,7 +14,7 @@ namespace Wul.Interpreter.Types
         public override MetaType DefaultMetaType => ListMetaType.Instance;
     }
 
-    class ListTable : IValue
+    public class ListTable : IValue
     {
         private readonly List<IValue> _list;
 
