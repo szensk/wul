@@ -32,7 +32,20 @@ namespace Wul.Interpreter.Types
 
         public ListTable AsList()
         {
-            throw new NotImplementedException();
+            ListTable list = new ListTable();
+
+            var actualList = list.AsList();
+
+            actualList.Add(First);
+
+            Range rem = Remainder;
+            while (rem != null)
+            {
+                actualList.Add(rem.First);
+                rem = rem.Remainder;
+            }
+
+            return list;
         }
 
         public Number First => _Start;
@@ -41,7 +54,7 @@ namespace Wul.Interpreter.Types
         {
             get
             {
-                if (_Increment.HasValue && (_Start < _End) || !_End.HasValue)
+                if (_Increment.HasValue && (_Increment > 0 && _Start < _End || _Increment < 0 && _Start > _End) || !_End.HasValue)
                 {
                     return new Range(_Start + _Increment.Value, _End, _Increment);
                 }

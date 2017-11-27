@@ -6,7 +6,17 @@ namespace Wul.StdLib
 {
     internal class List
     {
-        internal static IFunction Listify = new NetFunction((list, Scope) => new ListTable(list), "list");
+        internal static IFunction Listify = new NetFunction((list, Scope) =>
+        {
+            if (list.Count == 1 && list[0].Type == RangeType.Instance)
+            {
+                return ((Interpreter.Types.Range) list[0]).AsList();
+            }
+            else
+            {
+                return new ListTable(list);
+            }
+        }, "list");
 
         internal static IFunction First = new NetFunction((list, scope) =>
         {

@@ -22,7 +22,14 @@ namespace Wul.StdLib
 
             if (list.Count < 3)
             {
-                increment = 1;
+                if (start.Value < end)
+                {
+                    increment = 1;
+                }
+                else
+                {
+                    increment = -1;
+                }
             }
             else if (list.Count == 3 && list[2] != Value.Nil)
             {
