@@ -38,20 +38,20 @@ namespace Wul.Interpreter.MetaTypes
         public IValue RangeIndex(List<IValue> arguments, Scope s)
         {
             Range range = arguments[0] as Range;
-            ListTable list = arguments[1] as ListTable;
+            IValue target = arguments[1];
 
-            if (range == null || list == null) return Value.Nil;
+            if (range == null || target == null || !(target.MetaType?.At.IsDefined ?? false)) return Value.Nil;
 
             var indexes = range.AsList().AsList();
             if (indexes.Count == 1)
             {
-                return list[indexes[0]];
+                return target.MetaType.At.Invoke(new List<IValue>{target, indexes[0]}, s);
             }
 
             List<IValue> values = new List<IValue>(indexes.Count);
             foreach (var index in indexes)
             {
-                values.Add(list[index]);
+                values.Add(target.MetaType.At.Invoke(new List<IValue> { target, index }, s));
             }
             return new ListTable(values);
         }
