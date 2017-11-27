@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
 
@@ -44,12 +43,19 @@ namespace Wul.StdLib
                 }
                 catch
                 {
-                    
+                    //We might want to display something
                 }
 
                 if (propertyInfo != null)
                 {
-                    methodInfo = propertyInfo.SetMethod;
+                    if (arguments.Length > 0)
+                    {
+                        methodInfo = propertyInfo.SetMethod;
+                    }
+                    else
+                    {
+                        methodInfo = propertyInfo.GetMethod;
+                    }
                 }
 
                 if (methodInfo != null)
@@ -67,16 +73,24 @@ namespace Wul.StdLib
             var nameIdentifier = (IdentifierNode)children[0];
             string name = nameIdentifier.Name;
 
-            var arguments = (ListNode)children[1];
-            IValue evaluatedArguments = arguments.Eval(scope);
-            var finalArguments = ((ListTable)evaluatedArguments).AsList().Select(i => i.ToObject()).ToArray();
+            object result = null;
+            if (children.Length > 1)
+            {
+                object[] evaluatedArguments = children.Skip(1).Select(s => s.Eval(scope).ToObject()).ToArray();
 
-            object result = InvokeNetFunction(name, finalArguments);
+                result = InvokeNetFunction(name, evaluatedArguments);
+            }
+            else
+            {
+                result = InvokeNetFunction(name);
+            }
 
             //TODO find a better way
             //TODO IEnumerables to Lists
             switch (result)
             {
+                case DateTime dt:
+                    return new UString(dt.ToString());
                 case string s:
                     return new UString(s);
                 case bool b:
@@ -85,6 +99,8 @@ namespace Wul.StdLib
                     return (Number)d;
                 case int i:
                     return (Number)i;
+                case int[] ia:
+                    return new ListTable(ia.Select(n => (Number)n));
                 default:
                     return Value.Nil;
             }

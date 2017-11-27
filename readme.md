@@ -46,8 +46,13 @@ Examples
 ```
 
 ```lisp
-; Call a .NET function
-(:: System.String.Join (' ' ('a' 'b' 'c'))) ; returns ('a b c')
+; Call .NET functions
+(:: System.String.Join ' ' ('a' 'b' 'c')) ; returns ('a b c')
+(:: System.Console.WriteLine "ok") 
+(:: System.Console.Title "New title")
+(:: System.Console.Title) 
+(:: System.DateTime.Now) 
+
 ```
 
 ```lisp
