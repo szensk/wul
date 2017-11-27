@@ -68,7 +68,7 @@ Examples
 ; Ranges can be used to generate lists
 (def l (list [1 5])) 
 (def size (- (# l) 1))
-; ranges can be used as functions, in which case the index their argument
+; ranges can be used as functions, in which case it is used as an index into a list
 ([size 0] l) ; returns l in backwards order, (5 4 3 2 1)
 ([0] l)      ; returns the first element of l, 1
 ([0 size 2] l) ; returns every other element of l, (1 3 5)

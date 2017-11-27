@@ -36,6 +36,22 @@ namespace Wul.StdLib
                 {
                     //We might want to display something
                 }
+
+                PropertyInfo propertyInfo = null;
+                try
+                {
+                    propertyInfo = type.GetProperty(methodName);
+                }
+                catch
+                {
+                    
+                }
+
+                if (propertyInfo != null)
+                {
+                    methodInfo = propertyInfo.SetMethod;
+                }
+
                 if (methodInfo != null)
                 {
                     return methodInfo.Invoke(null, arguments);
