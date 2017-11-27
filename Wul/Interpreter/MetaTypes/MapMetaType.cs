@@ -27,18 +27,26 @@ namespace Wul.Interpreter.MetaTypes
 
         public IValue AtKey(List<IValue> arguments, Scope s)
         {
-            ListNode list = (ListNode) arguments[0];
-            MapTable map = (MapTable) list.Children[1].Eval(s);
-            IValue index = list.Children[2].Eval(s);
-
-            //Reference comparison
-            if (index == Value.Nil)
+            if (arguments.Count == 2)
             {
-                //Use the identifier
-                index = list.Children[2];
+                MapTable map = (MapTable) arguments[0];
+                return map[arguments[1]];
             }
+            else
+            {
+                ListNode list = (ListNode) arguments[0];
+                MapTable map = (MapTable) list.Children[1].Eval(s);
+                IValue index = list.Children[2].Eval(s);
 
-            return map[index];
+                //Reference comparison
+                if (index == Value.Nil)
+                {
+                    //Use the identifier
+                    index = list.Children[2];
+                }
+
+                return map[index];
+            }
         }
 
         public IValue SetKey(List<IValue> arguments, Scope s)

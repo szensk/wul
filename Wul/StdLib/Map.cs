@@ -53,13 +53,8 @@ namespace Wul.StdLib
         {
             var mapList = ((ListNode)list.Children[1]).Children;
 
-            if (mapList.Count % 2 != 0)
-            {
-                throw new Exception("Unable to create map, missing key");
-            }
-
             MapTable map = new MapTable();
-            for (int i = 0; i < mapList.Count - 1; i += 2)
+            for (int i = 0; i < mapList.Count; ++i)
             {
                 var key = (IdentifierNode)mapList[i];
                 var val = key.Eval(scope);
