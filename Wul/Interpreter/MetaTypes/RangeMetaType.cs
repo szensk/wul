@@ -49,9 +49,11 @@ namespace Wul.Interpreter.MetaTypes
             }
 
             List<IValue> values = new List<IValue>(indexes.Count);
+            List<IValue> atArguments = new List<IValue>(2) { target, null};
             foreach (var index in indexes)
             {
-                values.Add(target.MetaType.At.Invoke(new List<IValue> { target, index }, s));
+                atArguments[1] = index;
+                values.Add(target.MetaType.At.Invoke(atArguments, s));
             }
             return new ListTable(values);
         }
