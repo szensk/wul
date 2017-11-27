@@ -65,6 +65,19 @@ namespace Wul.Interpreter.Types
                 return new Number(d);
             }
         }
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj)) return true;
+            if (ReferenceEquals(null, obj)) return false;
+            Number other = obj as Number;
+            return other != null && Value == other.Value;
+        }
+
 
         public WulType Type => NumberType.Instance;
 

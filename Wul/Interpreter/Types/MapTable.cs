@@ -17,11 +17,17 @@ namespace Wul.Interpreter.Types
 
     class MapTable : IValue
     {
-        private readonly Dictionary<IValue, IValue> _map;
+        private readonly IDictionary<IValue, IValue> _map;
 
         public MapTable()
         {
             _map = new Dictionary<IValue, IValue>();
+            MetaType = MapMetaType.Instance;
+        }
+
+        public MapTable(IDictionary<IValue, IValue> dict)
+        {
+            _map = dict;
             MetaType = MapMetaType.Instance;
         }
 
@@ -37,7 +43,17 @@ namespace Wul.Interpreter.Types
 
         public MapTable(object o)
         {
+            MetaType = MapMetaType.Instance;
+
+            //TODO iterate through each field and add to map
+            //for each property generate a NetFunction
+
             throw new NotImplementedException();
+        }
+
+        public IDictionary<IValue, IValue> AsDictionary()
+        {
+            return _map;
         }
 
         public IValue Get(IValue key)
@@ -74,13 +90,21 @@ namespace Wul.Interpreter.Types
 
         public string AsString()
         {
-            //TODO call as string metamethod
             return "(" + string.Join(", ", _map.Select(s => $"{s.Key.AsString()}:{s.Value.AsString()}").ToList()) + ")";
         }
 
         public object ToObject()
         {
-            return _map;
+            Dictionary<object, object> objectMap = new Dictionary<object, object>();
+
+            foreach (var kvp in _map)
+            {
+                var key = kvp.Key.ToObject();
+                var val = kvp.Value.ToObject();
+                objectMap[key] = val;
+            }
+
+            return objectMap;
         }
 
         public MetaType MetaType { get; set; }

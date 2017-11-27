@@ -11,6 +11,19 @@ namespace Wul.Parser
             Name = name;
         }
 
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj)) return true;
+            if (ReferenceEquals(null, obj)) return false;
+            IdentifierNode other = obj as IdentifierNode;
+            return other != null && Name.Equals(other.Name);
+        }
+
         public override string AsString()
         {
             return $"Identifer[{Name}]";

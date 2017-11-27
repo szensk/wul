@@ -16,6 +16,7 @@ namespace Wul.Interpreter.MetaTypes
 
             //List
             At.Method = new NetFunction(AtIndex, At.Name);
+            Set.Method = new NetFunction(SetIndex, Set.Name);
             Remainder.Method = new NetFunction(Remaining, Remainder.Name);
             Count.Method = new NetFunction(Length, Count.Name);
             Concat.Method = new NetFunction(JoinLists, Concat.Name);
@@ -50,6 +51,17 @@ namespace Wul.Interpreter.MetaTypes
             Number index = (Number) arguments.Skip(1).First();
 
             return list[index];
+        }
+
+        public IValue SetIndex(List<IValue> arguments, Scope s)
+        {
+            ListTable list = (ListTable) arguments[0];
+            Number index = (Number)arguments[1];
+            IValue value = arguments[2];
+
+            list.Assign(index, value);
+
+            return list;
         }
 
         public IValue JoinLists(List<IValue> argument, Scope s)

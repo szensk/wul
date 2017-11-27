@@ -83,6 +83,12 @@ namespace Wul.StdLib
             Scope["len"] = List.Length;
             Scope["#"] = List.Length;
             Scope["list"] = List.Listify;
+            Scope["at"] = List.AtIndex;
+            Scope["set"] = List.SetIndex;
+
+            //Map
+            Scope["dict"] = Map.Dictionary;
+            Scope["object"] = Map.Object;
 
             //Logical
             Scope["!"] = Logical.Not;

@@ -69,6 +69,7 @@ namespace Wul.Interpreter
             Compare = new MetaMethod("compare");
 
             At = new MetaMethod("@");
+            Set = new MetaMethod("set");
             Remainder = new MetaMethod("rem");
             Count = new MetaMethod("len");
             Concat = new MetaMethod("..");
@@ -102,6 +103,7 @@ namespace Wul.Interpreter
             clone.Compare = new MetaMethod(Compare);
 
             clone.At = new MetaMethod(At);
+            clone.Set = new MetaMethod(Set);
             clone.Remainder = new MetaMethod(Remainder);
             clone.Count = new MetaMethod(Count);
             clone.Concat = new MetaMethod(Concat);
@@ -123,7 +125,7 @@ namespace Wul.Interpreter
                 Add, Subtract, Multiply, Divide, Modulus, Power,
                 Not, And, Or, Xor,
                 Equal, Compare,
-                At, Remainder, Count, Concat,
+                At, Set, Remainder, Count, Concat,
                 Invoke, InvokeMagic, AsString, Type
             };
 
@@ -162,6 +164,7 @@ namespace Wul.Interpreter
 
         // List
         public MetaMethod At { get; private set; }
+        public MetaMethod Set { get; private set; }
         public MetaMethod Remainder { get; private set; }
         public MetaMethod Count { get; private set; }
         public MetaMethod Concat { get; private set; }

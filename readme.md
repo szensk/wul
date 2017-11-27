@@ -52,6 +52,16 @@ Examples
 ```
 
 ```lisp
+; Maps
+(defn make-person (name age) (dict ('age' age 'name' name)))
+(def me (make-person 'szensk' 26))
+(def bill (make-person 'Bill' 72))
+(= me bill) ; returns false
+(def me2 (make-person 'szensk' 26))
+(= me me2) ; returns true
+```
+
+```lisp
 ; Metamethod fun
 
 ; By default the concat operator .. does not work on numbers
