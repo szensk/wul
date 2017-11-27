@@ -42,12 +42,13 @@ namespace Wul.Interpreter
                     return Evaluate(s, currentScope);
                 case ListNode l:
                     return Evaluate(l, currentScope);
+                case RangeNode r:
+                    return Evaluate(r, currentScope);
                 default:
                     throw new NotImplementedException();
             }
         }
-
-
+        
         private static IValue Evaluate(IdentifierNode identifier, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
@@ -68,6 +69,13 @@ namespace Wul.Interpreter
         private static IValue Evaluate(CommentNode comment)
         {
             return null;
+        }
+
+        private static IValue Evaluate(RangeNode rangeNode, Scope currentScope = null)
+        {
+            currentScope = currentScope ?? Global.Scope;
+            var arguments = rangeNode.Children.Select(c => c.Eval(currentScope));
+            return StdLib.Range.RangeFromArguments.Evaluate(arguments.ToList(), currentScope);
         }
 
         private static IValue Evaluate(StringNode str, Scope currentScope = null)
@@ -94,6 +102,10 @@ namespace Wul.Interpreter
             else if (first is ListNode)
             {
                 value = Evaluate((ListNode) first, currentScope);
+            }
+            else if (first is RangeNode)
+            {
+                value = Evaluate((RangeNode) first, currentScope);
             }
 
             bool isFunction = value.MetaType?.Invoke?.IsDefined ?? false;

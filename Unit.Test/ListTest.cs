@@ -93,5 +93,16 @@ namespace Unit.Test
 
             Assert.AreEqual(6, node.Children.Count);
         }
+
+        [TestMethod]
+        public void List_IncludesRange()
+        {
+            ListParser parser = new ListParser();
+            string list = "(def l (list [0 4]))";
+
+            ListNode node = (ListNode) parser.Parse(list);
+
+            Assert.IsTrue(node.Children[2] is ListNode);
+        }
     }
 }
