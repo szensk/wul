@@ -57,14 +57,14 @@ Examples
 
 ```lisp
 ; Maps
-(defn make-person (name age) (dict ('age' age 'name' name)))
+(defn make-person (name age) (@object (name age)))
 (def me (make-person 'szensk' 26))
 (def bill (make-person 'Bill' 72))
 (= me bill) ; returns false
 (def me2 (make-person 'szensk' 26))
 (= me me2) ; returns true
-(at me 'age') ; returns 26
-(set me 'name' 'New Name') ; modifies map inplace 
+(at me age) ; returns 26
+(set me name 'New Name') ; modifies map inplace 
 ```
 
 ```lisp
