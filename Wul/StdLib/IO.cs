@@ -1,11 +1,11 @@
 ﻿using System;
-using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
     internal class IO
     {
+        [GlobalName("print")]
         internal static IFunction Print = new NetFunction((list, scope) =>
         {
             foreach (var value in list)
@@ -22,6 +22,7 @@ namespace Wul.StdLib
             return Value.Nil;
         }, "print");
 
+        [GlobalName("clear")]
         internal static IFunction Clear = new NetFunction((list, scope) =>
         {
             Console.Clear();

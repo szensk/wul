@@ -66,6 +66,7 @@ namespace Wul.StdLib
             return null;
         }
 
+        [GlobalName("::")]
         internal static IFunction CallFrameworkFunction = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();

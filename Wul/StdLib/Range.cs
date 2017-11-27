@@ -4,6 +4,7 @@ namespace Wul.StdLib
 {
     class Range
     {
+        [GlobalName("range")]
         internal static IFunction RangeFromArguments = new NetFunction((list, scope) =>
         {
             Number start = (Number) list[0];

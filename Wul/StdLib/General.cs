@@ -7,8 +7,10 @@ namespace Wul.StdLib
 {
     class General
     {
+        [GlobalName("identity")]
         internal static IFunction Identity = new NetFunction((list, scope) => list.FirstOrDefault() ?? Value.Nil, "identity");
 
+        [GlobalName("def")]
         internal static IFunction Define = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
@@ -28,6 +30,7 @@ namespace Wul.StdLib
             return value;
         }, "def");
 
+        [GlobalName("defn")]
         internal static IFunction DefineFunction = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
@@ -45,6 +48,7 @@ namespace Wul.StdLib
             return function;
         }, "defn");
 
+        [GlobalName("lambda")]
         internal static IFunction Lambda = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
@@ -58,6 +62,7 @@ namespace Wul.StdLib
             return function;
         }, "lambda");
 
+        [GlobalName("@defn")]
         internal static IFunction DefineMagicFunction = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
@@ -75,6 +80,8 @@ namespace Wul.StdLib
             return function;
         }, "@defn");
 
+        [GlobalName("then")]
+        [GlobalName("else")]
         internal static IFunction Then = new NetFunction((list, scope) =>
         {
             if (list.Count == 1)
@@ -87,6 +94,7 @@ namespace Wul.StdLib
             }
         }, "then/else");
 
+        [GlobalName("if")]
         internal static IFunction If = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
@@ -111,6 +119,7 @@ namespace Wul.StdLib
             return returnValue;
         }, "if");
 
+        [GlobalName("eval")]
         internal static IFunction Evaluate = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();
@@ -118,6 +127,7 @@ namespace Wul.StdLib
             return children[0].Eval(scope);
         }, "eval");
 
+        [GlobalName("??")]
         internal static IFunction Coalesce = new NetFunction((list, scope) =>
         {
             var firstNonNull = list.FirstOrDefault(i => i != Value.Nil);
@@ -132,6 +142,7 @@ namespace Wul.StdLib
             }
         }, "??");
 
+        [GlobalName("type")]
         internal static IFunction Type = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
@@ -139,6 +150,7 @@ namespace Wul.StdLib
             return first.MetaType.Type.Invoke(list, scope);
         }, "type");
 
+        [GlobalName("quote")]
         internal static IFunction Quote = new MagicNetFunction((list, scope) =>
         {
             var children = list.Children.Skip(1).ToArray();

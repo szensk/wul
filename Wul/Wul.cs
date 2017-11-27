@@ -47,10 +47,10 @@ namespace Wul
 
         private static int Main(string[] args)
         {
+            Global.RegisterDefaultFunctions();
+
             if (!args.Any())
             {
-                Global.RegisterDefaultFunctions();
-
                 string input = "";
 
                 Console.WriteLine($"wul interpreter {Version}");
@@ -65,7 +65,7 @@ namespace Wul
                         var result = WulInterpreter.Interpret(programNode);
                         if (result != null && result != Value.Nil)
                         {
-                            StdLib.IO.Print.Evaluate(new List<IValue> {result}, Global.Scope);
+                            IO.Print.Evaluate(new List<IValue> {result}, Global.Scope);
                         }
                     }
                     catch (Exception e)

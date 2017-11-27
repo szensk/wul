@@ -6,6 +6,7 @@ namespace Wul.StdLib
 {
     class MetaType
     {
+        [GlobalName("set-metamethod")]
         internal static IFunction SetMetaType = new MagicNetFunction((list, scope) =>
         {
             IValue first = list.Children[1].Eval(scope);

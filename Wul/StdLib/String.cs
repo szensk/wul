@@ -1,11 +1,12 @@
 ﻿using System.Linq;
-using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
     internal class String
     {
+        [GlobalName("..")]
+        [GlobalName("concat")]
         internal static IFunction Concat = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
@@ -13,6 +14,7 @@ namespace Wul.StdLib
             return first.MetaType.Concat.Invoke(list, scope);
         }, "..");
 
+        [GlobalName("string")]
         internal static IFunction Stringify = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
@@ -20,6 +22,7 @@ namespace Wul.StdLib
             return first.MetaType.AsString.Invoke(list, scope);
         }, "string");
 
+        [GlobalName("substring")]
         internal static IFunction Substring = new NetFunction((list, scope) =>
         {
             string value = ((UString) list[0]).Value;
@@ -31,12 +34,14 @@ namespace Wul.StdLib
             return new UString(result);
         }, "substring");
 
+        [GlobalName("lower")]
         internal static IFunction Lower = new NetFunction((list, scope) =>
         {
             string value = ((UString) list[0]).Value;
             return new UString(value.ToLower());
         }, "lower");
 
+        [GlobalName("upper")]
         internal static IFunction Upper = new NetFunction((list, scope) =>
         {
             string value = ((UString) list[0]).Value;

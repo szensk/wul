@@ -5,6 +5,7 @@ namespace Wul.StdLib
 {
     internal class Comparison
     {
+        [GlobalName("=")]
         internal static IFunction Equal = new NetFunction((list, scope) =>
         {
             IValue first = list[0];
@@ -19,6 +20,7 @@ namespace Wul.StdLib
             }
         }, "=");
 
+        [GlobalName("<")]
         internal static IFunction LessThan = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
@@ -28,6 +30,7 @@ namespace Wul.StdLib
             return value == -1 ? Bool.True : Bool.False;
         }, "<");
 
+        [GlobalName("<=")]
         internal static IFunction LessThanEqualTo = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
@@ -38,6 +41,7 @@ namespace Wul.StdLib
             return value == -1 || value == 0 ? Bool.True : Bool.False;
         }, "<=");
 
+        [GlobalName(">")]
         internal static IFunction GreaterThan = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
@@ -47,6 +51,7 @@ namespace Wul.StdLib
             return value == 1 ? Bool.True : Bool.False;
         }, ">");
 
+        [GlobalName(">=")]
         internal static IFunction GreaterThanEqualTo = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
@@ -57,6 +62,7 @@ namespace Wul.StdLib
             return value == 1 || value == 0 ? Bool.True : Bool.False;
         }, ">=");
 
+        [GlobalName("compare")]
         internal static IFunction Compare = new NetFunction((list, scope) =>
         {
             IValue first = list.First();
