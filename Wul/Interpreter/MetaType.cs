@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
+using Wul.Parser;
 
 namespace Wul.Interpreter
 {
@@ -30,9 +32,20 @@ namespace Wul.Interpreter
 
         public IValue Invoke(List<IValue> arguments, Scope s)
         {
-            IValue lhs = arguments.First();
-            //TODO Magic metamethods, e.g. at
-            return Method?.Evaluate(arguments, s) ?? throw new NotSupportedException($"Unable to invoke metamethod `{Name}` on type {lhs.GetType().Name}");
+            if (Method == null)
+            {
+                IValue lhs = arguments.First();
+                throw new NotSupportedException($"Unable to invoke metamethod `{Name}` on type {lhs.GetType().Name}");
+            }
+
+            if (Method.MetaType == FunctionMetaType.Instance)
+            {
+                return Method.Evaluate(arguments, s);
+            }
+            else
+            {
+                return Method.Execute((ListNode) arguments[1], s);
+            }
         }
     }
 
