@@ -2,7 +2,7 @@
 
 namespace Wul.StdLib
 {
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method, AllowMultiple = true)]
     internal class GlobalNameAttribute : Attribute
     {
         public string Name { get; set; }

@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Wul.Interpreter;
+using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
@@ -37,6 +40,23 @@ namespace Wul.StdLib
                     Scope[globalname.Name] = (IValue) field.Field.GetValue(null);
                 }
             }
+
+            //TODO create attribute for NetFunction
+            //TODO create attribute for MagicNetFunction
+            //var namedMethods = types.SelectMany(t => t.GetRuntimeMethods())
+            //    .Select(m => new { Method = m, Attributes = m.GetCustomAttributes<GlobalNameAttribute>() })
+            //    .Where(m => m.Attributes.Any());
+
+            //foreach (var method in namedMethods)
+            //{
+            //    NetFunction netFunction = new NetFunction((Func<List<IValue>,Scope,IValue>)method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, IValue>)), method.Attributes.First().Name);
+            //    foreach (var globalname in method.Attributes)
+            //    {
+            //        Scope[globalname.Name] = netFunction;
+            //    }
+            //}
+
+            FunctionMetaType.SetMetaMethods();
         }
     }
 }

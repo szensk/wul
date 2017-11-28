@@ -11,14 +11,14 @@ namespace Wul.StdLib
         {
             IValue first = list.Children[1].Eval(scope);
             IdentifierNode identifier = (IdentifierNode) list.Children[2];
-            IFunction function = (IFunction) list.Children[3].Eval(scope);
+            IValue function = list.Children[3].Eval(scope);
 
             string metaMethodName = identifier.Name;
 
             if (first is WulType type)
             {
                 var metaMethod = type.DefaultMetaType.Get(metaMethodName);
-                metaMethod.Method = function;
+                metaMethod.Method = function == Value.Nil ? null : (IFunction)function;
             }
             else
             {
@@ -26,7 +26,7 @@ namespace Wul.StdLib
                 var newMetaType = first.MetaType.Clone();
 
                 var metaMethod = newMetaType.Get(metaMethodName);
-                metaMethod.Method = function;
+                metaMethod.Method = function == Value.Nil ? null : (IFunction) function;
 
                 first.MetaType = newMetaType;
             }

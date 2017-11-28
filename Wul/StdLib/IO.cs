@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
@@ -8,15 +9,21 @@ namespace Wul.StdLib
         [GlobalName("print")]
         internal static IFunction Print = new NetFunction((list, scope) =>
         {
-            foreach (var value in list)
+            foreach (IValue value in list)
             {
+                string stringValue = "";
+                if (value.MetaType?.AsString?.IsDefined ?? false)
+                {
+                    UString ustring = (UString) value.MetaType.AsString.Invoke(new List<IValue> {value}, scope);
+                    stringValue = ustring.Value;
+                }
                 if (value is UString)
                 {
-                    Console.WriteLine($"'{value.AsString()}'");
+                    Console.WriteLine($"'{stringValue}'");
                 }
                 else
                 {
-                    Console.WriteLine(value.AsString());
+                    Console.WriteLine(stringValue);
                 }
             }
             return Value.Nil;

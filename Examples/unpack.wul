@@ -1,4 +1,4 @@
-; Is a macro that turns a list into arguments to a function
+; Unpack is a macro that turns a list into arguments to a function
 
 (def l (1 2 3 4 5))
 (+ (unpack l)) ; returns 15

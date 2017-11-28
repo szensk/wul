@@ -175,20 +175,20 @@ namespace Wul.Interpreter
         public MetaMethod AsString { get; private set; }
         public MetaMethod Type { get; private set; }
 
-        protected IValue IdentityEqual (List<IValue> arguments, Scope s)
+        protected static IValue IdentityEqual (List<IValue> arguments, Scope s)
         {
             IValue first = arguments.First();
             IValue second = arguments.Skip(1).First();
             return first.Equals(second) ? Bool.True : Bool.False;
         }
 
-        protected IValue IdentityString(List<IValue> arguments, Scope s)
+        protected static IValue IdentityString(List<IValue> arguments, Scope s)
         {
             IValue first = arguments.First();
             return new UString(first.AsString());
         }
 
-        protected IValue IdentityType(List<IValue> arguments, Scope s)
+        protected static IValue IdentityType(List<IValue> arguments, Scope s)
         {
             IValue first = arguments.First();
             return (IValue) first.Type ?? Value.Nil;
