@@ -1,0 +1,9 @@
+; Dump returns a string representing the code behind the given value
+(let l (1 2 3))
+(dump l) ; returns '(1 2 3)'
+
+(defn sum (a b) (+ a b))
+(dump sum) ; returns '(lambda (a b) (+ a b)'
+
+(dump (quote (dump sum))) ; returns '(dump sum)'
+

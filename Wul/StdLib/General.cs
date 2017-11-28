@@ -168,11 +168,12 @@ namespace Wul.StdLib
         [NetFunction("exit")]
         internal static IValue Exit(List<IValue> list, Scope scope)
         {
-            Number code = list.First() as Number;
+            Number code = list.FirstOrDefault() as Number;
 
-            Environment.Exit((int)code.Value);
+            double exitCode = code?.Value ?? 0; 
+            Environment.Exit((int) exitCode);
 
-            return code;
+            return (Number) exitCode;
         }
 
         //I don't like this macro
