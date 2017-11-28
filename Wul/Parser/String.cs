@@ -17,7 +17,7 @@ namespace Wul.Parser
             return _Value;
         }
 
-        public StringNode(string value)
+        public StringNode(SyntaxNode parent, string value) : base(parent)
         {
             _Value = value;
         }
@@ -25,6 +25,11 @@ namespace Wul.Parser
         public override string AsString()
         {
             return $"String[{_Value}]";
+        }
+
+        public override string ToString()
+        {
+            return _Value;
         }
     }
 
@@ -81,7 +86,7 @@ namespace Wul.Parser
             return listParser.Parse(interpolation) ?? identifierParser.Parse(interpolation) ?? numericParser.Parse(interpolation) ?? stringParser.Parse(interpolation);
         }
         
-        public InterpolatedStringNode(string value) : base(value)
+        public InterpolatedStringNode(SyntaxNode parent, string value) : base(parent, value)
         {
             _chunks = new List<Chunk>();
             int lastIndex = 0;
@@ -170,7 +175,7 @@ namespace Wul.Parser
             return sb.ToString();
         }
 
-        public override SyntaxNode Parse(string token)
+        public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
             if (token.Length < 2) return null;
             if (token[0] != '\"' && token[0] != '\'') return null;
@@ -192,7 +197,7 @@ namespace Wul.Parser
             string substring = token.Substring(openQuoteIndex + 1, closeQuoteIndex - (openQuoteIndex + 1));
             string value = Unescape(substring);
             
-            return interpolated ? new InterpolatedStringNode(value) : new StringNode(value);
+            return interpolated ? new InterpolatedStringNode(parent, value) : new StringNode(parent, value);
         }
     }
 }

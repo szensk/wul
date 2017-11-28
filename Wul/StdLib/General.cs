@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
@@ -130,7 +132,7 @@ namespace Wul.StdLib
         [GlobalName("??")]
         internal static IFunction Coalesce = new NetFunction((list, scope) =>
         {
-            var firstNonNull = list.FirstOrDefault(i => i != Value.Nil);
+            IValue firstNonNull = list.FirstOrDefault(i => i != Value.Nil);
 
             if (firstNonNull != null)
             {
@@ -157,5 +159,39 @@ namespace Wul.StdLib
 
             return children[0];
         }, "quote");
+
+        [GlobalName("exit")]
+        internal static IFunction Exit = new NetFunction((list, scope) =>
+        {
+            Number code = list.First() as Number;
+
+            Environment.Exit((int)code.Value);
+
+            return code;
+        }, "exit");
+
+        //I don't like this macro
+        [GlobalName("unpack")]
+        internal static IFunction Unpack = new MagicNetFunction((list, scope) =>
+        {
+            ListNode listToUnpack  = (ListNode) list.Children[1].Eval(scope).ToSyntaxNode(list.Parent);
+            ListNode replaceInList = (ListNode) listToUnpack.Parent;
+            List<SyntaxNode> replacementList = new List<SyntaxNode>();
+
+            foreach (SyntaxNode node in replaceInList.Children)
+            {
+                if (node == list)
+                {
+                    replacementList.AddRange(listToUnpack.Children);
+                }
+                else
+                {
+                    replacementList.Add(node);
+                }
+            }
+            replaceInList.Children = replacementList;
+
+            return replaceInList.Eval(scope);
+        }, "unpack");
     }
 }

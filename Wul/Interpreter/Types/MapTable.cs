@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.MetaTypes;
+using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
@@ -87,6 +88,14 @@ namespace Wul.Interpreter.Types
         public Number Count => _map.Count;
 
         public WulType Type => MapType.Instance;
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new ListNode(parent, _map
+                .SelectMany(kvp => new[] { kvp.Key.ToSyntaxNode(parent), kvp.Value.ToSyntaxNode(parent)})
+                .ToList()
+            );
+        }
 
         public string AsString()
         {

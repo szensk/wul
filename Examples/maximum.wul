@@ -16,4 +16,6 @@
 
 (defn maxNumber (list) (max-n list 0))
 
-(maxNumber (6 3 7 0 -4))
+(def myMax (maxNumber (6 3 7 0 -4)))
+
+(:: System.Console.WriteLine myMax)

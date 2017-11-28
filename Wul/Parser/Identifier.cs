@@ -6,7 +6,7 @@ namespace Wul.Parser
     {
         public string Name { get; }
 
-        public IdentifierNode(string name)
+        public IdentifierNode(SyntaxNode parent, string name) : base(parent)
         {
             Name = name;
         }
@@ -28,14 +28,19 @@ namespace Wul.Parser
         {
             return $"Identifer[{Name}]";
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public class IdentifierParser : SyntaxNodeParser
     {
-        public override SyntaxNode Parse(string token)
+        public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
             //TODO this is a mess
-            if (token.StartsWith("..") && token.EndsWith("..")) return new IdentifierNode(token);
+            if (token.StartsWith("..") && token.EndsWith("..")) return new IdentifierNode(parent, token);
             if (token.StartsWith("-"))
             {
                 if (Regex.Match(token, @"-[0-9]*\.?[0-9]+").Success) return null;
@@ -46,9 +51,8 @@ namespace Wul.Parser
             if (match.Success)
             {
                 string name = match.Groups[1].Value;
-                return new IdentifierNode(name);
+                return new IdentifierNode(parent, name);
             }
-            
 
             return null;
         }

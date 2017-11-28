@@ -1,6 +1,7 @@
 ﻿using System;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
+using Wul.Parser;
 
 namespace Wul.Interpreter
 {
@@ -22,6 +23,11 @@ namespace Wul.Interpreter
         public abstract MetaType DefaultMetaType { get; }
 
         public WulType Type => null;
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new IdentifierNode(parent, Name);
+        }
 
         public string AsString()
         {

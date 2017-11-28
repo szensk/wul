@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
@@ -9,21 +9,22 @@ namespace Wul.Interpreter.Types
 
         public WulType Type => null;
 
-        public virtual string AsString()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract SyntaxNode ToSyntaxNode(SyntaxNode parent);
 
-        public virtual object ToObject()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract string AsString();
+
+        public abstract object ToObject();
 
         public static Value Nil = new Nill();
     }
 
     internal class Nill : Value
     {
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new IdentifierNode(parent, "nil");
+        }
+
         public override string AsString()
         {
             return "nil";

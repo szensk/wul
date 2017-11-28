@@ -57,8 +57,6 @@ namespace Wul.Interpreter.Types
                 {
                     IValue argValue = i >= arguments.Count ? Value.Nil : arguments[i];
                     currentScope[argName] = argValue;
-                    //TODO is this correct
-                    //scope[argName] = Value.Nil;
                 } 
             }
 
@@ -72,6 +70,15 @@ namespace Wul.Interpreter.Types
         }
 
         public WulType Type => FunctionType.Instance;
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            List<SyntaxNode> listNodes = new List<SyntaxNode>();
+            listNodes.Add(new IdentifierNode(parent, "lambda"));
+            listNodes.AddRange(ArgumentNames.Select(a => new IdentifierNode(parent, a)));
+            listNodes.Add(Body);
+            return new ListNode(parent, listNodes);
+        }
 
         public string AsString()
         {
@@ -119,14 +126,12 @@ namespace Wul.Interpreter.Types
                 string argName = ArgumentNames[i];
                 if (argName == "...")
                 {
-                    currentScope[argName] = new ListNode(arguments.Skip(i).ToList());
+                    currentScope[argName] = new ListNode(list, arguments.Skip(i).ToList());
                 }
                 else
                 {
-                    IValue argValue = i >= arguments.Length ? new IdentifierNode("nil") : arguments[i];
+                    IValue argValue = i >= arguments.Length ? new IdentifierNode(list, "nil") : arguments[i];
                     currentScope[argName] = argValue;
-                    //TODO this removes value in parent
-                    //scope[argName] = Value.Nil;
                 }
             }
 
@@ -142,6 +147,11 @@ namespace Wul.Interpreter.Types
         {
             //TODO
             return null;
+        }
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            throw new NotImplementedException();
         }
 
         public string AsString()
@@ -183,6 +193,11 @@ namespace Wul.Interpreter.Types
             return null;
         }
 
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            throw new NotImplementedException();
+        }
+
         public string AsString()
         {
             return $"Function[{Name}]";
@@ -221,6 +236,11 @@ namespace Wul.Interpreter.Types
         {
             //TODO
             return null;
+        }
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            throw new NotImplementedException();
         }
 
         public string AsString()

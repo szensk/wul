@@ -28,25 +28,31 @@ namespace Wul.Parser
 
     class NumericNode : SyntaxNode
     {
-        public NumericNode(string match)
+        public NumericNode(SyntaxNode parent, string match) : base(parent)
         {
             Value = double.Parse(match);
         }
 
         public double Value { get; }
+
         public override string AsString()
         {
             return $"Numeric[{Value}]";
+        }
+
+        public override string ToString()
+        {
+            return $"{Value}";
         }
     }
 
     class NumericParser : SyntaxNodeParser
     {
-        public override SyntaxNode Parse(string token)
+        public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
             if (Integer.Literal(token) || Decimal.Literal(token))
             {
-                return new NumericNode(token);
+                return new NumericNode(parent, token);
             }
             else
             {

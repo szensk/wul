@@ -1,4 +1,5 @@
 ﻿using Wul.Interpreter.MetaTypes;
+using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
@@ -33,6 +34,11 @@ namespace Wul.Interpreter.Types
         }
 
         public WulType Type => BoolType.Instance;
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new BooleanNode(parent, Value);
+        }
 
         public string AsString()
         {

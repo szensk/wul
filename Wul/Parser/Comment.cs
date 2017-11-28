@@ -6,7 +6,7 @@ namespace Wul.Parser
     {
         public string Comment { get; }
 
-        public CommentNode(string comment)
+        public CommentNode(SyntaxNode parent, string comment) : base(parent)
         {
             Comment = comment;
         }
@@ -19,7 +19,7 @@ namespace Wul.Parser
 
     public class CommentParser : SyntaxNodeParser
     {
-        public override SyntaxNode Parse(string token)
+        public override SyntaxNode Parse(string token, SyntaxNode parent)
         {
             if (token.Length < 1) return null;
 
@@ -27,7 +27,7 @@ namespace Wul.Parser
             if (match.Success)
             {
                 string comment = match.Groups[1].Value;
-                return new CommentNode(comment);
+                return new CommentNode(parent, comment);
             }
             else
             {

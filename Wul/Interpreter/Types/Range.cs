@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Wul.Interpreter.MetaTypes;
+using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
@@ -90,6 +92,22 @@ namespace Wul.Interpreter.Types
                 }
                 return (int)((_End - _Start) / _Increment) + 1;
             }
+        }
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            List<SyntaxNode> children = new List<SyntaxNode>();
+            children.Add(((Number)_Start).ToSyntaxNode(parent));
+            if (_End.HasValue)
+            {
+                children.Add(((Number) _End.Value).ToSyntaxNode(parent));
+            }
+            else
+            {
+                children.Add(Value.Nil.ToSyntaxNode(parent));
+            }
+            children.Add(((Number)_Increment.Value).ToSyntaxNode(parent));
+           return new RangeNode(parent, children);
         }
 
         public string AsString()

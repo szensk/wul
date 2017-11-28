@@ -7,7 +7,7 @@ namespace Wul.Parser
     {
         public List<SyntaxNode> Children { get; }
 
-        public RangeNode(List<SyntaxNode> children)
+        public RangeNode(SyntaxNode parent, List<SyntaxNode> children) : base(parent)
         {
             Children = children;
         }
@@ -15,6 +15,16 @@ namespace Wul.Parser
         public override string AsString()
         {
             return $"Range[{Children.Count}]";
+        }
+
+        public override string ToString()
+        {
+            List<string> strings = new List<string>();
+            foreach (var child in Children)
+            {
+                strings.Add(child.ToString());
+            }
+            return "[" + string.Join(' ', strings) + "]";
         }
     }
 
@@ -31,14 +41,14 @@ namespace Wul.Parser
             return openQuoteIndex != -1 && closeQuoteIndex == -1;
         }
 
-        public override SyntaxNode Parse(string token)
+        public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
             if (token.Length < 2) return null;
-            if (token[0] != '[') return null;
+            if (token.Trim()[0] != '[') return null;
 
             //Assume token has been trimmed
             int openIndex = token.IndexOf("[", StringComparison.Ordinal);
-            int closeIndex = token.LastIndexOf("]", StringComparison.Ordinal);
+            int closeIndex = token.LastIndexOf("]", StringComparison.Ordinal); //TODO shouldn't this be IndexOf?
 
             if (openIndex == -1 || closeIndex == -1) return null;
 
@@ -50,6 +60,8 @@ namespace Wul.Parser
             int closeParentheses = 0;
             int startIndex = 0;
             bool startedList = false;
+            RangeNode currentRange = new RangeNode(parent, new List<SyntaxNode>());
+            
             while (currentIndex < inner.Length)
             {
                 if (inner[currentIndex] == '[')
@@ -63,7 +75,7 @@ namespace Wul.Parser
 
                 if (closeParentheses > openParentheses)
                 {
-                    throw new Exception("Mismatched parenthesis, have fun");
+                    throw new Exception("Mismatched brackets, have fun");
                 }
 
                 currentIndex++;
@@ -76,9 +88,9 @@ namespace Wul.Parser
                         continue;
                     }
 
-                    SyntaxNode item = identifierParser.Parse(currentInner)
-                                      ?? numericParser.Parse(currentInner)
-                                      ?? listParser.Parse(currentInner);
+                    SyntaxNode item = identifierParser.Parse(currentInner, currentRange)
+                                      ?? numericParser.Parse(currentInner, currentRange)
+                                      ?? listParser.Parse(currentInner, currentRange);
 
                     if (item != null)
                     {
@@ -99,7 +111,8 @@ namespace Wul.Parser
             }
             if (startedList) throw new Exception("unfinsihed list in range");
 
-            return new RangeNode(children);
+            currentRange.Children.AddRange(children);
+            return currentRange;
         }
     }
 }

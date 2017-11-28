@@ -1,4 +1,6 @@
-﻿namespace Wul.Interpreter.Types
+﻿using Wul.Parser;
+
+namespace Wul.Interpreter.Types
 {
     public interface IValue
     {    
@@ -6,6 +8,8 @@
         MetaType MetaType { get; set; }
 
         WulType Type { get; }
+
+        SyntaxNode ToSyntaxNode(SyntaxNode parent);
 
         string AsString();
 

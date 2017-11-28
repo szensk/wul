@@ -25,7 +25,7 @@ namespace Unit.Test
 
             BooleanNode node = (BooleanNode)parser.Parse(token);
 
-            Assert.AreEqual(BooleanNode.True, node);
+            Assert.IsTrue(node.Value);
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace Unit.Test
 
             BooleanNode node = (BooleanNode)parser.Parse(token);
 
-            Assert.AreEqual(BooleanNode.False, node);
+            Assert.IsFalse(node.Value);
         }
 
         [TestMethod]

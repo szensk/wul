@@ -4,21 +4,21 @@ namespace Wul.Parser
 {
     public class BooleanNode : SyntaxNode
     {
-        public BooleanNode(bool value)
+        public BooleanNode(SyntaxNode parent, bool value) : base(parent)
         {
             Value = value;
         }
-
-        public BooleanNode(string match)
-        {
-            Value = bool.Parse(match);
-        }
-
+        
         public bool Value { get; }
 
-        public static BooleanNode False = new BooleanNode(false);
-        public static BooleanNode True = new BooleanNode(true);
+        //AsString is used by Wul
         public override string AsString()
+        {
+            return $"{Value}";
+        }
+
+        //ToString is used by C#
+        public override string ToString()
         {
             return $"{Value}";
         }
@@ -26,12 +26,12 @@ namespace Wul.Parser
 
     public class BooleanParser : SyntaxNodeParser
     {
-        public override SyntaxNode Parse(string token)
+        public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
             if (token.Any(char.IsUpper)) return null;
             if (bool.TryParse(token, out bool value))
             {
-                return value ? BooleanNode.True : BooleanNode.False;
+                return new BooleanNode(parent, value);
             }
             else
             {

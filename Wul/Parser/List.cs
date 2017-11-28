@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Wul.Parser
 {
     public class ListNode : SyntaxNode
     {
-        public List<SyntaxNode> Children { get; }
+        public List<SyntaxNode> Children { get; set; }
 
-        public ListNode(List<SyntaxNode> children)
+        public ListNode(SyntaxNode parent, List<SyntaxNode> children) : base(parent)
         {
             Children = children;
         }
@@ -16,6 +17,16 @@ namespace Wul.Parser
         public override string AsString()
         {
             return $"List[{Children.Count}]";
+        }
+
+        public override string ToString()
+        {
+            List<string> strings = new List<string>();
+            foreach (var child in Children)
+            {
+                strings.Add(child.ToString());
+            }
+            return "(" + string.Join(' ', strings) + ")";
         }
     }
 
@@ -34,17 +45,18 @@ namespace Wul.Parser
             return countOpen > countClosed;
         }
 
-        public override SyntaxNode Parse(string token)
+        public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
             if (token.Length < 2) return null;
 
             //Assume token has been trimmed
-            int openIndex = token.IndexOf("(", StringComparison.Ordinal);
-            int closeIndex = token.LastIndexOf(")", StringComparison.Ordinal);
+            int openIndex = token.IndexOf('(');
+            int lastCloseIndex = token.LastIndexOf(')');
 
-            if (openIndex == -1 || closeIndex == -1) return null;
+            if (openIndex == -1 || lastCloseIndex == -1) return null;
 
-            string inner = token.Substring(openIndex + 1, closeIndex - (openIndex + 1));
+            string inner = token.Substring(openIndex + 1, lastCloseIndex - (openIndex + 1));
+            inner = Regex.Replace(inner, "([^\"].*)\\s+([^\"].*)", "$1 $2");
             List<SyntaxNode> children = new List<SyntaxNode>();
             
             int currentIndex = 0;
@@ -53,6 +65,8 @@ namespace Wul.Parser
             int startIndex = 0;
             bool startedString = false;
             bool startedRange = false;
+            ListNode currentList = new ListNode(parent, new List<SyntaxNode>());
+
             while (currentIndex < inner.Length)
             {
                 if (inner[currentIndex] == '(')
@@ -72,7 +86,7 @@ namespace Wul.Parser
                 currentIndex++;
                 if ((currentIndex == inner.Length || inner[currentIndex] == ' ' || inner[currentIndex] == ')') && openParentheses == closeParentheses)
                 {
-                    string currentInner = inner.Substring(startIndex, currentIndex - startIndex);
+                    string currentInner = inner.Substring(startIndex, currentIndex - startIndex).Trim();
                     if (stringParser.StartsString(currentInner)) 
                     {
                         startedString = true;
@@ -83,11 +97,12 @@ namespace Wul.Parser
                         startedRange = true;
                         continue;
                     }
-                    SyntaxNode item = identifierParser.Parse(currentInner)
-                                      ?? numericParser.Parse(currentInner)
-                                      ?? stringParser.Parse(currentInner)
-                                      ?? rangeParser.Parse(currentInner)
-                                      ?? Parse(currentInner);
+
+                    SyntaxNode item = identifierParser.Parse(currentInner, currentList)
+                                      ?? numericParser.Parse(currentInner, currentList)
+                                      ?? stringParser.Parse(currentInner, currentList)
+                                      ?? rangeParser.Parse(currentInner, currentList)
+                                      ?? Parse(currentInner, currentList);
                     if (item != null)
                     {
                         if (item is StringNode) startedString = false;
@@ -98,6 +113,7 @@ namespace Wul.Parser
                     {
                         throw new Exception("trash in list");
                     }
+
                     startIndex = currentIndex + 1;
                 }
             }
@@ -105,7 +121,8 @@ namespace Wul.Parser
             if (startedString) throw new Exception("unfinished string in list");
             if (startedRange) throw new Exception("unfinished range in list");
 
-            return new ListNode(children);
+            currentList.Children.AddRange(children);
+            return currentList;
         }
     }
 }

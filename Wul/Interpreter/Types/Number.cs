@@ -1,5 +1,6 @@
 using System;
 using Wul.Interpreter.MetaTypes;
+using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
@@ -85,6 +86,11 @@ namespace Wul.Interpreter.Types
 
 
         public WulType Type => NumberType.Instance;
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new NumericNode(parent, Value.ToString());
+        }
 
         public string AsString()
         {

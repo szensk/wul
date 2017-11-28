@@ -1,4 +1,5 @@
 using Wul.Interpreter.MetaTypes;
+using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
@@ -38,6 +39,11 @@ namespace Wul.Interpreter.Types
         public string Value { get; }
 
         public WulType Type => StringType.Instance;
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new StringNode(parent, Value);
+        }
 
         public string AsString()
         {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.MetaTypes;
+using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
@@ -79,6 +80,11 @@ namespace Wul.Interpreter.Types
         public Number Count => _list.Count;
 
         public WulType Type => ListType.Instance;
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new ListNode(parent, _list.Select(i => i.ToSyntaxNode(parent)).ToList());
+        }
 
         public string AsString()
         {

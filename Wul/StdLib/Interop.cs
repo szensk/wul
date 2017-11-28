@@ -63,7 +63,7 @@ namespace Wul.StdLib
                     return methodInfo.Invoke(null, arguments);
                 }
             }
-            return null;
+            throw new Exception($"Method {methodName} not found in {className}");
         }
 
         [GlobalName("::")]
