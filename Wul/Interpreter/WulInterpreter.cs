@@ -122,7 +122,9 @@ namespace Wul.Interpreter
                 //There must be a better way
                 if (list.MacroResult != null)
                 {
-                    return list.MacroResult;
+                    var result = list.MacroResult;
+                    list.MacroResult = null;
+                    return result;
                 }
 
                 var function = value.MetaType.Invoke.Method;
