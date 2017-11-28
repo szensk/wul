@@ -1,0 +1,17 @@
+;one line
+(defn apply (func list) (if (empty? list) (then list) (else (.. ((func (first list))) (apply func (rem list))))))
+
+;multiline
+(defn apply (func list) 
+	(if (empty? list) 
+		(then list) 
+		(else 
+			(.. 
+				((func (first list))) 
+				(apply func (rem list))
+			)
+		)
+	)
+)
+
+(apply (lambda (a) (+ a 1)) (list [1 5]))

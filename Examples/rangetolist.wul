@@ -1,0 +1,17 @@
+;one line
+(defn range-to-list (r) (if (= nil r) (then ()) (else (.. ((first r)) (range-to-list (rem r))))))
+
+;multiline
+(defn range-to-list (r) 
+	(if (= nil r) 
+		(then ()) 
+		(else 
+			(.. 
+				((first r)) 
+				(range-to-list (rem r))
+			)
+		)
+	)
+)
+
+(def range-to-list [1 5])

@@ -49,6 +49,10 @@ namespace Wul
         {
             Global.RegisterDefaultFunctions();
 
+            RunFile(@"C:\Users\havronj\Documents\maximum.wul");
+
+            return 0;
+
             if (!args.Any())
             {
                 string input = "";

@@ -67,7 +67,8 @@ namespace Wul.Parser
                 else if (program[currentIndex] == ';')
                 {
                     int endIndex = program.IndexOf('\n', currentIndex);
-                    currentIndex = endIndex == -1 ? program.Length : endIndex;
+                    startIndex = endIndex == -1 ? program.Length : endIndex + 1;
+                    currentIndex = endIndex == -1 ? program.Length : endIndex + 1;
                     continue;
                 }
 
