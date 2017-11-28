@@ -118,6 +118,13 @@ namespace Wul.Interpreter
                     .Where(v => v != null)
                     .ToList();
 
+                //A macro child executed the parent, return the macro result instead
+                //There must be a better way
+                if (list.MacroResult != null)
+                {
+                    return list.MacroResult;
+                }
+
                 var function = value.MetaType.Invoke.Method;
 
                 var finalList = new List<IValue> {value};

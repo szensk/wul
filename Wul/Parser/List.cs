@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Wul.Interpreter.Types;
 
 namespace Wul.Parser
 {
     public class ListNode : SyntaxNode
     {
         public List<SyntaxNode> Children { get; set; }
+
+        public IValue MacroResult { get; set; } = null;
 
         public ListNode(SyntaxNode parent, List<SyntaxNode> children) : base(parent)
         {

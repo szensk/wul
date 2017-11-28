@@ -174,8 +174,8 @@ namespace Wul.StdLib
         [GlobalName("unpack")]
         internal static IFunction Unpack = new MagicNetFunction((list, scope) =>
         {
-            ListNode listToUnpack  = (ListNode) list.Children[1].Eval(scope).ToSyntaxNode(list.Parent);
-            ListNode replaceInList = (ListNode) listToUnpack.Parent;
+            ListNode listToUnpack  = (ListNode)list.Children[1].Eval(scope).ToSyntaxNode(list.Parent);
+            ListNode replaceInList = (ListNode)listToUnpack.Parent;
             List<SyntaxNode> replacementList = new List<SyntaxNode>();
 
             foreach (SyntaxNode node in replaceInList.Children)
@@ -191,7 +191,9 @@ namespace Wul.StdLib
             }
             replaceInList.Children = replacementList;
 
-            return replaceInList.Eval(scope);
+            IValue result = replaceInList.Eval(scope);
+            replaceInList.MacroResult = result;
+            return result;
         }, "unpack");
     }
 }
