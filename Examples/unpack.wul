@@ -3,3 +3,7 @@
 (def l (1 2 3 4 5))
 (+ (unpack l)) ; returns 15
 (+ l) ; error unable to invoke metamethod + on list
+
+(defn sum (l) (+ (unpack l)))
+(set-metamethod List + sum)
+(+ l) ; returns 15
