@@ -65,7 +65,7 @@ namespace Wul
                         var result = WulInterpreter.Interpret(programNode);
                         if (result != null && result != Value.Nil)
                         {
-                            IO.Print.Evaluate(new List<IValue> {result}, Global.Scope);
+                            IO.Print(new List<IValue> {result}, Global.Scope);
                         }
                     }
                     catch (Exception e)

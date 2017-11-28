@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
     internal class IO
     {
-        [GlobalName("print")]
-        internal static IFunction Print = new NetFunction((list, scope) =>
+        [NetFunction("print")]
+        internal static IValue Print(List<IValue> list, Scope scope)
         {
             foreach (IValue value in list)
             {
@@ -27,13 +28,13 @@ namespace Wul.StdLib
                 }
             }
             return Value.Nil;
-        }, "print");
+        }
 
-        [GlobalName("clear")]
-        internal static IFunction Clear = new NetFunction((list, scope) =>
+        [NetFunction("clear")]
+        internal static IValue Clear(List<IValue> list, Scope scope)
         {
             Console.Clear();
             return Value.Nil;
-        }, "clear");
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
 
@@ -6,8 +8,8 @@ namespace Wul.StdLib
 {
     internal class Map
     {
-        [GlobalName("dict")]
-        internal static IFunction Dictionary = new NetFunction((list, scope) =>
+        [NetFunction("dict")]
+        internal static IValue Dictionary(List<IValue> list, Scope scope)
         {
             var mapList = ((ListTable) list[0]).AsList();
 
@@ -25,10 +27,10 @@ namespace Wul.StdLib
             }
 
             return map;
-        }, "dict");
+        }
 
-        [GlobalName("object")]
-        internal static IFunction Object = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("object")]
+        internal static IValue Object(ListNode list, Scope scope)
         {
             var mapList = ((ListNode) list.Children[1]).Children;
 
@@ -46,10 +48,10 @@ namespace Wul.StdLib
             }
 
             return map;
-        }, "object");
+        }
 
-        [GlobalName("@object")]
-        internal static IFunction ObjectShort = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("@object")]
+        internal static IValue ObjectShort(ListNode list, Scope scope)
         {
             var mapList = ((ListNode)list.Children[1]).Children;
 
@@ -62,7 +64,7 @@ namespace Wul.StdLib
             }
 
             return map;
-        }, "@object");
+        }
 
     }
 }

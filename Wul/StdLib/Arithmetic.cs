@@ -1,56 +1,58 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
     internal class Arithmetic
     {
-        [GlobalName("+")]
-        internal static IFunction Add = new NetFunction((list, scope) =>
+        [NetFunction("+")]
+        internal static IValue Add(List<IValue> list, Scope scope) 
         {
             IValue first = list.First();
 
             return first.MetaType.Add.Invoke(list, scope);
-        }, "+");
+        }
 
-        [GlobalName("-")]
-        internal static IFunction Subtract = new NetFunction((list, scope) =>
+        [NetFunction("-")]
+        internal static IValue Subtract(List<IValue> list, Scope scope) 
         {
             IValue first = list.First();
 
             return first.MetaType.Subtract.Invoke(list, scope);
-        }, "-");
+        }
 
-        [GlobalName("*")]
-        internal static IFunction Multiply = new NetFunction((list, scope) =>
+        [NetFunction("*")]
+        internal static IValue Multiply(List<IValue> list, Scope scope) 
         {
             IValue first = list.First();
 
             return first.MetaType.Multiply.Invoke(list, scope);
-        }, "*");
+        }
 
-        [GlobalName("/")]
-        internal static IFunction Divide = new NetFunction((list, scope) =>
+        [NetFunction("/")]
+        internal static IValue Divide(List<IValue> list, Scope scope) 
         {
             IValue first = list.First();
 
             return first.MetaType.Divide.Invoke(list, scope);
-        }, "/");
+        }
 
-        [GlobalName("%")]
-        internal static IFunction Modulus = new NetFunction((list, scope) =>
+        [NetFunction("%")]
+        internal static IValue Modulus(List<IValue> list, Scope scope) 
         {
             IValue first = list.First();
 
             return first.MetaType.Modulus.Invoke(list, scope);
-        }, "%");
+        }
 
-        [GlobalName("**")]
-        internal static IFunction Power = new NetFunction((list, scope) =>
+        [NetFunction("**")]
+        internal static IValue Power(List<IValue> list, Scope scope) 
         {
             IValue first = list.First();
 
             return first.MetaType.Power.Invoke(list, scope);
-        }, "**");
+        }
     }
 }

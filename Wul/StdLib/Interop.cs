@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
 
@@ -66,8 +67,8 @@ namespace Wul.StdLib
             throw new Exception($"Method {methodName} not found in {className}");
         }
 
-        [GlobalName("::")]
-        internal static IFunction CallFrameworkFunction = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("::")]
+        internal static IValue CallFrameworkFunction(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
@@ -105,6 +106,6 @@ namespace Wul.StdLib
                 default:
                     return Value.Nil;
             }
-        }, "::");
+        }
     }
 }

@@ -1,12 +1,14 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
     internal class Comparison
     {
-        [GlobalName("=")]
-        internal static IFunction Equal = new NetFunction((list, scope) =>
+        [NetFunction("=")]
+        internal static IValue Equal(List<IValue> list, Scope scope)
         {
             IValue first = list[0];
 
@@ -18,20 +20,20 @@ namespace Wul.StdLib
             {
                 return first == list[1] ? Bool.True : Bool.False;
             }
-        }, "=");
+        }
 
-        [GlobalName("<")]
-        internal static IFunction LessThan = new NetFunction((list, scope) =>
+        [NetFunction("<")]
+        internal static IValue LessThan(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             Number comparison = (Number) first.MetaType.Compare.Invoke(list, scope);
             int value = (int)comparison.Value;
             return value == -1 ? Bool.True : Bool.False;
-        }, "<");
+        }
 
-        [GlobalName("<=")]
-        internal static IFunction LessThanEqualTo = new NetFunction((list, scope) =>
+        [NetFunction("<=")]
+        internal static IValue LessThanEqualTo(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
@@ -39,20 +41,20 @@ namespace Wul.StdLib
             int value = (int)comparison.Value;
         
             return value == -1 || value == 0 ? Bool.True : Bool.False;
-        }, "<=");
+        }
 
-        [GlobalName(">")]
-        internal static IFunction GreaterThan = new NetFunction((list, scope) =>
+        [NetFunction(">")]
+        internal static IValue GreaterThan(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             Number comparison = (Number)first.MetaType.Compare.Invoke(list, scope);
             int value = (int)comparison.Value;
             return value == 1 ? Bool.True : Bool.False;
-        }, ">");
+        }
 
-        [GlobalName(">=")]
-        internal static IFunction GreaterThanEqualTo = new NetFunction((list, scope) =>
+        [NetFunction(">=")]
+        internal static IValue GreaterThanEqualTo(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
@@ -60,14 +62,14 @@ namespace Wul.StdLib
             int value = (int)comparison.Value;
 
             return value == 1 || value == 0 ? Bool.True : Bool.False;
-        }, ">=");
+        }
 
-        [GlobalName("compare")]
-        internal static IFunction Compare = new NetFunction((list, scope) =>
+        [NetFunction("compare")]
+        internal static IValue Compare(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             return first.MetaType.Compare.Invoke(list, scope);
-        }, "compare");
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Reflection;
 using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
+using Wul.Parser;
 
 namespace Wul.StdLib
 {
@@ -13,6 +14,35 @@ namespace Wul.StdLib
         private static Scope _scope;
 
         public static Scope Scope => _scope ?? (_scope = new Scope(null));
+
+        private class FunctionRegistration
+        {
+            public MethodInfo Method;
+            public IEnumerable<NetFunctionAttribute> NetAttributes;
+            public IEnumerable<MagicNetFunctionAttribute> MagicAttributes;
+        }
+
+        private static void RegisterNetFunction(FunctionRegistration method)
+        {
+            string defaultName = method.NetAttributes.First().Name;
+            var deleg = method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, IValue>));
+            NetFunction netFunction = new NetFunction((Func<List<IValue>, Scope, IValue>)deleg, defaultName);
+            foreach (var globalname in method.NetAttributes)
+            {
+                Scope[globalname.Name] = netFunction;
+            }
+        }
+
+        private static void RegisterMagicFunction(FunctionRegistration method)
+        {
+            string defaultName = method.MagicAttributes.First().Name;
+            var deleg = method.Method.CreateDelegate(typeof(Func<ListNode, Scope, IValue>));
+            MagicNetFunction magicFunction = new MagicNetFunction((Func<ListNode, Scope, IValue>)deleg, defaultName);
+            foreach (var globalname in method.MagicAttributes)
+            {
+                Scope[globalname.Name] = magicFunction;
+            }
+        }
 
         public static void RegisterDefaultFunctions()
         {
@@ -27,34 +57,27 @@ namespace Wul.StdLib
             Scope["Range"] = RangeType.Instance;
 
             var types = Assembly.GetAssembly(typeof(Global)).GetTypes();
-            var fields = types.SelectMany(t => t.GetRuntimeFields());
 
-            var namedFields = fields
-                .Select(f => new { Field = f, Attributes = f.GetCustomAttributes<GlobalNameAttribute>()})
-                .Where(f => f.Attributes.Any());
-
-            foreach (var field in namedFields)
-            {
-                foreach (var globalname in field.Attributes)
+            var namedMethods = types.SelectMany(t => t.GetRuntimeMethods())
+                .Select(m => new FunctionRegistration
                 {
-                    Scope[globalname.Name] = (IValue) field.Field.GetValue(null);
+                    Method = m,
+                    NetAttributes = m.GetCustomAttributes<NetFunctionAttribute>(),
+                    MagicAttributes = m.GetCustomAttributes<MagicNetFunctionAttribute>()
+                })
+                .ToList();
+
+            foreach (FunctionRegistration method in namedMethods)
+            {
+                if (method.NetAttributes.Any())
+                {
+                    RegisterNetFunction(method);
+                }
+                else if (method.MagicAttributes.Any())
+                {
+                    RegisterMagicFunction(method);
                 }
             }
-
-            //TODO create attribute for NetFunction
-            //TODO create attribute for MagicNetFunction
-            //var namedMethods = types.SelectMany(t => t.GetRuntimeMethods())
-            //    .Select(m => new { Method = m, Attributes = m.GetCustomAttributes<GlobalNameAttribute>() })
-            //    .Where(m => m.Attributes.Any());
-
-            //foreach (var method in namedMethods)
-            //{
-            //    NetFunction netFunction = new NetFunction((Func<List<IValue>,Scope,IValue>)method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, IValue>)), method.Attributes.First().Name);
-            //    foreach (var globalname in method.Attributes)
-            //    {
-            //        Scope[globalname.Name] = netFunction;
-            //    }
-            //}
 
             FunctionMetaType.SetMetaMethods();
         }

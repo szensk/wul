@@ -75,7 +75,7 @@ namespace Wul.Interpreter
         {
             currentScope = currentScope ?? Global.Scope;
             var arguments = rangeNode.Children.Select(c => c.Eval(currentScope));
-            return StdLib.Range.RangeFromArguments.Evaluate(arguments.ToList(), currentScope);
+            return StdLib.Range.RangeFromArguments(arguments.ToList(), currentScope);
         }
 
         private static IValue Evaluate(StringNode str, Scope currentScope = null)

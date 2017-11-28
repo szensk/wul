@@ -1,11 +1,13 @@
-﻿using Wul.Interpreter.Types;
+﻿using System.Collections.Generic;
+using Wul.Interpreter;
+using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
     class Range
     {
-        [GlobalName("range")]
-        internal static IFunction RangeFromArguments = new NetFunction((list, scope) =>
+        [NetFunction("range")]
+        internal static IValue RangeFromArguments(List<IValue> list, Scope scope)
         {
             Number start = (Number) list[0];
 
@@ -38,7 +40,6 @@ namespace Wul.StdLib
             }
 
             return new Interpreter.Types.Range(start.Value, end, increment);
-        }, "range");
-
+        }
     }
 }

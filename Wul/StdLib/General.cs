@@ -9,11 +9,14 @@ namespace Wul.StdLib
 {
     class General
     {
-        [GlobalName("identity")]
-        internal static IFunction Identity = new NetFunction((list, scope) => list.FirstOrDefault() ?? Value.Nil, "identity");
+        [NetFunction("identity")]
+        internal static IValue Identity(List<IValue> list, Scope scope)
+        {
+            return list.FirstOrDefault() ?? Value.Nil;
+        }
 
-        [GlobalName("def")]
-        internal static IFunction Define = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("def")]
+        internal static IValue Define(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
             var nameIdentifier = (IdentifierNode) children[0];
@@ -30,10 +33,10 @@ namespace Wul.StdLib
             }
 
             return value;
-        }, "def");
+        }
 
-        [GlobalName("defn")]
-        internal static IFunction DefineFunction = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("defn")]
+        internal static IValue DefineFunction(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
@@ -48,10 +51,10 @@ namespace Wul.StdLib
             scope[name] = function;
 
             return function;
-        }, "defn");
+        }
 
-        [GlobalName("lambda")]
-        internal static IFunction Lambda = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("lambda")]
+        internal static IValue Lambda(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
@@ -62,10 +65,10 @@ namespace Wul.StdLib
             var function = new Function(body, "unnamed function", argNames.ToList());
 
             return function;
-        }, "lambda");
+        }
 
-        [GlobalName("@defn")]
-        internal static IFunction DefineMagicFunction = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("@defn")]
+        internal static IValue DefineMagicFunction(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
@@ -80,11 +83,11 @@ namespace Wul.StdLib
             scope[name] = function;
 
             return function;
-        }, "@defn");
+        }
 
-        [GlobalName("then")]
-        [GlobalName("else")]
-        internal static IFunction Then = new NetFunction((list, scope) =>
+        [NetFunction("then")]
+        [NetFunction("else")]
+        internal static IValue Then(List<IValue> list, Scope scope)
         {
             if (list.Count == 1)
             {
@@ -94,10 +97,10 @@ namespace Wul.StdLib
             {
                 return new ListTable(list.ToArray());
             }
-        }, "then/else");
+        }
 
-        [GlobalName("if")]
-        internal static IFunction If = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("if")]
+        internal static IValue If(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
@@ -109,28 +112,30 @@ namespace Wul.StdLib
             IValue returnValue = Value.Nil;
             if (result != Value.Nil && result != Bool.False)
             {
-                var thenBlock = listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "then");
+                var thenBlock =
+                    listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "then");
                 if (thenBlock != null) returnValue = WulInterpreter.Interpret(thenBlock, scope);
             }
             else
             {
-                var elseBlock = listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "else");
+                var elseBlock =
+                    listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "else");
                 if (elseBlock != null) returnValue = WulInterpreter.Interpret(elseBlock, scope);
             }
 
             return returnValue;
-        }, "if");
+        }
 
-        [GlobalName("eval")]
-        internal static IFunction Evaluate = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("eval")]
+        internal static IValue Evaluate(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
             return children[0].Eval(scope);
-        }, "eval");
+        }
 
-        [GlobalName("??")]
-        internal static IFunction Coalesce = new NetFunction((list, scope) =>
+        [NetFunction("??")]
+        internal static IValue Coalesce(List<IValue> list, Scope scope)
         {
             IValue firstNonNull = list.FirstOrDefault(i => i != Value.Nil);
 
@@ -142,37 +147,37 @@ namespace Wul.StdLib
             {
                 return Value.Nil;
             }
-        }, "??");
+        }
 
-        [GlobalName("type")]
-        internal static IFunction Type = new NetFunction((list, scope) =>
+        [NetFunction("type")]
+        internal static IValue Type(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             return first.MetaType.Type.Invoke(list, scope);
-        }, "type");
+        }
 
-        [GlobalName("quote")]
-        internal static IFunction Quote = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("quote")]
+        internal static IValue Quote(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
             return children[0];
-        }, "quote");
+        }
 
-        [GlobalName("exit")]
-        internal static IFunction Exit = new NetFunction((list, scope) =>
+        [NetFunction("exit")]
+        internal static IValue Exit(List<IValue> list, Scope scope)
         {
             Number code = list.First() as Number;
 
             Environment.Exit((int)code.Value);
 
             return code;
-        }, "exit");
+        }
 
         //I don't like this macro
-        [GlobalName("unpack")]
-        internal static IFunction Unpack = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("unpack")]
+        internal static IValue Unpack(ListNode list, Scope scope)
         {
             ListNode listToUnpack  = (ListNode)list.Children[1].Eval(scope).ToSyntaxNode(list.Parent);
             ListNode replaceInList = (ListNode)listToUnpack.Parent;
@@ -196,6 +201,6 @@ namespace Wul.StdLib
             replaceInList.MacroResult = result;
             replaceInList.Children = originalList;
             return result;
-        }, "unpack");
+        }
     }
 }

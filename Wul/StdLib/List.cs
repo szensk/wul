@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Wul.Interpreter;
 using Wul.Interpreter.Types;
+using Wul.Parser;
 
 namespace Wul.StdLib
 {
     internal class List
     {
-        [GlobalName("list")]
-        internal static IFunction Listify = new NetFunction((list, Scope) =>
+        [NetFunction("list")]
+        internal static IValue Listify(List<IValue> list, Scope scope)
         {
             if (list.Count == 1 && list[0].Type == RangeType.Instance)
             {
@@ -17,36 +19,36 @@ namespace Wul.StdLib
             {
                 return new ListTable(list);
             }
-        }, "list");
+        }
 
-        [GlobalName("first")]
-        internal static IFunction First = new NetFunction((list, scope) =>
+        [NetFunction("first")]
+        internal static IValue First(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             return first.MetaType.At.Invoke(new List<IValue>{ first, (Number) 0}, scope);
-        }, "first");
+        }
 
-        [GlobalName("last")]
-        internal static IFunction Last = new NetFunction((list, scope) =>
+        [NetFunction("last")]
+        internal static IValue Last(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             Number count = (Number) first.MetaType.Count.Invoke(list, scope);
 
             return first.MetaType.At.Invoke(new List<IValue> {first, (Number) (count.Value - 1)}, scope);
-        }, "last");
+        }
 
-        [GlobalName("rem")]
-        internal static IFunction Remainder = new NetFunction((list, scope) =>
+        [NetFunction("rem")]
+        internal static IValue Remainder(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             return first.MetaType.Remainder.Invoke(list, scope);
-        }, "rem");
+        }
 
-        [GlobalName("at")]
-        internal static IFunction AtIndex = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("at")]
+        internal static IValue AtIndex(ListNode list, Scope scope)
         {
             IValue first = list.Children[1].Eval(scope);
 
@@ -59,10 +61,10 @@ namespace Wul.StdLib
                 var evaluatedArguments = list.Children.Skip(1).Select(c => c.Eval(scope)).ToList();
                 return first.MetaType.At.Invoke(evaluatedArguments, scope);
             }
-        }, "at");
+        }
 
-        [GlobalName("set")]
-        internal static IFunction SetIndex = new MagicNetFunction((list, scope) =>
+        [MagicNetFunction("set")]
+        internal static IValue SetIndex(ListNode list, Scope scope)
         {
             IValue first = list.Children[1].Eval(scope);
 
@@ -75,25 +77,25 @@ namespace Wul.StdLib
                 var evaluatedArguments = list.Children.Skip(1).Select(c => c.Eval(scope)).ToList();
                 return first.MetaType.Set.Invoke(evaluatedArguments, scope);
             }
-        }, "set");
+        }
 
-        [GlobalName("empty?")]
-        internal static IFunction Empty = new NetFunction((list, scope) =>
+        [NetFunction("empty?")]
+        internal static IValue Empty(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             Number count = (Number) first.MetaType.Count.Invoke(list, scope);
 
             return count == 0 ? Bool.True : Bool.False;
-        }, "empty?");
+        }
 
-        [GlobalName("len")]
-        [GlobalName("#")]
-        internal static IFunction Length = new NetFunction((list, scope) =>
+        [NetFunction("len")]
+        [NetFunction("#")]
+        internal static IValue Length(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
 
             return first.MetaType.Count.Invoke(list, scope);
-        }, "length");
+        }
     }
 }
