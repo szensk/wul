@@ -67,6 +67,14 @@ namespace Wul.StdLib
             throw new Exception($"Method {methodName} not found in {className}");
         }
 
+        private static object NewObject(string className, params object[] arguments)
+        {
+            var types = AllTypes[className];
+
+            var type = types.First();
+            return Activator.CreateInstance(type, arguments);
+        }
+
         [MagicNetFunction("::")]
         internal static IValue CallFrameworkFunction(ListNode list, Scope scope)
         {
@@ -91,8 +99,6 @@ namespace Wul.StdLib
             //TODO IEnumerables to Lists
             switch (result)
             {
-                case DateTime dt:
-                    return new UString(dt.ToString());
                 case string s:
                     return new UString(s);
                 case bool b:
@@ -103,9 +109,34 @@ namespace Wul.StdLib
                     return (Number)i;
                 case int[] ia:
                     return new ListTable(ia.Select(n => (Number)n));
-                default:
+                case null:
                     return Value.Nil;
+                default:
+                    return new NetObject(result);
             }
+        }
+
+        [MagicNetFunction("new-object")]
+        internal static IValue NewObject(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            var nameIdentifier = (IdentifierNode)children[0];
+            string name = nameIdentifier.Name;
+
+            object result = null;
+            if (children.Length > 1)
+            {
+                object[] evaluatedArguments = children.Skip(1).Select(s => s.Eval(scope).ToObject()).ToArray();
+
+                result = NewObject(name, evaluatedArguments);
+            }
+            else
+            {
+                result = NewObject(name);
+            }
+
+            return result == null ? (IValue) Value.Nil : new NetObject(result);
         }
     }
 }
