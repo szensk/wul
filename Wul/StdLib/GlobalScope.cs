@@ -56,6 +56,10 @@ namespace Wul.StdLib
             Scope["SyntaxNode"] = SyntaxNodeType.Instance;
             Scope["Range"] = RangeType.Instance;
 
+            //Bools
+            Scope["true"] = Bool.True;
+            Scope["false"] = Bool.False;
+
             var types = Assembly.GetAssembly(typeof(Global)).GetTypes();
 
             var namedMethods = types.SelectMany(t => t.GetRuntimeMethods())
