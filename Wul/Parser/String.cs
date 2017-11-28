@@ -142,13 +142,23 @@ namespace Wul.Parser
                 if (j >= text.Length) break;
                 switch (text[j + 1])
                 {
-                    case 'n':  sb.Append('\n');
+                    case 'n':
+                        sb.Append('\n');
                         break;  
-                    case 'r':  sb.Append('\r');
+                    case 'r':
+                        sb.Append('\r');
                         break;  
-                    case 't':  sb.Append('\t');
+                    case 't':
+                        sb.Append('\t');
                         break;  
-                    case '\\': sb.Append('\\');
+                    case '\\':
+                        sb.Append('\\');
+                        break;
+                    case '"':
+                        sb.Append('"');
+                        break;
+                    case '\'':
+                        sb.Append('\'');
                         break;
                     default:
                         sb.Append('\\').Append(text[j + 1]);
@@ -179,7 +189,8 @@ namespace Wul.Parser
 
             if (closeQuoteIndex == -1 || openQuoteIndex == closeQuoteIndex) return null;
 
-            string value = Unescape(token.Substring(openQuoteIndex + 1, closeQuoteIndex - (openQuoteIndex + 1)));
+            string substring = token.Substring(openQuoteIndex + 1, closeQuoteIndex - (openQuoteIndex + 1));
+            string value = Unescape(substring);
             
             return interpolated ? new InterpolatedStringNode(value) : new StringNode(value);
         }

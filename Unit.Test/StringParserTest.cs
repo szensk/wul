@@ -64,6 +64,17 @@ namespace Unit.Test
         }
 
         [TestMethod]
+        public void StringParser_EscapedQuote()
+        {
+            StringParser parser = new StringParser();
+            string token = "\"\\\"\"";
+
+            StringNode node = (StringNode)parser.Parse(token);
+
+            Assert.AreEqual("\"", node.Value());
+        }
+
+        [TestMethod]
         public void StringParser_Interpolated()
         {
             StringParser parser = new StringParser();
