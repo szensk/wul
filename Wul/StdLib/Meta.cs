@@ -1,10 +1,11 @@
-﻿using Wul.Interpreter;
+﻿using System.Linq;
+using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
 
 namespace Wul.StdLib
 {
-    class MetaType
+    class Meta
     {
         [GlobalName("set-metamethod")]
         internal static IFunction SetMetaType = new MagicNetFunction((list, scope) =>
@@ -33,5 +34,13 @@ namespace Wul.StdLib
 
             return Value.Nil;
         }, "set-metamethod");
+
+        [GlobalName("dump")]
+        internal static IFunction DumpValue = new MagicNetFunction((list, scope) =>
+        {
+            IValue first = WulInterpreter.Interpret(list.Children[1], scope) ?? Value.Nil;
+            SyntaxNode node = first.ToSyntaxNode(list.Parent);
+            return new UString(node.ToString());
+        }, "dump");
     }
 }

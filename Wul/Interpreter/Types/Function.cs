@@ -75,7 +75,9 @@ namespace Wul.Interpreter.Types
         {
             List<SyntaxNode> listNodes = new List<SyntaxNode>();
             listNodes.Add(new IdentifierNode(parent, "lambda"));
-            listNodes.AddRange(ArgumentNames.Select(a => new IdentifierNode(parent, a)));
+            ListNode args = new ListNode(parent, new List<SyntaxNode>());
+            args.Children.AddRange(ArgumentNames.Select(a => new IdentifierNode(parent, a)));
+            listNodes.Add(args);
             listNodes.Add(Body);
             return new ListNode(parent, listNodes);
         }
