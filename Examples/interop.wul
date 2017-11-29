@@ -3,4 +3,4 @@
 (:: System.Console.WriteLine "ok") 
 (:: System.Console.Title "New title")
 (:: System.Console.Title) 
-(:: System.DateTime.Now) 
+(print (:: System.DateTime.Now))

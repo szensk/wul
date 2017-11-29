@@ -1,7 +1,3 @@
-;one line
-(defn max-n (l max) (if (empty? l) (then max) (else (if (> (first l) max) (then (max-n (rem l) (first l))) (else (max-n (rem l) max))))))
-
-;multiline
 (defn max-n (l max)
 	(if (empty? l)
 		(then max)
@@ -18,4 +14,4 @@
 
 (def myMax (maxNumber (6 3 7 0 -4)))
 
-(:: System.Console.WriteLine myMax)
+(print myMax)

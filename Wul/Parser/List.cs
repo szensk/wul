@@ -49,8 +49,14 @@ namespace Wul.Parser
         {
             if (token.Length < 2) return null;
 
-            //Assume token has been trimmed
+            //If it starts with a comment, don't include it
+            int commentIndex = token.IndexOf(';');
             int openIndex = token.IndexOf('(');
+            if (commentIndex != -1 && commentIndex < openIndex)
+            {
+                int lineIndex = token.IndexOf('\n');
+                openIndex = token.IndexOf('(', lineIndex);
+            }
             int lastCloseIndex = token.LastIndexOf(')');
 
             if (openIndex == -1 || lastCloseIndex == -1) return null;
@@ -126,7 +132,6 @@ namespace Wul.Parser
 
             if (startedString) throw new Exception("unfinished string in list");
             if (startedRange) throw new Exception("unfinished range in list");
-            if (startIndex < inner.Length) throw new Exception("unfinished list");
 
             currentList.Children.AddRange(children);
             return currentList;

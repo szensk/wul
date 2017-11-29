@@ -1,9 +1,9 @@
 ; Unpack is a macro that turns a list into arguments to a function
 
 (def l (1 2 3 4 5))
-(+ (unpack l)) ; returns 15
-(+ l) ; error unable to invoke metamethod + on list
+(print (+ (unpack l))) ; returns 15
+
 
 (defn sum (l) (+ (unpack l)))
 (set-metamethod List + sum)
-(+ l) ; returns 15
+(print (+ l)) ; returns 15

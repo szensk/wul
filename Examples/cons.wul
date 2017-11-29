@@ -4,5 +4,5 @@
 (defn cdr (z) (z (lambda (p q) (identity q))))
 
 (def l (cons 1 2))
-(car l) ; returns 1
-(cdr l) ; returns 2
+(print (car l)) ; 1
+(print (cdr l)) ; 2

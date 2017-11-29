@@ -7,4 +7,4 @@
 (= me me2) ; returns true
 (at me age) ; returns 26
 (set me name 'New Name') ; modifies map inplace 
-(:: System.Debug.WriteLine (at me name))
+(print (at me name))
