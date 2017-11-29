@@ -1,0 +1,8 @@
+; Classic lisp functions cons, car, cdr
+(defn cons (x y) (lambda (m) (m x y)))
+(defn car (z) (z (lambda (p q) (identity p))))
+(defn cdr (z) (z (lambda (p q) (identity q))))
+
+(def l (cons 1 2))
+(car l) ; returns 1
+(cdr l) ; returns 2
