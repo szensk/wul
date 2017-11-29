@@ -40,8 +40,8 @@
             (if (= J opcode)
               (then 
                 (if (= (at memory operand) (at memory (operand2 code location)))
-                  (then (simulate code (inc location)))
-                  (else (simulate code (get-bt code location)))
+                  (then (simulate code (inc location)))         ; branch not taken
+                  (else (simulate code (get-bt code location))) ; branch taken
                 )
               )
             )

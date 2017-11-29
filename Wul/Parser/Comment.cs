@@ -19,7 +19,12 @@ namespace Wul.Parser
 
     public class CommentParser : SyntaxNodeParser
     {
-        public override SyntaxNode Parse(string token, SyntaxNode parent)
+        public static bool StartsComment(string token)
+        {
+            return Regex.Match(token, ";(.*)$").Success;
+        }
+
+        public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
             if (token.Length < 1) return null;
 

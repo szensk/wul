@@ -77,6 +77,12 @@ namespace Wul.Parser
                 {
                     closeParentheses++;
                 }
+                else if (inner[currentIndex] == ';')
+                {
+                    int endIndex = inner.IndexOf('\n', currentIndex);
+                    currentIndex = endIndex == -1 ? inner.Length : endIndex + 1;
+                    continue;
+                }
 
                 if (closeParentheses > openParentheses)
                 {
@@ -109,7 +115,7 @@ namespace Wul.Parser
                         if (item is RangeNode) startedRange = false;
                         children.Add(item);
                     }
-                    else if (!string.IsNullOrWhiteSpace(currentInner))
+                    else if (!string.IsNullOrWhiteSpace(currentInner) && !CommentParser.StartsComment(currentInner))
                     {
                         throw new Exception("trash in list");
                     }

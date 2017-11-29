@@ -90,6 +90,27 @@ namespace Unit.Test
         }
 
         [TestMethod]
+        public void ProgramParser_CommentExample()
+        {
+            //Arrange
+            const string program = @"
+                (defn add (a b c)
+                  (+ a b) ; this adds the first two arguments
+                )
+
+                (print add)
+                (print (dump add))";
+
+            ProgramParser parser = new ProgramParser();
+
+            //Act
+            ProgramNode node = (ProgramNode)parser.Parse(program);
+
+            //Assert
+            Assert.AreEqual(3, node.Expressions.Count);
+        }
+
+        [TestMethod]
         public void ProgramParser_ListOfOne()
         {
             //Arrange
