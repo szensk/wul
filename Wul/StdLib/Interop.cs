@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
@@ -83,7 +82,7 @@ namespace Wul.StdLib
             var nameIdentifier = (IdentifierNode)children[0];
             string name = nameIdentifier.Name;
 
-            object result = null;
+            object result;
             if (children.Length > 1)
             {
                 object[] evaluatedArguments = children.Skip(1).Select(s => s.Eval(scope).ToObject()).ToArray();
@@ -124,7 +123,7 @@ namespace Wul.StdLib
             var nameIdentifier = (IdentifierNode)children[0];
             string name = nameIdentifier.Name;
 
-            object result = null;
+            object result;
             if (children.Length > 1)
             {
                 object[] evaluatedArguments = children.Skip(1).Select(s => s.Eval(scope).ToObject()).ToArray();

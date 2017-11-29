@@ -48,6 +48,7 @@ namespace Wul.Interpreter.Types
         {
             Scope currentScope = ParentScope.EmptyChildScope();
 
+            currentScope["self"] = this;
             //Bind arguments to names
             for (int i = 0; i < ArgumentNames.Count; ++i)
             {

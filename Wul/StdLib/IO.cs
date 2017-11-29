@@ -5,6 +5,7 @@ using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
+    // ReSharper disable once InconsistentNaming
     internal class IO
     {
         [NetFunction("print")]
@@ -12,7 +13,7 @@ namespace Wul.StdLib
         {
             foreach (IValue value in list)
             {
-                string stringValue = "";
+                string stringValue;
                 if (value.MetaType?.AsString?.IsDefined ?? false)
                 {
                     UString ustring = (UString) value.MetaType.AsString.Invoke(new List<IValue> {value}, scope);

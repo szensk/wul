@@ -18,7 +18,7 @@ namespace Wul.StdLib
             }
             else
             {
-                return first == list[1] ? Bool.True : Bool.False;
+                return ReferenceEquals(first, list[1]) ? Bool.True : Bool.False;
             }
         }
 
@@ -28,7 +28,7 @@ namespace Wul.StdLib
             IValue first = list.First();
 
             Number comparison = (Number) first.MetaType.Compare.Invoke(list, scope);
-            int value = (int)comparison.Value;
+            int value = (int) comparison.Value;
             return value == -1 ? Bool.True : Bool.False;
         }
 

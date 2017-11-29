@@ -24,7 +24,7 @@ namespace Wul.StdLib
             string name = nameIdentifier.Name;
             var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
 
-            if (value == Value.Nil)
+            if (ReferenceEquals(value, Value.Nil))
             {
                 scope.Remove(name);
             }
@@ -125,7 +125,7 @@ namespace Wul.StdLib
             var listChildren = children.OfType<ListNode>();
 
             IValue returnValue = Value.Nil;
-            if (result != Value.Nil && result != Bool.False)
+            if (!ReferenceEquals(result, Value.Nil) && !ReferenceEquals(result, Bool.False))
             {
                 var thenBlock =
                     listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "then");
@@ -152,7 +152,7 @@ namespace Wul.StdLib
         [NetFunction("??")]
         internal static IValue Coalesce(List<IValue> list, Scope scope)
         {
-            IValue firstNonNull = list.FirstOrDefault(i => i != Value.Nil);
+            IValue firstNonNull = list.FirstOrDefault(i => !ReferenceEquals(i, Value.Nil));
 
             if (firstNonNull != null)
             {
@@ -169,7 +169,14 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Type.Invoke(list, scope);
+            if (first.MetaType?.Type?.IsDefined ?? false)
+            {
+                return first.MetaType.Type.Invoke(list, scope);
+            }
+            else
+            {
+                return (IValue) first.Type ?? Value.Nil;
+            }
         }
 
         [MagicNetFunction("quote")]

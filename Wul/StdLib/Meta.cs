@@ -18,7 +18,7 @@ namespace Wul.StdLib
             if (first is WulType type)
             {
                 var metaMethod = type.DefaultMetaType.Get(metaMethodName);
-                metaMethod.Method = function == Value.Nil ? null : (IFunction)function;
+                metaMethod.Method = ReferenceEquals(function, Value.Nil) ? null : (IFunction)function;
             }
             else
             {
@@ -26,7 +26,7 @@ namespace Wul.StdLib
                 var newMetaType = first.MetaType.Clone();
 
                 var metaMethod = newMetaType.Get(metaMethodName);
-                metaMethod.Method = function == Value.Nil ? null : (IFunction) function;
+                metaMethod.Method = ReferenceEquals(function, Value.Nil) ? null : (IFunction) function;
 
                 first.MetaType = newMetaType;
             }

@@ -25,7 +25,7 @@ namespace Wul.StdLib
             foreach (SyntaxNode node in nodes)
             {
                 value = node.EvalOnce(scope);
-                if (value != Value.Nil && value != Bool.False)
+                if (!ReferenceEquals(value, Value.Nil) && !ReferenceEquals(value, Bool.False))
                 {
                     return value;
                 }
@@ -42,7 +42,7 @@ namespace Wul.StdLib
             foreach (SyntaxNode node in nodes)
             {
                 value = node.EvalOnce(scope);
-                if (value == Value.Nil || value == Bool.False)
+                if (ReferenceEquals(value, Value.Nil) || ReferenceEquals(value, Bool.False))
                 {
                     return value;
                 }

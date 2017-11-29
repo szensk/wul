@@ -31,8 +31,7 @@ namespace Wul.StdLib
             Number start = list[1] as Number;
             Number length = list.Skip(2).FirstOrDefault() as Number;
 
-            string result = "";
-            result = length != null ? value.Substring(start, length) : value.Substring(start);
+            var result = length != null ? value.Substring(start, length) : value.Substring(start);
             return new UString(result);
         }
 

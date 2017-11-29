@@ -18,7 +18,7 @@ namespace Wul.StdLib
             {
                 end = start.Value;
             }
-            else if (list[1] != Value.Nil)
+            else if (!ReferenceEquals(list[1], Value.Nil))
             {
                 end = ((Number) list[1]).Value;
             }
@@ -34,7 +34,7 @@ namespace Wul.StdLib
                     increment = -1;
                 }
             }
-            else if (list.Count == 3 && list[2] != Value.Nil)
+            else if (list.Count == 3 && !ReferenceEquals(list[2], Value.Nil))
             {
                 increment = ((Number) list[2]).Value;
             }

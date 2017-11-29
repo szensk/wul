@@ -13,7 +13,7 @@ namespace Wul.StdLib
     {
         private static Scope _scope;
 
-        public static Scope Scope => _scope ?? (_scope = new Scope(null));
+        public static Scope Scope => _scope ?? (_scope = new Scope());
 
         private class FunctionRegistration
         {
