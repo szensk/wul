@@ -103,11 +103,14 @@ namespace Wul.Interpreter.Types
     {
         public ListNode Body;
 
-        public MagicFunction(ListNode body, string name, List<string> argumentNames)
+        public Scope ParentScope { get; }
+
+        public MagicFunction(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
+            ParentScope = parentScope;
             MetaType = MagicFunctionMetaType.Instance;
         }
 
@@ -122,7 +125,7 @@ namespace Wul.Interpreter.Types
         //TODO prevent double evaluation of self
         public virtual IValue Execute(ListNode list, Scope scope)
         {
-            Scope currentScope = scope.EmptyChildScope();
+            Scope currentScope = ParentScope.EmptyChildScope();
 
             var arguments = list.Children.ToArray();
 
