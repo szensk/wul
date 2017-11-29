@@ -65,6 +65,7 @@ namespace Wul
                         var result = WulInterpreter.Interpret(programNode);
                         if (result != null && result != Value.Nil)
                         {
+                            if (result is UString) result = new UString($"'{result.AsString()}'");
                             IO.Print(new List<IValue> {result}, Global.Scope);
                         }
                     }

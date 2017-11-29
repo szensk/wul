@@ -59,7 +59,7 @@ namespace Wul.Parser
             if (openIndex == -1 || lastCloseIndex == -1) return null;
 
             string inner = token.Substring(openIndex + 1, lastCloseIndex - (openIndex + 1));
-            inner = Regex.Replace(inner, "([^\"].*)\\s+([^\"].*)", "$1 $2");
+            //inner = Regex.Replace(inner, "([^\"].*)\\s+([^\"].*)", "$1 $2");
             List<SyntaxNode> children = new List<SyntaxNode>();
             
             int currentIndex = 0;
@@ -87,7 +87,7 @@ namespace Wul.Parser
                 }
 
                 currentIndex++;
-                if ((currentIndex == inner.Length || inner[currentIndex] == ' ' || inner[currentIndex] == ')') && openParentheses == closeParentheses)
+                if ((currentIndex == inner.Length || char.IsWhiteSpace(inner[currentIndex]) || inner[currentIndex] == ')') && openParentheses == closeParentheses)
                 {
                     string currentInner = inner.Substring(startIndex, currentIndex - startIndex).Trim();
                     if (stringParser.StartsString(currentInner)) 

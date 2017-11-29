@@ -1,0 +1,6 @@
+(defn add (a b c)
+  (+ a b) ; this adds the first two arguments
+)
+
+(print add)
+(print (dump add))

@@ -1,0 +1,47 @@
+; zij.wul
+
+(def Z 0)
+(def I 1)
+(def J 2)
+
+(def memory (3 4 0 0))
+(def program 
+   ((Z 2) 
+	(Z 3)
+	(I 2)
+	(J 2 0 2)
+	(I 2)
+	(I 3)
+	(J 3 1 4)
+	(Z 3))
+)
+
+(defn inc (a) (+ a 1))
+(defn get-opcode (code location) (first (at code location)))
+(defn get-operand (code location) (at (at code location) 1))
+(defn get-bnt (code location) (at (at code location) 2))
+(defn get-bt (code location) (at (at code location) 3))
+
+(defn simulate (code location)
+	(if (>= location (# code))
+		(then memory)
+		(else 
+			(??
+				(if (= Z (get-opcode code location)) 
+					(then (simulate code (set memory (get-operand code location) 0) (inc location)))
+				)
+				(if (= I (get-opcode code location))
+					(then (simulate code (set memory (get-operand code location) (at memory (get-operand code location))) (inc location)))
+				)
+				(if (= J (get-opcode code location))
+					(then 
+						()
+					)
+				)
+			)
+		)
+	)
+)
+
+(print "Program code size: {(# program)}")
+(print (dump simulate))
