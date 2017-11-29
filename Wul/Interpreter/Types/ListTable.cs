@@ -93,13 +93,11 @@ namespace Wul.Interpreter.Types
 
         public string AsString()
         {
-            //TODO call as string metamethod
             return "(" + string.Join(", ", _list.Select(s => s.AsString()).ToList()) + ")";
         }
 
         public object ToObject()
         {
-            //TODO Not ideal
             return _list.Select(i => i.ToObject()).ToArray();
         }
 

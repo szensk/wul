@@ -83,7 +83,7 @@ namespace Wul.Parser
 
                 if (closeParentheses > openParentheses)
                 {
-                    throw new Exception("Mismatched parenthesis, have fun");
+                    throw new Exception($"Mismatched parenthesis: {inner}");
                 }
 
                 currentIndex++;

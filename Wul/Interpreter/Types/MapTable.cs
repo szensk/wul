@@ -42,16 +42,6 @@ namespace Wul.Interpreter.Types
             MetaType = MapMetaType.Instance;
         }
 
-        public MapTable(object o)
-        {
-            MetaType = MapMetaType.Instance;
-
-            //TODO iterate through each field and add to map
-            //for each property generate a NetFunction
-
-            throw new NotImplementedException();
-        }
-
         public IDictionary<IValue, IValue> AsDictionary()
         {
             return _map;
@@ -91,10 +81,16 @@ namespace Wul.Interpreter.Types
 
         public SyntaxNode ToSyntaxNode(SyntaxNode parent)
         {
-            return new ListNode(parent, _map
-                .SelectMany(kvp => new[] { kvp.Key.ToSyntaxNode(parent), kvp.Value.ToSyntaxNode(parent)})
+            var dictListNode = new ListNode(parent, new List<SyntaxNode>());
+            dictListNode.Children.Add(new IdentifierNode(dictListNode, "dict"));
+            var listNode = new ListNode(dictListNode, new List<SyntaxNode>());
+            //TODO: if key is identifier, quote it?
+            listNode.Children.AddRange(_map
+                .SelectMany(kvp => new[] { kvp.Key.ToSyntaxNode(dictListNode), kvp.Value.ToSyntaxNode(dictListNode) })
                 .ToList()
             );
+            dictListNode.Children.Add(listNode);
+            return dictListNode;
         }
 
         public string AsString()
