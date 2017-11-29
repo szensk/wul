@@ -26,8 +26,16 @@ namespace Wul
 
         private static bool RunFile(string filePath)
         {
-            var result = WulInterpreter.Interpret(LoadFile(filePath));
-            return true; //TODO 
+            try
+            {
+                WulInterpreter.Interpret(LoadFile(filePath));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+                return false;
+            }
+            return true;
         }
 
         private static void PrintHelp()
@@ -95,7 +103,7 @@ namespace Wul
                     string filePath = args[1];
                     if (File.Exists(filePath))
                     {
-                        RunFile(filePath);
+                        return RunFile(filePath) ? 0 : -1;
                     }
                     else
                     {
