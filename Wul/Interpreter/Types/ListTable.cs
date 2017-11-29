@@ -73,7 +73,12 @@ namespace Wul.Interpreter.Types
             }
             else
             {
-                _list[(Number) key] = value;
+                int index = (Number) key;
+                while (index >= _list.Count)
+                {
+                    _list.Add(Value.Nil);
+                }
+                _list[index] = value;
             }
         }
 
