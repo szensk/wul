@@ -7,12 +7,24 @@ namespace Wul.StdLib
 {
     internal class Arithmetic
     {
+        [NetFunction("inc")]
+        internal static IValue Increment(List<IValue> list, Scope scope)
+        {
+            return Add(list.PushBack((Number) 1), scope);
+        }
+
         [NetFunction("+")]
         internal static IValue Add(List<IValue> list, Scope scope) 
         {
             IValue first = list.First();
 
             return first.MetaType.Add.Invoke(list, scope);
+        }
+
+        [NetFunction("dec")]
+        internal static IValue Decrement(List<IValue> list, Scope scope)
+        {
+            return Subtract(list.PushBack((Number)1), scope);
         }
 
         [NetFunction("-")]

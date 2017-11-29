@@ -14,14 +14,17 @@ namespace Wul
     //WUL: Worthless Unnecessary Language
     class Wul
     {
-        private static readonly ProgramParser parser = new ProgramParser();
+        private const int ExitSuccess = 0;
+        private const int ExitError = -1;
+
+        private static readonly ProgramParser Parser = new ProgramParser();
 
         private static string Version => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
         
         private static ProgramNode LoadFile(string filePath)
         {
             string programText = File.ReadAllText(filePath);
-            return (ProgramNode) parser.Parse(programText);
+            return (ProgramNode) Parser.Parse(programText);
         }
 
         private static bool RunFile(string filePath)
@@ -50,7 +53,7 @@ namespace Wul
         {
             Console.WriteLine(message);
             PrintHelp();
-            return -1;
+            return ExitError;
         }
 
         private static int Main(string[] args)
@@ -69,7 +72,7 @@ namespace Wul
                     input = Console.ReadLine();
                     try
                     {
-                        var programNode = (ProgramNode) parser.Parse(input.Trim());
+                        var programNode = (ProgramNode) Parser.Parse(input.Trim());
                         var result = WulInterpreter.Interpret(programNode);
                         if (result != null && result != Value.Nil)
                         {
@@ -82,14 +85,14 @@ namespace Wul
                         Console.WriteLine($"Error: {e.Message}");
                     }
                 }
-                return 0;
+                return ExitSuccess;
             }
             else if (args.Length == 1)
             {
                 if (args[0] == "-h")
                 {
                     PrintHelp();
-                    return 0;
+                    return ExitSuccess;
                 }
                 else
                 {
@@ -103,12 +106,12 @@ namespace Wul
                     string filePath = args[1];
                     if (File.Exists(filePath))
                     {
-                        return RunFile(filePath) ? 0 : -1;
+                        return RunFile(filePath) ? ExitSuccess : ExitError;
                     }
                     else
                     {
                         Console.WriteLine($"Unable to open file {filePath}");
-                        return -1;
+                        return ExitError;
                     }
                 }
                 else
@@ -119,9 +122,8 @@ namespace Wul
             else
             {
                 PrintHelp();
-                return 0;
+                return ExitSuccess;
             }
-            return 0;
         }
     }
 }

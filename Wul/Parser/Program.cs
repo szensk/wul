@@ -80,7 +80,8 @@ namespace Wul.Parser
                 }
             }
 
-            if (startIndex < program.Length) throw new Exception("unfinished list");
+            if (startIndex < program.Length && openParenthesis > closeParenthesis)
+                throw new Exception("unfinished list");
 
             currentProgram.Expressions.AddRange(expressions);
             return currentProgram;
