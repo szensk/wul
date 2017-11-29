@@ -117,7 +117,7 @@ namespace Wul.Parser
                     }
                     else if (!string.IsNullOrWhiteSpace(currentInner) && !CommentParser.StartsComment(currentInner))
                     {
-                        throw new Exception("trash in list");
+                        throw new Exception($"trash in list\n\t'{currentInner}'");
                     }
 
                     startIndex = currentIndex + 1;
@@ -126,6 +126,7 @@ namespace Wul.Parser
 
             if (startedString) throw new Exception("unfinished string in list");
             if (startedRange) throw new Exception("unfinished range in list");
+            if (startIndex < inner.Length) throw new Exception("unfinished list");
 
             currentList.Children.AddRange(children);
             return currentList;
