@@ -9,12 +9,13 @@ namespace Wul.Interpreter
 {
     public class WulInterpreter
     {
-        public static IValue Interpret(ProgramNode program)
+        public static IValue Interpret(ProgramNode program, Scope scope = null)
         {
+            Scope currentScope = scope ?? Global.Scope.EmptyChildScope();
             IValue lastResult = null;
             foreach (var list in program.Expressions)
             {
-                lastResult = Evaluate(list, Global.Scope);       
+                lastResult = Evaluate(list, currentScope);       
             }
 
             return lastResult;

@@ -215,5 +215,24 @@ namespace Wul.StdLib
 
             return (Number)sw.ElapsedMilliseconds;
         }
+
+        [MagicNetFunction("global")]
+        internal static IValue Global(ListNode list, Scope scope)
+        {
+            Scope rootScope = scope;
+            while (rootScope.Parent != null)
+            {
+                rootScope = rootScope.Parent;
+            }
+
+            IdentifierNode identifier = (IdentifierNode)list.Children[1];
+            if (list.Children.Count == 2)
+            {
+                return identifier.Eval(rootScope);
+            }
+            IValue value = list.Children[2].Eval(scope);
+            rootScope[identifier.Name] = value;
+            return value;
+        }
     }
 }

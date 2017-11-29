@@ -64,6 +64,7 @@ namespace Wul
             {
                 string input = "";
 
+                Scope replScope = Global.Scope.EmptyChildScope();
                 Console.WriteLine($"wul interpreter {Version}");
                 Console.WriteLine("to leave type 'exit'");
 
@@ -73,7 +74,7 @@ namespace Wul
                     try
                     {
                         var programNode = (ProgramNode) Parser.Parse(input.Trim());
-                        var result = WulInterpreter.Interpret(programNode);
+                        var result = WulInterpreter.Interpret(programNode, replScope);
                         if (result != null && result != Value.Nil)
                         {
                             if (result is UString) result = new UString($"'{result.AsString()}'");
