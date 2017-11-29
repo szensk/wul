@@ -52,6 +52,7 @@ namespace Wul.StdLib
         {
             IValue first = list.Children[1].Eval(scope);
 
+            //TODO UnpackList
             if (first.Type == MapType.Instance || first is NetObject)
             {
                 return first.MetaType.At.Invoke(new List<IValue> {list}, scope);

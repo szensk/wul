@@ -46,7 +46,7 @@ namespace Wul.Parser
                 if (Regex.Match(token, @"-[0-9]*\.?[0-9]+").Success) return null;
             }
 
-            var match = Regex.Match(token, @"^([a-zA-Z\>\<\+\-\!\@\#\$\%\^\&\*~?=\|/\:]+[a-zA-Z0-9\>\<\+\-\!\@\#\$\%\^\&\*~?\.=\|/\:]*)$");
+            var match = Regex.Match(token, @"^([a-zA-Z\>\<\+\-\!\@\#\$\%\^\&\*~?=\|/\:_]+[a-zA-Z0-9\>\<\+\-\!\@\#\$\%\^\&\*~?\.=\|/\:_]*)$");
 
             if (match.Success)
             {

@@ -123,12 +123,16 @@ namespace Wul.Interpreter.Types
         {
             Scope currentScope = scope.EmptyChildScope();
 
-            var arguments = list.Children.Skip(1).ToArray();
+            var arguments = list.Children.ToArray();
 
             //Bind arguments to names
-            for (int i = 0; i < ArgumentNames.Count; ++i)
+            if (arguments.Any())
             {
-                string argName = ArgumentNames[i];
+                currentScope["self"] = arguments[0];
+            }
+            for (int i = 1; i <= ArgumentNames.Count; ++i)
+            {
+                string argName = ArgumentNames[i-1];
                 if (argName == "...")
                 {
                     currentScope[argName] = new ListNode(list, arguments.Skip(i).ToList());

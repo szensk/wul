@@ -17,6 +17,12 @@ namespace Wul.StdLib
             return result;
         }
 
+        public static IValue EvalOnce(this SyntaxNode node, Scope scope)
+        {
+            return WulInterpreter.Interpret(node, scope) ?? Value.Nil;
+        }
+
+
         public static List<IValue> PushFront(this List<IValue> list, params IValue[] values)
         {
             list.InsertRange(0, values);

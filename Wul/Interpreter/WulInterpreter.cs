@@ -130,8 +130,8 @@ namespace Wul.Interpreter
             else if (isMagicFunction)
             {
                 //Magic functions are passed syntax nodes, not fully evaluated arguments
-                var function = value.MetaType.InvokeMagic.Method;
-                value = function.Evaluate(new List<IValue>{value, list}, currentScope);
+                var function = value.MetaType.InvokeMagic;
+                value = function.Invoke(new List<IValue>{value, list}, currentScope);
             }
             else
             {

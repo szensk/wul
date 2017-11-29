@@ -1,19 +1,16 @@
 wul
 ========
-A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. I wrote this simple language in C# before reading books about interpreters. It's a bit odd as a result. The syntax is copied from Lisp because it was easy to parse and the metatypes are inspired by Lua. 
-
-Overview
-========
-There existing types are bool, string, number, list, map, range and function. There are, however, two types of functions. Magic functions are passed syntax nodes rather than evaluated arguments. 
-They can evaluate their arguments at their leisure. Strings in single quotes are not subject to interpolation. Strings in double quotes are interpolated. 
+A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. I wrote this simple language in C# before reading books about interpreters. It's a bit odd as a result. The syntax is borrowed from Lisp for its parsing simplicity. The metatypes are inspired by Lua's metatables. 
 
 Types
-=========
-All types have a metatype. A metatype contains a methods that define how a value interacts with the default functions. You can define new or override existing functions in the metatype. For example, you can define the `Invoke` metamethod on a list value. This allows that list instance to be used like a function. Why? This greatly simplified the core interpreter.
+======
+There are only a eight basic types: Bool, Number, String, List, Map, Range, Function, SyntaxNode and NetObject. Strings come in two varieties, interpolated (e.g. `"hello {world}.`) and regular (e.g. `'this is a bracket {}'`). Functions also exist in two varieties. Regular functions operate as you expect but the magic functions are passed SyntaxNodes instead of evaluated arguments. These syntax nodes may be evaluated using the `eval` function. 
 
-Calling .NET Functions
-======================
-Use the `::` function to invoke a .NET method. 
+All types have a metatype. A metatype contains methods that define how a value interacts with existing functions. You can define new or override existing functions on a metatype. For example, you can define the `invoke` metamethod on a map value. This allows that map instance to be used like a function. The first argument is the list itself. Using this it is possible construct an object-oriented programming system.
+
+.NET Interoperability
+=====================
+The `::` function can invoke static .NET methods and the `new-object` function can construct new .NET objects. These objects are wrapped in a NetObject. Fields and properties of an object can be accessed with `(at obj PropertyName)` and set with `(set obj PropertyName 5)`. Methods on objects may be invoked by using the NetObject like a function, for example `(obj Create 'argument1')`.
 
 Examples
 =======

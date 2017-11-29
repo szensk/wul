@@ -1,0 +1,7 @@
+(def me (object (name 'jon' age 26)))
+
+(@defn at-wrapper (key) (at (eval self) key))
+
+(set-metamethod me @invoke at-wrapper)
+
+(print (me name))

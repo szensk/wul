@@ -36,7 +36,7 @@ namespace Wul.Interpreter.MetaTypes
             {
                 ListNode list = (ListNode) arguments[0];
                 MapTable map = (MapTable) list.Children[1].Eval(s);
-                IValue index = list.Children[2].Eval(s);
+                IValue index = list.Children[2].EvalOnce(s);
 
                 //Reference comparison
                 if (index == Value.Nil)
