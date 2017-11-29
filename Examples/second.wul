@@ -1,0 +1,5 @@
+(defn second (l) (or (and (> (# l) 1) (at l 1)) nil))
+
+(print (second (1 2 3))) ; prints 2
+
+(print (second (1))) ; prints nil
