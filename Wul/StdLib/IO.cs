@@ -18,6 +18,10 @@ namespace Wul.StdLib
                     UString ustring = (UString) value.MetaType.AsString.Invoke(new List<IValue> {value}, scope);
                     stringValue = ustring.Value;
                 }
+                else
+                {
+                    stringValue = value.AsString();
+                }
 
                 Console.WriteLine(stringValue);
             }

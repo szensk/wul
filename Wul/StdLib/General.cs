@@ -35,6 +35,20 @@ namespace Wul.StdLib
             return value;
         }
 
+        [MagicNetFunction("let")]
+        internal static IValue Let(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+            var nameIdentifier = (IdentifierNode) children[0];
+            string name = nameIdentifier.Name;
+            var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
+
+            Scope currentScope = scope.EmptyChildScope();
+            currentScope[name] = value;
+
+            return children[2].Eval(currentScope);
+        }
+
         [MagicNetFunction("defn")]
         internal static IValue DefineFunction(ListNode list, Scope scope)
         {
