@@ -54,5 +54,24 @@ namespace Wul.StdLib
 
             return first.MetaType.Power.Invoke(list, scope);
         }
+
+        [NetFunction("int")]
+        internal static IValue NetInteger(List<IValue> list, Scope scope)
+        {
+            if (list.Count == 1)
+            {
+                Number first = (Number) list[0];
+                return new NetObject((int)first.Value);
+            }
+            else if (list.Count > 1)
+            {
+                int[] intArray = list.Select(n => (int) ((Number) n).Value).ToArray();
+                return new NetObject(intArray);
+            }
+            else
+            {
+                return Value.Nil;
+            }
+        }
     }
 }

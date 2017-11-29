@@ -30,11 +30,14 @@ namespace Wul.Interpreter.Types
     {
         public ListNode Body;
 
-        public Function(ListNode body, string name, List<string> argumentNames)
+        public Scope ParentScope { get; }
+
+        public Function(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
+            ParentScope = parentScope;
             MetaType = FunctionMetaType.Instance;
         }
 
@@ -43,7 +46,7 @@ namespace Wul.Interpreter.Types
 
         public IValue Evaluate(List<IValue> arguments, Scope scope)
         {
-            Scope currentScope = scope.EmptyChildScope();
+            Scope currentScope = ParentScope.EmptyChildScope();
 
             //Bind arguments to names
             for (int i = 0; i < ArgumentNames.Count; ++i)

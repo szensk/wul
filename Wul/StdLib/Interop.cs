@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
@@ -70,7 +71,6 @@ namespace Wul.StdLib
         private static object NewObject(string className, params object[] arguments)
         {
             var types = AllTypes[className];
-
             var type = types.First();
             return Activator.CreateInstance(type, arguments);
         }

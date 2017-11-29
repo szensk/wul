@@ -47,7 +47,7 @@ namespace Wul.StdLib
             var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
 
             var body = (ListNode) children[2];
-            var function = new Function(body, name, argNames.ToList());
+            var function = new Function(body, name, argNames.ToList(), scope);
             scope[name] = function;
 
             return function;
@@ -62,7 +62,7 @@ namespace Wul.StdLib
             var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
 
             var body = (ListNode) children[1];
-            var function = new Function(body, "unnamed function", argNames.ToList());
+            var function = new Function(body, "unnamed function", argNames.ToList(), scope);
 
             return function;
         }

@@ -63,7 +63,7 @@ namespace Wul.Interpreter.Types
                 return new NetObject(property.GetMethod.Invoke(Value, null));
             }
 
-            throw new Exception($"{Value} has no field/property {name}");
+            throw new Exception($"{ValueType} has no field/property {name}");
         }
 
         public void Set(string name, IValue value)
@@ -86,7 +86,7 @@ namespace Wul.Interpreter.Types
                 return;
             }
 
-            throw new Exception($"{Value} has no field/property {name}");
+            throw new Exception($"{ValueType} has no field/property {name}");
         }
 
         public IValue Call(string name, params IValue[] arguments)
@@ -102,7 +102,7 @@ namespace Wul.Interpreter.Types
             }
 
             string argumentTypes = string.Join(", ", types.Select(t => t.Name));
-            throw new Exception($"Unable to find method {name}({argumentTypes})");
+            throw new Exception($"Unable to find method {ValueType}.{name}({argumentTypes})");
         }
 
         public MetaType MetaType { get; set; }

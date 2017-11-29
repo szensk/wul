@@ -70,7 +70,7 @@ namespace Wul
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Error: {e}");
+                        Console.WriteLine($"Error: {e.Message}");
                     }
                 }
                 return 0;

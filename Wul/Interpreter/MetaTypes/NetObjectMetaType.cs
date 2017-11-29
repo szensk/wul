@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.Types;
 using Wul.Parser;
@@ -15,9 +17,13 @@ namespace Wul.Interpreter.MetaTypes
             //Equality
             Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
 
+            //Arithmetic
+            Add.Method = new NetFunction(DoAdd, Add.Name);
+
             //List 
             At.Method = new NetFunction(AtKey, At.Name);
             Set.Method = new NetFunction(SetKey, Set.Name);
+            Concat.Method = new NetFunction(Join, Concat.Name);
 
             //Other
             AsString.Method = new NetFunction(ConvertToString, AsString.Name);
@@ -64,6 +70,48 @@ namespace Wul.Interpreter.MetaTypes
                 return netObj.Call(name.Name, parameters);
             }
             return netObj.Call(name.Name);
+        }
+
+        //Do we want this for all arithmetic methods?
+        public IValue DoAdd(List<IValue> arguments, Scope s)
+        {
+            var numbers = arguments.Select(a =>
+            {
+                switch (a)
+                {
+                    case NetObject o:
+                        return (Number)Convert.ToDouble(o.ToObject());
+                    case Number n:
+                        return n;
+                    default:
+                        return null;
+                }
+            }).ToArray();
+            if (!numbers.Any())
+            {
+                return Value.Nil;
+            }
+            if (numbers.Any(a => a == null))
+            {
+                throw new InvalidOperationException("All arguments must be numbers");
+            }
+            double sum = numbers.Sum(x => x);
+            return (Number)sum;
+        }
+
+        public IValue Join(List<IValue> arguments, Scope s)
+        {
+            NetObject first = (NetObject) arguments[0];
+            var obj = first.ToObject();
+
+            if (obj is IEnumerable enumerable)
+            {
+                //if enumerable, concat together
+            }
+
+            //otherwise not supported
+
+            return Value.Nil;
         }
     }
 }

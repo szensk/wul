@@ -35,7 +35,7 @@ namespace Wul.Interpreter
             if (Method == null)
             {
                 IValue lhs = arguments.First();
-                throw new NotSupportedException($"Unable to invoke metamethod `{Name}` on type {lhs.GetType().Name}");
+                throw new NotSupportedException($"Unable to invoke metamethod `{Name}` on type {lhs.Type.Name}");
             }
 
             if (Method.MetaType == FunctionMetaType.Instance)
