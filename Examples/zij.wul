@@ -1,10 +1,13 @@
 ; zij.wul
+; Tiny Z machine
 
-(def Z 0)
-(def I 1)
-(def J 2)
+(def Z 0) ; ZERO value at address
+(def I 1) ; INC  increment value at address
+(def J 2) ; JMP  jump to instruction if value at address 1 = value at address 2
 
 (def memory (3 4 0 0))
+
+; This program should at memory 
 (def program 
    ((Z 2) 
 	(Z 3)
@@ -18,24 +21,31 @@
 
 (defn inc (a) (+ a 1))
 (defn get-opcode (code location) (first (at code location)))
-(defn get-operand (code location) (at (at code location) 1))
-(defn get-bnt (code location) (at (at code location) 2))
+(defn operand1 (code location) (at (at code location) 1))
+(defn operand2 (code location) (at (at code location) 2))
 (defn get-bt (code location) (at (at code location) 3))
 
 (defn simulate (code location)
 	(if (>= location (# code))
 		(then memory)
 		(else 
-			(??
-				(if (= Z (get-opcode code location)) 
-					(then (simulate code (set memory (get-operand code location) 0) (inc location)))
-				)
-				(if (= I (get-opcode code location))
-					(then (simulate code (set memory (get-operand code location) (at memory (get-operand code location))) (inc location)))
-				)
-				(if (= J (get-opcode code location))
-					(then 
-						()
+			(let opcode (get-opcode code location)
+				(let operand (operand1 code location)
+					(??
+						(if (= Z opcode) 
+							(then (simulate code (inc location) (set memory operand 0)))
+						)
+						(if (= I opcode)
+							(then (simulate code (inc location) (set memory operand (inc (at memory operand)))))
+						)
+						(if (= J opcode)
+							(then 
+								(if (= (at memory operand) (at memory (operand2 code location)))
+									(then (simulate code (inc location)))
+									(else (simulate code (get-bt code location)))
+								)
+							)
+						)
 					)
 				)
 			)
@@ -44,4 +54,4 @@
 )
 
 (print "Program code size: {(# program)}")
-(print (dump simulate))
+(print (simulate program 0))
