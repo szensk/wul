@@ -118,14 +118,7 @@ namespace Wul.Interpreter
                     .Where(v => v != null)
                     .ToList();
 
-                //A macro child executed the parent, return the macro result instead
-                //There must be a better way
-                if (list.MacroResult != null)
-                {
-                    var result = list.MacroResult;
-                    list.MacroResult = null;
-                    return result;
-                }
+                evalutedList = UnpackList.Replace(evalutedList);
 
                 var function = value.MetaType.Invoke.Method;
 
@@ -146,9 +139,11 @@ namespace Wul.Interpreter
                 var remaining = list.Children
                     .Where(node => !(node is CommentNode))
                     .Select(node => Interpret(node, currentScope))
-                    .ToArray();
+                    .ToList();
 
-                if (remaining.Length > 0)
+                remaining = UnpackList.Replace(remaining);
+
+                if (remaining.Count > 0)
                 {
                     value = new ListTable(remaining);
                 }

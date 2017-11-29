@@ -176,32 +176,14 @@ namespace Wul.StdLib
             return (Number) exitCode;
         }
 
-        //I don't like this macro
-        [MagicNetFunction("unpack")]
-        internal static IValue Unpack(ListNode list, Scope scope)
+        [NetFunction("unpack")]
+        internal static IValue Unpack(List<IValue> list, Scope scope)
         {
-            ListNode listToUnpack  = (ListNode)list.Children[1].Eval(scope).ToSyntaxNode(list.Parent);
-            ListNode replaceInList = (ListNode)listToUnpack.Parent;
-            List<SyntaxNode> originalList = replaceInList.Children;
-            List<SyntaxNode> replacementList = new List<SyntaxNode>();
+            if (!(list[0] is ListTable listTable)) return Value.Nil;
 
-            foreach (SyntaxNode node in replaceInList.Children)
-            {
-                if (node == list)
-                {
-                    replacementList.AddRange(listToUnpack.Children);
-                }
-                else
-                {
-                    replacementList.Add(node);
-                }
-            }
-            replaceInList.Children = replacementList;
+            UnpackList unpack = new UnpackList(listTable);
 
-            IValue result = replaceInList.Eval(scope);
-            replaceInList.MacroResult = result;
-            replaceInList.Children = originalList;
-            return result;
+            return unpack;
         }
     }
 }
