@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
@@ -198,6 +199,21 @@ namespace Wul.StdLib
             UnpackList unpack = new UnpackList(listTable);
 
             return unpack;
+        }
+
+        [MagicNetFunction("time")]
+        internal static IValue Time(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            var sw = Stopwatch.StartNew();
+            foreach (SyntaxNode child in children)
+            {
+                child.Eval(scope);
+            }
+            sw.Stop();
+
+            return (Number)sw.ElapsedMilliseconds;
         }
     }
 }
