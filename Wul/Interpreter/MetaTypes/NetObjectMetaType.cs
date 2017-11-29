@@ -23,7 +23,6 @@ namespace Wul.Interpreter.MetaTypes
             //List 
             At.Method = new NetFunction(AtKey, At.Name);
             Set.Method = new NetFunction(SetKey, Set.Name);
-            Concat.Method = new NetFunction(Join, Concat.Name);
 
             //Other
             AsString.Method = new NetFunction(ConvertToString, AsString.Name);
@@ -97,21 +96,6 @@ namespace Wul.Interpreter.MetaTypes
             }
             double sum = numbers.Sum(x => x);
             return (Number)sum;
-        }
-
-        public IValue Join(List<IValue> arguments, Scope s)
-        {
-            NetObject first = (NetObject) arguments[0];
-            var obj = first.ToObject();
-
-            if (obj is IEnumerable enumerable)
-            {
-                //if enumerable, concat together
-            }
-
-            //otherwise not supported
-
-            return Value.Nil;
         }
     }
 }
