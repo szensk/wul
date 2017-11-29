@@ -7,7 +7,6 @@
 
 (def memory (3 4 0 0))
 
-; This program should at memory 
 (def program 
    ((Z 2) 
 	(Z 3)
