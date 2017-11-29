@@ -1,0 +1,3 @@
+(@defn if (cond then else) (eval (or (and (eval cond) then) else)))
+(if if (print 'true') (print 'false'))
+(if nil (print 'true') (print 'false'))

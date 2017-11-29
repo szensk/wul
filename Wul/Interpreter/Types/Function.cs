@@ -119,6 +119,7 @@ namespace Wul.Interpreter.Types
             throw new NotImplementedException();
         }
 
+        //TODO prevent double evaluation of self
         public virtual IValue Execute(ListNode list, Scope scope)
         {
             Scope currentScope = scope.EmptyChildScope();

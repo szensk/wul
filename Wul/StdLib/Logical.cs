@@ -24,7 +24,7 @@ namespace Wul.StdLib
             IValue value = Value.Nil;
             foreach (SyntaxNode node in nodes)
             {
-                value = node.Eval(scope);
+                value = node.EvalOnce(scope);
                 if (value != Value.Nil && value != Bool.False)
                 {
                     return value;
@@ -41,7 +41,7 @@ namespace Wul.StdLib
             IValue value = Value.Nil;
             foreach (SyntaxNode node in nodes)
             {
-                value = node.Eval(scope);
+                value = node.EvalOnce(scope);
                 if (value == Value.Nil || value == Bool.False)
                 {
                     return value;
