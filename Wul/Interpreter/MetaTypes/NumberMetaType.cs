@@ -39,7 +39,7 @@ namespace Wul.Interpreter.MetaTypes
             }
             if (numbers.Any(a => a == null))
             {
-                throw new InvalidOperationException("All arguments must be numbers");
+                throw new InvalidOperationException("All arguments to + must be numbers");
             }
             double sum = numbers.Sum(x => x.Value);
             return (Number)sum;
@@ -54,7 +54,7 @@ namespace Wul.Interpreter.MetaTypes
             var numbers = arguments.Select(a => a as Number).ToList();
             if (numbers.Any(a => a == null))
             {
-                throw new InvalidOperationException("All arguments must be numbers");
+                throw new InvalidOperationException("All arguments to - must be numbers");
             }
 
             Number first;
@@ -81,7 +81,7 @@ namespace Wul.Interpreter.MetaTypes
             }
             if (numbers.Any(a => a == null))
             {
-                throw new InvalidOperationException("All arguments must be numbers");
+                throw new InvalidOperationException("All arguments to * must be numbers");
             }
 
             double multiplied = numbers[0].Value;
@@ -95,6 +95,15 @@ namespace Wul.Interpreter.MetaTypes
         public IValue DoDivide(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
+            if (!numbers.Any())
+            {
+                return Value.Nil;
+            }
+            if (numbers.Any(a => a == null))
+            {
+                throw new InvalidOperationException("All arguments to / must be numbers");
+            }
+
             var first = numbers.First();
             var second = numbers.Skip(1).First();
             return (Number)(first.Value / second.Value);
