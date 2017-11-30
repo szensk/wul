@@ -19,7 +19,7 @@ namespace Wul.StdLib
 
             foreach (AssemblyName assembly in referencedAssemblies)
             {
-                Console.WriteLine($"Loading assembly {assembly.Name}");
+                System.Diagnostics.Debug.WriteLine($"Loading assembly {assembly.Name}");
                 Assembly.Load(assembly);
             }
         }

@@ -69,6 +69,7 @@ namespace Wul.StdLib
             var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
 
             var body = (ListNode) children[2];
+            scope[name] = Value.Nil;
             var function = new Function(body, name, argNames.ToList(), scope);
             scope[name] = function;
 
@@ -101,6 +102,7 @@ namespace Wul.StdLib
             var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
 
             var body = (ListNode) children[2];
+            scope[name] = Value.Nil;
             var function = new MagicFunction(body, name, argNames.ToList(), scope);
             scope[name] = function;
 
