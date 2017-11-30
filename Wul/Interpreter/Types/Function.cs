@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Wul.Interpreter.MetaTypes;
 using Wul.Parser;
@@ -37,8 +38,13 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            ParentScope = parentScope;
+            ParentScope = parentScope.CloseScope(body);
             MetaType = FunctionMetaType.Instance;
+        }
+
+        ~Function()
+        {
+            Debug.WriteLine($"Deleting function {Name}");
         }
 
         public string Name { get; }
@@ -46,7 +52,7 @@ namespace Wul.Interpreter.Types
 
         public IValue Evaluate(List<IValue> arguments, Scope scope)
         {
-            Scope currentScope = ParentScope.EmptyChildScope();
+            Scope currentScope = ParentScope;//.EmptyChildScope();
 
             currentScope["self"] = this;
             //Bind arguments to names
@@ -126,7 +132,7 @@ namespace Wul.Interpreter.Types
         //TODO prevent double evaluation of self
         public virtual IValue Execute(ListNode list, Scope scope)
         {
-            Scope currentScope = ParentScope.EmptyChildScope();
+            Scope currentScope = ParentScope;//.EmptyChildScope();
 
             var arguments = list.Children.ToArray();
 

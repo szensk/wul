@@ -1,32 +1,47 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.Types;
 using Wul.Parser;
-using Wul.StdLib;
 
 namespace Wul.Interpreter
 {
+    internal class Binding
+    {
+        public Binding(IValue value)
+        {
+            Value = value;
+        }
+
+        public IValue Value { get; set; }
+    }
+
     public class Scope
     {
         public Scope Parent;
-        private readonly Dictionary<string, IValue> BoundVariables;
+        private readonly Dictionary<string, Binding> BoundVariables;
 
         public Scope(Scope parent = null)
         {
             Parent = parent;
-            BoundVariables = new Dictionary<string, IValue>();
-        }
-
-        public IValue Get(string key)
-        {
-            BoundVariables.TryGetValue(key, out IValue val);
-            return val ?? Parent?.Get(key) ?? Value.Nil;
+            BoundVariables = new Dictionary<string, Binding>();
         }
 
         public Scope EmptyChildScope()
         {
             return new Scope(this);
+        }
+
+        public IValue Get(string key)
+        {
+            BoundVariables.TryGetValue(key, out Binding val);
+            return val?.Value ?? Parent?.Get(key) ?? Value.Nil;
+        }
+
+        private Binding GetBinding(string key)
+        {
+            BoundVariables.TryGetValue(key, out Binding val);
+            return val ?? Parent?.GetBinding(key) ?? null;
+
         }
 
         public void Remove(string key)
@@ -35,40 +50,33 @@ namespace Wul.Interpreter
         }
 
         //This actually declares a new binding
-        public void Declare(string key, IValue value)
-        {
-            BoundVariables[key] = value;
-        }
-
         public void Set(string key, IValue value)
         {
-            Scope s = this;
-            while (s != null && !s.BoundVariables.ContainsKey(key))
+            if (BoundVariables.TryGetValue(key, out Binding val))
             {
-                s = s.Parent;
-            }
-
-            if (s == null)
-            {
-                throw new Exception($"upval {key} does not exist");
+                val.Value = value;
             }
             else
             {
-                s.BoundVariables[key] = value;
+                BoundVariables[key] = new Binding(value);
             }
         }
 
         public Scope CloseScope(ListNode body)
         {
             var identifierNodes = body.IdentifierNodes();
-            string[] magicVariables = {"...", "self"};
-            var referencedNames = identifierNodes.Select(i => i.Name).Concat(magicVariables);
+            var referencedNames = identifierNodes.Select(i => i.Name).ToHashSet();
 
-            Scope closedScope = new Scope(Global.Scope);
+            Scope closedScope = new Scope();
+
+            //Construct a new scope with referenced bindings
             foreach (string name in referencedNames)
             {
-                //TODO should it only include bound variables?
-                closedScope[name] = this[name];
+                Binding binding = GetBinding(name);
+                if (binding != null)
+                {
+                    closedScope.BoundVariables.Add(name, binding);
+                }
             }
 
             return closedScope;
@@ -78,7 +86,7 @@ namespace Wul.Interpreter
         {
             get => Get(key);
 
-            set => Declare(key, value);
+            set => Set(key, value);
         }
     }
 }

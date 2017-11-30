@@ -1,5 +1,5 @@
 ; expected 
-; set-a and get-a should share the same scope
+; set-a and get-a share the same parent scope
 
 (let a 5 
   (global get-a (lambda () (identity a)))

@@ -1,4 +1,6 @@
-﻿using Wul.Parser;
+﻿using System;
+using System.Diagnostics;
+using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
@@ -33,6 +35,30 @@ namespace Wul.Interpreter.Types
         public override object ToObject()
         {
             return null;
+        }
+    }
+
+    //For development only
+    internal class Sentinel : Value
+    {
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string AsString()
+        {
+            return "nel";
+        }
+
+        public override object ToObject()
+        {
+            throw new NotImplementedException();
+        }
+
+        ~Sentinel()
+        {
+            Debug.WriteLine("Deleting sentinel value");
         }
     }
 }

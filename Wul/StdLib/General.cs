@@ -44,11 +44,17 @@ namespace Wul.StdLib
             string name = nameIdentifier.Name;
             var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
 
+            //Do we want a closure or an empty child scope?
             Scope currentScope = scope.EmptyChildScope();
             currentScope[name] = value;
 
             var childrenToEval = children.Skip(2);
-            return childrenToEval.Select(c => c.Eval(currentScope)).Last();
+            IValue result = Value.Nil;
+            foreach (var child in childrenToEval)
+            {
+                result = child.Eval(currentScope);
+            }
+            return result;
         }
 
         [MagicNetFunction("defn")]
