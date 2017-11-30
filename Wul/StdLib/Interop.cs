@@ -11,11 +11,29 @@ namespace Wul.StdLib
     {
         private static ILookup<string, Type> _allTypes;
 
-        private static ILookup<string, Type> AllTypes => _allTypes ?? (_allTypes = AppDomain.CurrentDomain.GetAssemblies()
-                                               .SelectMany(a => a.GetTypes()).ToLookup(key => key.FullName));
+        private static ILookup<string, Type> AllTypes => _allTypes ?? (_allTypes = LoadAllTypes());
 
+        private static void LoadAssemblies()
+        {
+            var referencedAssemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+
+            foreach (AssemblyName assembly in referencedAssemblies)
+            {
+                Console.WriteLine($"Loading assembly {assembly.Name}");
+                Assembly.Load(assembly);
+            }
+        }
+
+        private static ILookup<string, Type> LoadAllTypes()
+        {
+            LoadAssemblies();
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes()).ToLookup(key => key.FullName);
+        }
+        
         private static object InvokeNetFunction(string name, params object[] arguments)
         {
+            //TODO load assemblies on demand
             //TODO no dots?
             int lastDot = name.LastIndexOf('.');
             string className = name.Substring(0, lastDot);
@@ -24,7 +42,6 @@ namespace Wul.StdLib
             var types = AllTypes[className];
             Type[] argTypes = arguments.Select(a => a.GetType()).ToArray();
 
-            //TODO if not a method?
             foreach (var type in types)
             {
                 MethodInfo methodInfo = null;

@@ -47,7 +47,8 @@ namespace Wul.StdLib
             Scope currentScope = scope.EmptyChildScope();
             currentScope[name] = value;
 
-            return children[2].Eval(currentScope);
+            var childrenToEval = children.Skip(2);
+            return childrenToEval.Select(c => c.Eval(currentScope)).Last();
         }
 
         [MagicNetFunction("defn")]
@@ -156,6 +157,12 @@ namespace Wul.StdLib
             }
         }
 
+        [NetFunction("do")]
+        internal static IValue Do(List<IValue> list, Scope scope)
+        {
+            return list.LastOrDefault() ?? Value.Nil;
+        }
+
         [NetFunction("type")]
         internal static IValue Type(List<IValue> list, Scope scope)
         {
@@ -169,14 +176,6 @@ namespace Wul.StdLib
             {
                 return (IValue) first.Type ?? Value.Nil;
             }
-        }
-
-        [MagicNetFunction("quote")]
-        internal static IValue Quote(ListNode list, Scope scope)
-        {
-            var children = list.Children.Skip(1).ToArray();
-
-            return children[0];
         }
 
         [NetFunction("exit")]
@@ -231,6 +230,17 @@ namespace Wul.StdLib
             }
             IValue value = list.Children[2].Eval(scope);
             rootScope[identifier.Name] = value;
+            return value;
+        }
+
+        [MagicNetFunction("assign")]
+        internal static IValue AssignUpval(ListNode list, Scope scope)
+        {
+            IdentifierNode identifier = (IdentifierNode) list.Children[1];
+            IValue value = list.Children[2].EvalOnce(scope);
+
+            scope.Set(identifier.Name, value);
+
             return value;
         }
     }

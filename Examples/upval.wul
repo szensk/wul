@@ -1,0 +1,11 @@
+; expected 
+; set-a and get-a should share the same scope
+
+(let a 5 
+  (global get-a (lambda () (identity a)))
+  (global set-a (lambda (v) (assign a v))) ; def binds v to a new a, so assign must be used
+)
+
+(print (get-a))
+(set-a 10)
+(print (get-a))

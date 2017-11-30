@@ -1,0 +1,11 @@
+; Magic functions can evaluate identifiers at run time.
+; This allows it to access any variable in its scope
+; Regardless if the value is referenced anywhere else
+(def scope-escape (let a 5 (@defn noname (key) (eval (unquote key)))))
+
+(print (scope-escape x)) 
+(print (scope-escape a))
+(print (a (global a)))
+
+; Implications
+; Scopes are not garbage until all magic functions defined within that scope are garbage

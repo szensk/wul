@@ -51,6 +51,14 @@ namespace Wul.StdLib
             return children[0].Eval(scope);
         }
 
+        [MagicNetFunction("quote")]
+        internal static IValue Quote(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            return children[0];
+        }
+
         [MagicNetFunction("unquote")]
         internal static IValue Unquote(ListNode list, Scope scope)
         {

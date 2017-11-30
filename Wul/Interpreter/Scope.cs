@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Wul.Interpreter.Types;
+using Wul.Parser;
+using Wul.StdLib;
 
 namespace Wul.Interpreter
 {
@@ -30,16 +34,51 @@ namespace Wul.Interpreter
             BoundVariables.Remove(key);
         }
 
-        public void Assign(string key, IValue value)
+        //This actually declares a new binding
+        public void Declare(string key, IValue value)
         {
             BoundVariables[key] = value;
+        }
+
+        public void Set(string key, IValue value)
+        {
+            Scope s = this;
+            while (s != null && !s.BoundVariables.ContainsKey(key))
+            {
+                s = s.Parent;
+            }
+
+            if (s == null)
+            {
+                throw new Exception($"upval {key} does not exist");
+            }
+            else
+            {
+                s.BoundVariables[key] = value;
+            }
+        }
+
+        public Scope CloseScope(ListNode body)
+        {
+            var identifierNodes = body.IdentifierNodes();
+            string[] magicVariables = {"...", "self"};
+            var referencedNames = identifierNodes.Select(i => i.Name).Concat(magicVariables);
+
+            Scope closedScope = new Scope(Global.Scope);
+            foreach (string name in referencedNames)
+            {
+                //TODO should it only include bound variables?
+                closedScope[name] = this[name];
+            }
+
+            return closedScope;
         }
 
         public IValue this[string key]
         {
             get => Get(key);
 
-            set => Assign(key, value);
+            set => Declare(key, value);
         }
     }
 }

@@ -13,6 +13,26 @@ namespace Wul.Parser
             Children = children;
         }
 
+        public List<IdentifierNode> IdentifierNodes()
+        {
+            List<IdentifierNode> identifierNodes = new List<IdentifierNode>();
+            foreach (SyntaxNode node in Children)
+            {
+                IdentifierNode identifierNode = node as IdentifierNode;
+                if (identifierNode != null)
+                {
+                    identifierNodes.Add(identifierNode);
+                }
+                ListNode listNode = node as ListNode;
+                if (listNode != null)
+                {
+                    identifierNodes.AddRange(listNode.IdentifierNodes());
+                }
+            }
+
+            return identifierNodes;
+        }
+
         public override string AsString()
         {
             return $"List[{Children.Count}]";
