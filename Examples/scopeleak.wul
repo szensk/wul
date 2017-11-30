@@ -1,0 +1,8 @@
+; Test case against scope leak
+
+(def a 10)
+(@defn scope-leak (key) (eval (unquote key)))
+(def b 5)
+
+(print (scope-leak a)) ; prints 10
+(print (scope-leak b)) ; prints nil

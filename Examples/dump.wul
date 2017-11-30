@@ -1,6 +1,6 @@
 ; Dump returns a string representing the code behind the given value
 (def l (1 2 3))
-(dump l) ; returns '(1 2 3)'
+(print (dump l)) ; returns '(1 2 3)'
 
 (defn sum (a b) (+ a b))
 (print (dump sum)) ; prints '(lambda (a b) (+ a b))'

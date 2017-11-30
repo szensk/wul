@@ -82,6 +82,23 @@ namespace Wul.Interpreter
             return closedScope;
         }
 
+        public Scope CompletelyCloseScope()
+        {
+            Scope closedScope = new Scope();
+
+            Scope currentScope = this;
+            while (currentScope != null)
+            {
+                foreach (var binding in currentScope.BoundVariables)
+                {
+                    closedScope.BoundVariables.TryAdd(binding.Key, binding.Value);
+                }
+                currentScope = currentScope.Parent;
+            }
+
+            return closedScope;
+        }
+
         public IValue this[string key]
         {
             get => Get(key);

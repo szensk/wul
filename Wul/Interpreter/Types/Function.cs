@@ -117,7 +117,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            ParentScope = parentScope;
+            ParentScope = parentScope.CompletelyCloseScope();
             MetaType = MagicFunctionMetaType.Instance;
         }
 

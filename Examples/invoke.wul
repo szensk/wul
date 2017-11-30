@@ -4,4 +4,4 @@
 
 (set-metamethod me @invoke at-wrapper)
 
-(print (me name))
+(print (me name)) ; prints 'jon'

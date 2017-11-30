@@ -6,6 +6,6 @@
   (global set-a (lambda (v) (assign a v))) ; def binds v to a new a, so assign must be used
 )
 
-(print (get-a))
+(print (get-a)) ; print 5
 (set-a 10)
-(print (get-a))
+(print (get-a)) ; print 10
