@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.Types;
@@ -59,6 +60,31 @@ namespace Wul.Interpreter
             else
             {
                 BoundVariables[key] = new Binding(value);
+            }
+        }
+
+        public void Assign(string key, IValue value)
+        {
+            Scope s = this;
+            while (s != null && !s.BoundVariables.ContainsKey(key))
+            {
+                s = s.Parent;
+            }
+
+            if (s == null)
+            {
+                throw new Exception($"upval {key} does not exist");
+            }
+            else
+            {
+                if (ReferenceEquals(value, Value.Nil))
+                {
+                    s.BoundVariables.Remove(key);
+                }
+                else
+                {
+                    s.BoundVariables[key].Value = value;
+                }
             }
         }
 

@@ -247,7 +247,7 @@ namespace Wul.StdLib
             IdentifierNode identifier = (IdentifierNode) list.Children[1];
             IValue value = list.Children[2].EvalOnce(scope);
 
-            scope.Set(identifier.Name, value);
+            scope.Assign(identifier.Name, value);
 
             return value;
         }
