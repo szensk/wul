@@ -18,6 +18,7 @@ namespace Wul.Interpreter.Types
     {
         #region Static Methods
         private static readonly Number[] SmallNumberCache;
+        private static readonly double OneHundredEpsilon = double.Epsilon * 100;
 
         static Number()
         {
@@ -34,7 +35,7 @@ namespace Wul.Interpreter.Types
         // Constructors
         private Number(int i)
         {
-            Value = (double) i;
+            Value = i;
             MetaType = NumberMetaType.Instance;
         }
 
@@ -62,7 +63,7 @@ namespace Wul.Interpreter.Types
 
         public static implicit operator Number(double d)
         {
-            if (Math.Floor(d) == d && d < 256 && d > -0.1)
+            if (Math.Abs(d % 1) <= OneHundredEpsilon && d < 256 && d > -0.1)
             {
                 return SmallNumberCache[(int) d];
             }
@@ -80,8 +81,7 @@ namespace Wul.Interpreter.Types
         {
             if (ReferenceEquals(this, obj)) return true;
             if (ReferenceEquals(null, obj)) return false;
-            Number other = obj as Number;
-            return other != null && Value == other.Value;
+            return obj is Number other && Math.Abs(Value - other.Value) < OneHundredEpsilon;
         }
 
 
@@ -89,7 +89,7 @@ namespace Wul.Interpreter.Types
 
         public SyntaxNode ToSyntaxNode(SyntaxNode parent)
         {
-            return new NumericNode(parent, Value.ToString());
+            return new NumericNode(parent, $"{Value}");
         }
 
         public string AsString()

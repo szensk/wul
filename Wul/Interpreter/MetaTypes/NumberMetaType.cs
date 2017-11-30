@@ -121,7 +121,7 @@ namespace Wul.Interpreter.MetaTypes
             var numbers = arguments.Select(x => x as Number).ToArray();
             var first = numbers.First();
             var second = numbers.Skip(1).First();
-            return first.Value == second.Value ? Bool.True : Bool.False;
+            return Equals(first, second) ? Bool.True : Bool.False;
         }
 
         public IValue Comparison(List<IValue> arguments, Scope s)

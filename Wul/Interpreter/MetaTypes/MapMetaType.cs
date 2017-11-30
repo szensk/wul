@@ -38,8 +38,7 @@ namespace Wul.Interpreter.MetaTypes
                 MapTable map = (MapTable) list.Children[1].Eval(s);
                 IValue index = list.Children[2].EvalOnce(s);
 
-                //Reference comparison
-                if (index == Value.Nil)
+                if (ReferenceEquals(index, Value.Nil))
                 {
                     //Use the identifier
                     index = list.Children[2];
@@ -57,7 +56,7 @@ namespace Wul.Interpreter.MetaTypes
             IValue value = list.Children[3].Eval(s);
 
             //Reference comparison
-            if (index == Value.Nil)
+            if (ReferenceEquals(index, Value.Nil))
             {
                 //Use the identifier
                 index = list.Children[2];

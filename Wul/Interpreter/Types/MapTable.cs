@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.MetaTypes;
@@ -65,7 +64,7 @@ namespace Wul.Interpreter.Types
 
         public void Assign(IValue key, IValue value)
         {
-            if (value == Value.Nil)
+            if (ReferenceEquals(value, Value.Nil))
             {
                 Remove(key);
             }

@@ -12,21 +12,21 @@ namespace Wul.Interpreter.Types
         }
 
         public static readonly RangeType Instance = new RangeType();
-        public override MetaType DefaultMetaType { get; }
+        public override MetaType DefaultMetaType => RangeMetaType.Instance;
     }
 
     //TODO hashcode, equals
     public class Range : IValue
     {
-        private readonly double _Start;
-        private readonly double? _End;
-        private readonly double? _Increment;
+        private readonly double _start;
+        private readonly double? _end;
+        private readonly double? _increment;
 
         public Range(double start, double? end = null, double? increment = null)
         {
-            _Start = start;
-            _End = end;
-            _Increment = increment;
+            _start = start;
+            _end = end;
+            _increment = increment;
         }
 
         public MetaType MetaType { get; set; } = RangeMetaType.Instance;
@@ -50,15 +50,16 @@ namespace Wul.Interpreter.Types
             return list;
         }
 
-        public Number First => _Start;
+        public Number First => _start;
 
         public Range Remainder
         {
             get
             {
-                if (_Increment.HasValue && (_Increment > 0 && _Start < _End || _Increment < 0 && _Start > _End) || !_End.HasValue)
+                if (_increment.HasValue && (_increment > 0 && _start < _end || _increment < 0 && _start > _end) || !_end.HasValue)
                 {
-                    return new Range(_Start + _Increment.Value, _End, _Increment);
+                    double inc = _increment ?? 0;
+                    return new Range(_start + inc, _end, _increment);
                 }
                 else
                 {
@@ -69,8 +70,8 @@ namespace Wul.Interpreter.Types
 
         public Bool Contains(Number n)
         {
-            bool result = n.Value >= _Start && n.Value <= _End && _Increment > 0 ||
-                          n.Value <= _Start && n.Value >= _End && _Increment < 0;
+            bool result = n.Value >= _start && n.Value <= _end && _increment > 0 ||
+                          n.Value <= _start && n.Value >= _end && _increment < 0;
             return result ? Bool.True : Bool.False;
         }
         
@@ -80,39 +81,39 @@ namespace Wul.Interpreter.Types
         {
             get
             {
-                if (!_Increment.HasValue)
+                if (!_increment.HasValue)
                 {
                     return 1;
                 }
-                if (!_End.HasValue)
+                if (!_end.HasValue)
                 {
-                    double result = _Increment > 0 ? double.PositiveInfinity : double.NegativeInfinity;
-                    Number numberResult = (Number) result;
+                    double result = _increment > 0 ? double.PositiveInfinity : double.NegativeInfinity;
+                    Number numberResult = result;
                     return numberResult;
                 }
-                return (int)((_End - _Start) / _Increment) + 1;
+                return (int)((_end - _start) / _increment) + 1;
             }
         }
 
         public SyntaxNode ToSyntaxNode(SyntaxNode parent)
         {
             List<SyntaxNode> children = new List<SyntaxNode>();
-            children.Add(((Number)_Start).ToSyntaxNode(parent));
-            if (_End.HasValue)
+            children.Add(((Number)_start).ToSyntaxNode(parent));
+            if (_end.HasValue)
             {
-                children.Add(((Number) _End.Value).ToSyntaxNode(parent));
+                children.Add(((Number) _end.Value).ToSyntaxNode(parent));
             }
             else
             {
                 children.Add(Value.Nil.ToSyntaxNode(parent));
             }
-            children.Add(((Number)_Increment.Value).ToSyntaxNode(parent));
-           return new RangeNode(parent, children);
+            if (_increment.HasValue) children.Add(((Number)_increment.Value).ToSyntaxNode(parent));
+            return new RangeNode(parent, children);
         }
 
         public string AsString()
         {
-            return $"Range[{_Start} {_End} by {_Increment}]";
+            return $"Range[{_start} {_end} by {_increment}]";
         }
 
         //Return an enumerator

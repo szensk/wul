@@ -10,15 +10,20 @@ namespace Unit.Test.Types
     {
         private class FieldClass
         {
-            public string OK;
+            public string Ok;
 
             public int Method()
             {
+                Ok = "5";
                 return 5;
             }
 
             public int Method(string ok)
             {
+                if (Ok != null)
+                {
+                    Ok = ok;
+                }
                 return 6;
             }
         }
@@ -63,10 +68,10 @@ namespace Unit.Test.Types
         public void NetObject_Get_Field()
         {
             string expected = "some string";
-            var ok = new FieldClass { OK = expected };
+            var ok = new FieldClass { Ok = expected };
             var netObj = new NetObject(ok);
 
-            var actual = netObj.Get("OK");
+            var actual = netObj.Get("Ok");
 
             Assert.AreEqual(expected, actual.ToObject());
         }
@@ -75,11 +80,11 @@ namespace Unit.Test.Types
         public void NetObject_Set_Field()
         {
             string expected = "new string";
-            var ok = new FieldClass { OK = "old string" };
+            var ok = new FieldClass { Ok = "old string" };
             var netObj = new NetObject(ok);
 
-            netObj.Set("OK", new NetObject(expected));
-            var actual = netObj.Get("OK");
+            netObj.Set("Ok", new NetObject(expected));
+            var actual = netObj.Get("Ok");
 
             Assert.AreEqual(expected, actual.ToObject());
         }
@@ -87,25 +92,25 @@ namespace Unit.Test.Types
         [TestMethod]
         public void NetObject_Call_NoArguments()
         {
-            string expected = "some string";
-            var ok = new FieldClass { OK = expected };
+            var ok = new FieldClass { Ok = "some string" };
             var netObj = new NetObject(ok);
 
             var actual = netObj.Call("Method");
+            var expected = ok.Method();
 
-            Assert.AreEqual(5, actual.ToObject());
+            Assert.AreEqual(expected, actual.ToObject());
         }
 
         [TestMethod]
         public void NetObject_Call_OneArgument()
         {
-            string expected = "some string";
-            var ok = new FieldClass { OK = expected };
+            var ok = new FieldClass { Ok = "some string" };
             var netObj = new NetObject(ok);
 
             var actual = netObj.Call("Method", new NetObject("hmm"));
+            var expected = ok.Method("hmm");
 
-            Assert.AreEqual(6, actual.ToObject());
+            Assert.AreEqual(expected, actual.ToObject());
         }
     }
 }

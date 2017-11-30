@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Wul.Parser
 {
@@ -62,7 +61,6 @@ namespace Wul.Parser
             if (openIndex == -1 || lastCloseIndex == -1) return null;
 
             string inner = token.Substring(openIndex + 1, lastCloseIndex - (openIndex + 1));
-            //inner = Regex.Replace(inner, "([^\"].*)\\s+([^\"].*)", "$1 $2");
             List<SyntaxNode> children = new List<SyntaxNode>();
             
             int currentIndex = 0;

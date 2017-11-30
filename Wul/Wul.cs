@@ -75,7 +75,7 @@ namespace Wul
                     {
                         var programNode = (ProgramNode) Parser.Parse(input.Trim());
                         var result = WulInterpreter.Interpret(programNode, replScope);
-                        if (result != null && result != Value.Nil)
+                        if (result != null && !ReferenceEquals(result, Value.Nil))
                         {
                             if (result is UString) result = new UString($"'{result.AsString()}'");
                             IO.Print(new List<IValue> {result}, Global.Scope);
