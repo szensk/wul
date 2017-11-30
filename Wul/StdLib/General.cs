@@ -141,14 +141,6 @@ namespace Wul.StdLib
             return returnValue;
         }
 
-        [MagicNetFunction("eval")]
-        internal static IValue Evaluate(ListNode list, Scope scope)
-        {
-            var children = list.Children.Skip(1).ToArray();
-
-            return children[0].Eval(scope);
-        }
-
         [NetFunction("??")]
         internal static IValue Coalesce(List<IValue> list, Scope scope)
         {

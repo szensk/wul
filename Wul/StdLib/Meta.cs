@@ -1,4 +1,5 @@
-﻿using Wul.Interpreter;
+﻿using System.Linq;
+using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
 
@@ -40,6 +41,22 @@ namespace Wul.StdLib
             IValue first = WulInterpreter.Interpret(list.Children[1], scope) ?? Value.Nil;
             SyntaxNode node = first.ToSyntaxNode(list.Parent);
             return new UString(node.ToString());
+        }
+
+        [MagicNetFunction("eval")]
+        internal static IValue Evaluate(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            return children[0].Eval(scope);
+        }
+
+        [MagicNetFunction("unquote")]
+        internal static IValue Unquote(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            return children[0].EvalOnce(scope);
         }
     }
 }
