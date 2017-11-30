@@ -124,9 +124,9 @@ namespace Wul
             }
             else if (args.Length == 2)
             {
-                if (args[0] == "-e")
+                if (args[0] == "-e" || args[0] == "-ep")
                 {
-                    string input = args[1];
+                    string input = args[0] == "-ep" ? $"({args[1]})" : args[1];
                     return RunString(input) ? ExitSuccess : ExitError;
                 }
                 else
