@@ -78,7 +78,8 @@ namespace Wul.Interpreter.MetaTypes
                 switch (a)
                 {
                     case NetObject o:
-                        return (Number)Convert.ToDouble(o.ToObject());
+                        if (double.TryParse(o.ToObject().ToString(), out double d)) return (Number) d;
+                        return null;
                     case Number n:
                         return n;
                     default:

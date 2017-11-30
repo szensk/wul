@@ -15,7 +15,7 @@ namespace Wul
     class Wul
     {
         private const int ExitSuccess = 0;
-        private const int ExitError = -1;
+        private const int ExitError = 1;
 
         private static readonly ProgramParser Parser = new ProgramParser();
 
@@ -41,11 +41,33 @@ namespace Wul
             return true;
         }
 
+        private static bool RunString(string input, Scope scope = null)
+        {
+            Scope currentScope = scope ?? Global.Scope.EmptyChildScope();
+
+            try
+            {
+                var programNode = (ProgramNode) Parser.Parse(input.Trim());
+                var result = WulInterpreter.Interpret(programNode, currentScope);
+                if (result != null && !ReferenceEquals(result, Value.Nil))
+                {
+                    if (result is UString) result = new UString($"'{result.AsString()}'");
+                    IO.Print(new List<IValue> {result}, Global.Scope);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+                return false;
+            }
+        }
+
         private static void PrintHelp()
         {
-            Console.WriteLine("wul - worthless unnecessary language");
-            Console.WriteLine($"version {Version}");
-            Console.WriteLine("\t-e filepath");
+            Console.WriteLine("wul [file]");
+            Console.WriteLine($"worthless unnecessary language version {Version}");
+            Console.WriteLine("\t-e program to evaluate");
             Console.WriteLine("\t-h help");
         }
 
@@ -71,20 +93,7 @@ namespace Wul
                 while (input != "exit")
                 {
                     input = Console.ReadLine();
-                    try
-                    {
-                        var programNode = (ProgramNode) Parser.Parse(input.Trim());
-                        var result = WulInterpreter.Interpret(programNode, replScope);
-                        if (result != null && !ReferenceEquals(result, Value.Nil))
-                        {
-                            if (result is UString) result = new UString($"'{result.AsString()}'");
-                            IO.Print(new List<IValue> {result}, Global.Scope);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"Error: {e.Message}");
-                    }
+                    RunString(input, replScope);
                 }
                 return ExitSuccess;
             }
@@ -95,16 +104,13 @@ namespace Wul
                     PrintHelp();
                     return ExitSuccess;
                 }
+                else if (args[0].StartsWith('-'))
+                {
+                    return Error($"Unrecognized option {args[0]}");
+                }
                 else
                 {
-                    return Error($"Unrecognized or invalid option {args[0]}");
-                }
-            }
-            else if (args.Length == 2)
-            {
-                if (args[0] == "-e")
-                {
-                    string filePath = args[1];
+                    string filePath = args[0];
                     if (File.Exists(filePath))
                     {
                         return RunFile(filePath) ? ExitSuccess : ExitError;
@@ -114,6 +120,14 @@ namespace Wul
                         Console.WriteLine($"Unable to open file {filePath}");
                         return ExitError;
                     }
+                }
+            }
+            else if (args.Length == 2)
+            {
+                if (args[0] == "-e")
+                {
+                    string input = args[1];
+                    return RunString(input) ? ExitSuccess : ExitError;
                 }
                 else
                 {
