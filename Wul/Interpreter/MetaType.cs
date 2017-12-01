@@ -76,6 +76,7 @@ namespace Wul.Interpreter
 
             Invoke = new MetaMethod("invoke");
             InvokeMagic = new MetaMethod("@invoke");
+            ApplyMacro = new MetaMethod("apply");
             AsString = new MetaMethod("string");
             Type = new MetaMethod("type");
 
@@ -110,6 +111,7 @@ namespace Wul.Interpreter
 
             clone.Invoke = new MetaMethod(Invoke);
             clone.InvokeMagic = new MetaMethod(InvokeMagic);
+            clone.ApplyMacro = new MetaMethod(ApplyMacro);
             clone.AsString = new MetaMethod(AsString);
             clone.Type = new MetaMethod(Type);
 
@@ -126,7 +128,8 @@ namespace Wul.Interpreter
                 Not, And, Or, Xor,
                 Equal, Compare,
                 At, Set, Remainder, Count, Concat,
-                Invoke, InvokeMagic, AsString, Type
+                Invoke, InvokeMagic, ApplyMacro,
+                AsString, Type
             };
 
             _metaMethods = metaMethodList.ToDictionary(key => key.Name);
@@ -172,6 +175,7 @@ namespace Wul.Interpreter
         // Other
         public MetaMethod Invoke { get; private set; }
         public MetaMethod InvokeMagic { get; private set; }
+        public MetaMethod ApplyMacro { get; private set; }
         public MetaMethod AsString { get; private set; }
         public MetaMethod Type { get; private set; }
 

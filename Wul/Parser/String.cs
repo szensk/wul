@@ -29,7 +29,7 @@ namespace Wul.Parser
 
         public override string ToString()
         {
-            return _Value;
+            return $"'{_Value}'";
         }
     }
 

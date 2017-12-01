@@ -1,8 +1,7 @@
-; Test case against scope leak
+(def a 10) ; Bind a to 10
+(defmacro upval-leak () (identity a))
+(def local-leak (let a 5 (defmacro local-leak () (identity a))))
+(def a 15) ; Rebind a to 15
 
-(def a 10)
-(@defn scope-leak (key) (eval (unquote key)))
-(def b 5)
-
-(print (scope-leak a)) ; prints 10
-(print (scope-leak b)) ; prints nil
+(print (upval-leak)) ; prints 15
+(print (local-leak)) ; prints 5

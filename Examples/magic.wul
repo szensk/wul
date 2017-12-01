@@ -1,5 +1,5 @@
 (defn ltr (a b) (?? a b))
-(@defn rtl (a b) (?? (eval b) (eval a)))
+(defmacro rtl (a b) ((quote ??) b a))
 
 (ltr (print "1") (print "2")) ; prints 1 then 2
 (rtl (print "1") (print "2")) ; prints 2 then 1

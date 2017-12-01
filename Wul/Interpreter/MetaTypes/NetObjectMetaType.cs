@@ -26,7 +26,7 @@ namespace Wul.Interpreter.MetaTypes
             //Other
             AsString.Method = new NetFunction(ConvertToString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
-            InvokeMagic.Method = new NetFunction(InvokeMethod, Invoke.Name);
+            ApplyMacro.Method = new NetFunction(InvokeMethod, Invoke.Name);
         }
 
         public IValue AtKey(List<IValue> arguments, Scope s)

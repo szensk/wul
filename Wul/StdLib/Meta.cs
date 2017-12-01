@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Wul.Interpreter;
+using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
 using Wul.Parser;
 
@@ -65,6 +66,26 @@ namespace Wul.StdLib
             var children = list.Children.Skip(1).ToArray();
 
             return children[0].EvalOnce(scope);
+        }
+
+        [MagicNetFunction("defmacro")]
+        internal static IValue DefineMagicFunction(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            var nameIdentifier = (IdentifierNode)children[0];
+            string name = nameIdentifier.Name;
+
+            var arguments = (ListNode)children[1];
+            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
+
+            var body = (ListNode)children[2];
+            scope[name] = Value.Nil;
+            var function = new MacroFunction(body, name, argNames.ToList(), scope);
+            function.MetaType = MacroMetaType.Instance;
+            scope[name] = function;
+
+            return function;
         }
     }
 }

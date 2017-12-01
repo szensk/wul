@@ -90,25 +90,6 @@ namespace Wul.StdLib
             return function;
         }
 
-        [MagicNetFunction("@defn")]
-        internal static IValue DefineMagicFunction(ListNode list, Scope scope)
-        {
-            var children = list.Children.Skip(1).ToArray();
-
-            var nameIdentifier = (IdentifierNode) children[0];
-            string name = nameIdentifier.Name;
-
-            var arguments = (ListNode) children[1];
-            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
-
-            var body = (ListNode) children[2];
-            scope[name] = Value.Nil;
-            var function = new MagicFunction(body, name, argNames.ToList(), scope);
-            scope[name] = function;
-
-            return function;
-        }
-
         [NetFunction("then")]
         [NetFunction("else")]
         internal static IValue Then(List<IValue> list, Scope scope)

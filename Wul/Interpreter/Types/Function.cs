@@ -106,18 +106,18 @@ namespace Wul.Interpreter.Types
         public MetaType MetaType { get; set; }
     }
 
-    class MagicFunction : IFunction
+    class MacroFunction : IFunction
     {
         public ListNode Body;
 
         public Scope ParentScope { get; }
 
-        public MagicFunction(ListNode body, string name, List<string> argumentNames, Scope parentScope)
+        public MacroFunction(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            ParentScope = parentScope.CompletelyCloseScope();
+            ParentScope = parentScope.CloseScope(body);
             MetaType = MagicFunctionMetaType.Instance;
         }
 
@@ -129,10 +129,9 @@ namespace Wul.Interpreter.Types
             throw new NotImplementedException();
         }
 
-        //TODO prevent double evaluation of self
         public virtual IValue Execute(ListNode list, Scope scope)
         {
-            Scope currentScope = ParentScope;//.EmptyChildScope();
+            Scope currentScope = ParentScope;
 
             var arguments = list.Children.ToArray();
 

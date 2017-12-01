@@ -111,6 +111,7 @@ namespace Wul.Interpreter
 
             bool isFunction = value.MetaType?.Invoke?.IsDefined ?? false;
             bool isMagicFunction = value.MetaType?.InvokeMagic?.IsDefined ?? false;
+            bool isMacroFunction = value.MetaType?.ApplyMacro?.IsDefined ?? false;
             if (isFunction)
             {
                 var evalutedList = list.Children
@@ -133,6 +134,15 @@ namespace Wul.Interpreter
                 //Magic functions are passed syntax nodes, not fully evaluated arguments
                 var function = value.MetaType.InvokeMagic;
                 value = function.Invoke(new List<IValue>{value, list}, currentScope);
+            }
+            else if (isMacroFunction)
+            {
+                var function = value.MetaType.ApplyMacro;
+                value = function.Invoke(new List<IValue>{value, list}, currentScope);
+                //TODO how to avoid the ToSyntaxNode step?
+                //Problem is that ListNodes are evaluated to ListTable
+                SyntaxNode node = value.ToSyntaxNode(list.Parent);
+                value = Interpret(node, currentScope) ?? Value.Nil;
             }
             else
             {
