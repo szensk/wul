@@ -52,7 +52,7 @@ namespace Wul.Interpreter.Types
 
         public IValue Evaluate(List<IValue> arguments, Scope scope)
         {
-            Scope currentScope = ParentScope;//.EmptyChildScope();
+            Scope currentScope = ParentScope.EmptyChildScope();
 
             currentScope["self"] = this;
             //Bind arguments to names
