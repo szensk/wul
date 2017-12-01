@@ -47,7 +47,7 @@ namespace Wul.StdLib
             return first.MetaType.Remainder.Invoke(list, scope);
         }
 
-        [MagicNetFunction("at")]
+        [MagicFunction("at")]
         internal static IValue AtIndex(ListNode list, Scope scope)
         {
             IValue first = list.Children[1].Eval(scope);
@@ -64,7 +64,7 @@ namespace Wul.StdLib
             }
         }
 
-        [MagicNetFunction("set")]
+        [MagicFunction("set")]
         internal static IValue SetIndex(ListNode list, Scope scope)
         {
             IValue first = list.Children[1].Eval(scope);

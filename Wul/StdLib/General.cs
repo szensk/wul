@@ -16,7 +16,7 @@ namespace Wul.StdLib
             return list.FirstOrDefault() ?? Value.Nil;
         }
 
-        [MagicNetFunction("def")]
+        [MagicFunction("def")]
         internal static IValue Define(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -36,7 +36,7 @@ namespace Wul.StdLib
             return value;
         }
 
-        [MagicNetFunction("let")]
+        [MagicFunction("let")]
         internal static IValue Let(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -57,7 +57,7 @@ namespace Wul.StdLib
             return result;
         }
 
-        [MagicNetFunction("defn")]
+        [MagicFunction("defn")]
         internal static IValue DefineFunction(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -76,7 +76,7 @@ namespace Wul.StdLib
             return function;
         }
 
-        [MagicNetFunction("lambda")]
+        [MagicFunction("lambda")]
         internal static IValue Lambda(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -104,7 +104,7 @@ namespace Wul.StdLib
             }
         }
 
-        [MagicNetFunction("if")]
+        [MagicFunction("if")]
         internal static IValue If(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -188,7 +188,7 @@ namespace Wul.StdLib
             return unpack;
         }
 
-        [MagicNetFunction("time")]
+        [MagicFunction("time")]
         internal static IValue Time(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -203,7 +203,7 @@ namespace Wul.StdLib
             return (Number)sw.ElapsedMilliseconds;
         }
 
-        [MagicNetFunction("global")]
+        [MagicFunction("global")]
         internal static IValue Global(ListNode list, Scope scope)
         {
             Scope rootScope = scope;
@@ -222,7 +222,7 @@ namespace Wul.StdLib
             return value;
         }
 
-        [MagicNetFunction("assign")]
+        [MagicFunction("assign")]
         internal static IValue AssignUpval(ListNode list, Scope scope)
         {
             IdentifierNode identifier = (IdentifierNode) list.Children[1];

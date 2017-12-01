@@ -8,7 +8,7 @@ namespace Wul.StdLib
 {
     class Meta
     {
-        [MagicNetFunction("set-metamethod")]
+        [MagicFunction("set-metamethod")]
         internal static IValue SetMetaType(ListNode list, Scope scope)
         {
             IValue first = list.Children[1].Eval(scope);
@@ -36,7 +36,7 @@ namespace Wul.StdLib
             return Value.Nil;
         }
 
-        [MagicNetFunction("dump")]
+        [MagicFunction("dump")]
         internal static IValue DumpValue(ListNode list, Scope scope)
         {
             IValue first = WulInterpreter.Interpret(list.Children[1], scope) ?? Value.Nil;
@@ -44,7 +44,7 @@ namespace Wul.StdLib
             return new UString(node.ToString());
         }
 
-        [MagicNetFunction("eval")]
+        [MagicFunction("eval")]
         internal static IValue Evaluate(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -52,7 +52,7 @@ namespace Wul.StdLib
             return children[0].Eval(scope);
         }
 
-        [MagicNetFunction("quote")]
+        [MagicFunction("quote")]
         internal static IValue Quote(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -60,7 +60,7 @@ namespace Wul.StdLib
             return children[0];
         }
 
-        [MagicNetFunction("unquote")]
+        [MagicFunction("unquote")]
         internal static IValue Unquote(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -68,7 +68,7 @@ namespace Wul.StdLib
             return children[0].EvalOnce(scope);
         }
 
-        [MagicNetFunction("defmacro")]
+        [MagicFunction("defmacro")]
         internal static IValue DefineMagicFunction(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();

@@ -19,7 +19,7 @@ namespace Wul.StdLib
         {
             public MethodInfo Method;
             public IEnumerable<NetFunctionAttribute> NetAttributes;
-            public IEnumerable<MagicNetFunctionAttribute> MagicAttributes;
+            public IEnumerable<MagicFunctionAttribute> MagicAttributes;
         }
 
         private static void RegisterNetFunction(FunctionRegistration method)
@@ -37,7 +37,7 @@ namespace Wul.StdLib
         {
             string defaultName = method.MagicAttributes.First().Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<ListNode, Scope, IValue>));
-            MagicNetFunction magicFunction = new MagicNetFunction((Func<ListNode, Scope, IValue>)deleg, defaultName);
+            MagicFunction magicFunction = new MagicFunction((Func<ListNode, Scope, IValue>)deleg, defaultName);
             foreach (var globalname in method.MagicAttributes)
             {
                 Scope[globalname.Name] = magicFunction;
@@ -67,7 +67,7 @@ namespace Wul.StdLib
                 {
                     Method = m,
                     NetAttributes = m.GetCustomAttributes<NetFunctionAttribute>(),
-                    MagicAttributes = m.GetCustomAttributes<MagicNetFunctionAttribute>()
+                    MagicAttributes = m.GetCustomAttributes<MagicFunctionAttribute>()
                 })
                 .ToList();
 
