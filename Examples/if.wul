@@ -1,3 +1,4 @@
-(defmacro if (cond then else) ((quote eval) ((quote or) ((quote and) cond ((quote quote) then)) ((quote quote) else))))
+(defmacro if (cond then else) (`eval (`or (`and cond ``then) ``else)))
+
 (if if (print 'true') (print 'false'))  ; prints true
 (if nil (print 'true') (print 'false')) ; prints false

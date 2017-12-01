@@ -85,7 +85,16 @@ namespace Wul.Interpreter.Types
             var listNode = new ListNode(dictListNode, new List<SyntaxNode>());
             //TODO: if key is identifier, quote it?
             listNode.Children.AddRange(_map
-                .SelectMany(kvp => new[] { kvp.Key.ToSyntaxNode(dictListNode), kvp.Value.ToSyntaxNode(dictListNode) })
+                .SelectMany(kvp =>
+                {
+                    //TODO If kvp.Key is SyntaxNode, then quote it?
+                    SyntaxNode key = kvp.Key.ToSyntaxNode(dictListNode);
+
+                    //TODO if kvp.Value is SyntaxNode, then quote it?
+                    SyntaxNode val = kvp.Value.ToSyntaxNode(dictListNode);
+                    
+                    return new[] {key, val};
+                })
                 .ToList()
             );
             dictListNode.Children.Add(listNode);

@@ -12,6 +12,11 @@ namespace Wul.Parser
             Children = children;
         }
 
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new RangeNode(parent, Children);
+        }
+
         public override string AsString()
         {
             return $"Range[{Children.Count}]";

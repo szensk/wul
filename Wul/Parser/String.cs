@@ -21,7 +21,12 @@ namespace Wul.Parser
         {
             _Value = value;
         }
-        
+
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new StringNode(parent, _Value);
+        }
+
         public override string AsString()
         {
             return $"String[{_Value}]";

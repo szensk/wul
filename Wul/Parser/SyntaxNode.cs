@@ -1,4 +1,5 @@
-﻿using Wul.Interpreter;
+﻿using System;
+using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
 
@@ -10,26 +11,19 @@ namespace Wul.Parser
 
         public WulType Type => SyntaxNodeType.Instance;
 
-        public SyntaxNode Parent { get; private set; }
+        public SyntaxNode Parent { get; }
 
         protected SyntaxNode(SyntaxNode parent)
         {
             Parent = parent;
         }
 
-        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
-        {
-            //TODO is setting parent a bad idea
-            Parent = parent;
-            return this;
-        }
-
+        public abstract SyntaxNode ToSyntaxNode(SyntaxNode parent);
         public abstract string AsString();
 
         public object ToObject()
         {
-            //No idea what to do here
-            return this;
+            throw new InvalidCastException();
         }
     }
 

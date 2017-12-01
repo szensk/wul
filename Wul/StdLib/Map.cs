@@ -43,7 +43,8 @@ namespace Wul.StdLib
             for (int i = 0; i < mapList.Count - 1; i += 2)
             {
                 var key = (IdentifierNode) mapList[i];
-                var val = mapList[i + 1].Eval(scope);
+                //TODO Should probably be eval once
+                var val = mapList[i + 1].EvalOnce(scope);
                 map.Add(key, val);
             }
 
@@ -59,7 +60,7 @@ namespace Wul.StdLib
             for (int i = 0; i < mapList.Count; ++i)
             {
                 var key = (IdentifierNode)mapList[i];
-                var val = key.Eval(scope);
+                var val = key.EvalOnce(scope);
                 map.Add(key, val);
             }
 

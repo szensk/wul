@@ -28,12 +28,22 @@ namespace Wul.Parser
 
     class NumericNode : SyntaxNode
     {
+        public NumericNode(SyntaxNode parent, double value) : base(parent)
+        {
+            Value = value;
+        }
+
         public NumericNode(SyntaxNode parent, string match) : base(parent)
         {
             Value = double.Parse(match);
         }
 
         public double Value { get; }
+
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new NumericNode(parent, Value);
+        }
 
         public override string AsString()
         {

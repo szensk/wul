@@ -4,7 +4,7 @@ namespace Wul.Parser
 {
     public class IdentifierNode : SyntaxNode
     {
-        public string Name { get; }
+        public string Name { get; set; }
 
         public IdentifierNode(SyntaxNode parent, string name) : base(parent)
         {
@@ -20,8 +20,12 @@ namespace Wul.Parser
         {
             if (ReferenceEquals(this, obj)) return true;
             if (ReferenceEquals(null, obj)) return false;
-            IdentifierNode other = obj as IdentifierNode;
-            return other != null && Name.Equals(other.Name);
+            return obj is IdentifierNode other && Name.Equals(other.Name);
+        }
+
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new IdentifierNode(parent, Name);
         }
 
         public override string AsString()

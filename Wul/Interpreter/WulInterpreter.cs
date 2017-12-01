@@ -141,7 +141,8 @@ namespace Wul.Interpreter
                 value = function.Invoke(new List<IValue>{value, list}, currentScope);
                 //TODO how to avoid the ToSyntaxNode step?
                 //Problem is that ListNodes are evaluated to ListTable
-                SyntaxNode node = value.ToSyntaxNode(list.Parent);
+                SyntaxNode node = value as SyntaxNode ?? value.ToSyntaxNode(list.Parent);
+                System.Diagnostics.Debug.WriteLine($"macro -> {node}");
                 value = Interpret(node, currentScope) ?? Value.Nil;
             }
             else

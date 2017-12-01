@@ -11,6 +11,11 @@ namespace Wul.Parser
             Comment = comment;
         }
 
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new CommentNode(parent, Comment);
+        }
+
         public override string AsString()
         {
             return "CommentNode";

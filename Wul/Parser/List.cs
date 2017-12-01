@@ -33,6 +33,11 @@ namespace Wul.Parser
             return identifierNodes;
         }
 
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new ListNode(parent, Children);
+        }
+
         public override string AsString()
         {
             return $"List[{Children.Count}]";

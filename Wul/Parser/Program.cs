@@ -12,6 +12,11 @@ namespace Wul.Parser
             Expressions = expressions;
         }
 
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new ProgramNode(Expressions);
+        }
+
         public override string AsString()
         {
             return $"Program[{Expressions.Count}]";

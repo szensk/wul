@@ -11,6 +11,11 @@ namespace Wul.Parser
         
         public bool Value { get; }
 
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new BooleanNode(parent, Value);
+        }
+
         //AsString is used by Wul
         public override string AsString()
         {

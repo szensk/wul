@@ -22,7 +22,7 @@ namespace Wul.StdLib
             var children = list.Children.Skip(1).ToArray();
             var nameIdentifier = (IdentifierNode) children[0];
             string name = nameIdentifier.Name;
-            var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
+            var value = children[1].EvalOnce(scope);
 
             if (ReferenceEquals(value, Value.Nil))
             {
@@ -42,7 +42,7 @@ namespace Wul.StdLib
             var children = list.Children.Skip(1).ToArray();
             var nameIdentifier = (IdentifierNode) children[0];
             string name = nameIdentifier.Name;
-            var value = WulInterpreter.Interpret(children[1], scope) ?? Value.Nil;
+            var value = children[1].EvalOnce(scope);
 
             //Do we want a closure or an empty child scope?
             Scope currentScope = scope.EmptyChildScope();
@@ -52,6 +52,7 @@ namespace Wul.StdLib
             IValue result = Value.Nil;
             foreach (var child in childrenToEval)
             {
+                //TODO Should probably be eval once
                 result = child.Eval(currentScope);
             }
             return result;
@@ -110,7 +111,7 @@ namespace Wul.StdLib
             var children = list.Children.Skip(1).ToArray();
 
             var condition = children[0];
-            var result = WulInterpreter.Interpret(condition, scope) ?? Value.Nil;
+            var result = condition.EvalOnce(scope);
 
             var listChildren = children.OfType<ListNode>();
 
@@ -119,13 +120,13 @@ namespace Wul.StdLib
             {
                 var thenBlock =
                     listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "then");
-                if (thenBlock != null) returnValue = WulInterpreter.Interpret(thenBlock, scope);
+                if (thenBlock != null) returnValue = thenBlock.EvalOnce(scope);
             }
             else
             {
                 var elseBlock =
                     listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "else");
-                if (elseBlock != null) returnValue = WulInterpreter.Interpret(elseBlock, scope);
+                if (elseBlock != null) returnValue = elseBlock.EvalOnce(scope);
             }
 
             return returnValue;
@@ -215,8 +216,10 @@ namespace Wul.StdLib
             IdentifierNode identifier = (IdentifierNode)list.Children[1];
             if (list.Children.Count == 2)
             {
+                //TODO Should probably be eval once
                 return identifier.Eval(rootScope);
             }
+            //TODO Should probably be eval once
             IValue value = list.Children[2].Eval(scope);
             rootScope[identifier.Name] = value;
             return value;

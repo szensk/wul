@@ -39,9 +39,17 @@ namespace Wul.StdLib
         [MagicFunction("dump")]
         internal static IValue DumpValue(ListNode list, Scope scope)
         {
-            IValue first = WulInterpreter.Interpret(list.Children[1], scope) ?? Value.Nil;
+            IValue first = list.Children[1].EvalOnce(scope);
             SyntaxNode node = first.ToSyntaxNode(list.Parent);
             return new UString(node.ToString());
+        }
+
+        [MagicFunction("syntax")]
+        internal static IValue Syntaxify(ListNode list, Scope scope)
+        {
+            IValue first = list.Children[1].EvalOnce(scope);
+            SyntaxNode node = first.ToSyntaxNode(list.Parent);
+            return node;
         }
 
         [MagicFunction("eval")]

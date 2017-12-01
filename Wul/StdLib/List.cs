@@ -59,7 +59,7 @@ namespace Wul.StdLib
             }
             else
             {
-                var evaluatedArguments = list.Children.Skip(1).Select(c => c.Eval(scope)).ToList();
+                var evaluatedArguments = list.Children.Skip(1).Select(c => c.EvalOnce(scope)).ToList();
                 return first.MetaType.At.Invoke(evaluatedArguments, scope);
             }
         }
@@ -75,7 +75,7 @@ namespace Wul.StdLib
             }
             else
             {
-                var evaluatedArguments = list.Children.Skip(1).Select(c => c.Eval(scope)).ToList();
+                var evaluatedArguments = list.Children.Skip(1).Select(c => c.EvalOnce(scope)).ToList();
                 return first.MetaType.Set.Invoke(evaluatedArguments, scope);
             }
         }
