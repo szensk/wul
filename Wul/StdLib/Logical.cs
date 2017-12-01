@@ -16,7 +16,7 @@ namespace Wul.StdLib
             return first.MetaType.Not.Invoke(list, scope);
         }
 
-        [MagicNetFunction("or")]
+        [MagicFunction("or")]
         internal static IValue Or(ListNode list, Scope scope)
         {
             SyntaxNode[] nodes = list.Children.Skip(1).ToArray();
@@ -33,7 +33,7 @@ namespace Wul.StdLib
             return value;
         }
 
-        [MagicNetFunction("and")]
+        [MagicFunction("and")]
         internal static IValue And(ListNode list, Scope scope)
         {
             SyntaxNode[] nodes = list.Children.Skip(1).ToArray();

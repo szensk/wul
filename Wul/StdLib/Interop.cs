@@ -91,7 +91,7 @@ namespace Wul.StdLib
             return Activator.CreateInstance(type, arguments);
         }
 
-        [MagicNetFunction("::")]
+        [MagicFunction("::")]
         internal static IValue CallFrameworkFunction(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -132,7 +132,7 @@ namespace Wul.StdLib
             }
         }
 
-        [MagicNetFunction("new-object")]
+        [MagicFunction("new-object")]
         internal static IValue NewObject(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();

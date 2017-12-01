@@ -29,7 +29,7 @@ namespace Wul.StdLib
             return map;
         }
 
-        [MagicNetFunction("object")]
+        [MagicFunction("object")]
         internal static IValue Object(ListNode list, Scope scope)
         {
             var mapList = ((ListNode) list.Children[1]).Children;
@@ -50,7 +50,7 @@ namespace Wul.StdLib
             return map;
         }
 
-        [MagicNetFunction("@object")]
+        [MagicFunction("@object")]
         internal static IValue ObjectShort(ListNode list, Scope scope)
         {
             var mapList = ((ListNode)list.Children[1]).Children;

@@ -3,11 +3,11 @@
 namespace Wul.StdLib
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    internal class MagicNetFunctionAttribute : Attribute
+    internal class MagicFunctionAttribute : Attribute
     {
         public string Name { get; set; }
 
-        public MagicNetFunctionAttribute(string name)
+        public MagicFunctionAttribute(string name)
         {
             Name = name;
         }

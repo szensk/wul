@@ -1,11 +1,6 @@
-; Magic functions can evaluate identifiers at run time.
-; As such a magic function's closure must contain EVERY variable that exists when it is defined.
+; Macro functions are evaluated with respect to definition environment.
+(def scope-escape (let a 5 (defmacro noname () (identity a))))
 
-(def scope-escape (let a 5 (@defn noname (key) (eval (unquote key)))))
-
-(print (scope-escape x)) ; prints nil
-(print (scope-escape a)) ; prints 5
-(print a)                ; prints nil
-
-; Implication
-; Any variable in scope when a magic function is defined will not be freed until the magic function is freed.
+(def a 10)
+(global a 15)
+(print (scope-escape)) ; prints 5

@@ -10,7 +10,7 @@ namespace Wul.Interpreter.MetaTypes
 
         private MagicFunctionMetaType()
         {
-            InvokeMagic.Method = new NetFunction(InvokeMagicFunction, InvokeMagic.Name);
+            InvokeMagic.Method = new NetFunction(InvokeMagicFunction, ApplyMacro.Name);
 
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
@@ -20,6 +20,26 @@ namespace Wul.Interpreter.MetaTypes
         {
             IFunction function = (IFunction) arguments[0];
             ListNode listNode = (ListNode) arguments[1];
+            return function.Execute(listNode, s);
+        }
+    }
+
+    public class MacroMetaType : MetaType
+    {
+        public static readonly MacroMetaType Instance = new MacroMetaType();
+
+        private MacroMetaType()
+        {
+            ApplyMacro.Method = new NetFunction(ApplyMacroFunction, ApplyMacro.Name);
+
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
+        }
+
+        public IValue ApplyMacroFunction(List<IValue> arguments, Scope s)
+        {
+            IFunction function = (IFunction)arguments[0];
+            ListNode listNode = (ListNode)arguments[1];
             return function.Execute(listNode, s);
         }
     }

@@ -1,7 +1,7 @@
 (def me (object (name 'jon' age 26)))
 
-(@defn at-wrapper (key) (at (eval self) key))
+(defmacro at-wrapper (key) ((quote at) self key))
 
-(set-metamethod me @invoke at-wrapper)
+(set-metamethod me apply at-wrapper)
 
 (print (me name)) ; prints 'jon'
