@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Wul.Parser
@@ -18,13 +19,11 @@ namespace Wul.Parser
             List<IdentifierNode> identifierNodes = new List<IdentifierNode>();
             foreach (SyntaxNode node in Children)
             {
-                IdentifierNode identifierNode = node as IdentifierNode;
-                if (identifierNode != null)
+                if (node is IdentifierNode identifierNode)
                 {
                     identifierNodes.Add(identifierNode);
                 }
-                ListNode listNode = node as ListNode;
-                if (listNode != null)
+                if (node is ListNode listNode)
                 {
                     identifierNodes.AddRange(listNode.IdentifierNodes());
                 }
@@ -65,6 +64,11 @@ namespace Wul.Parser
         }
 
         public override SyntaxNode Parse(string token, SyntaxNode parent = null)
+        {
+            return Parse(token, false, parent);
+        }
+
+        public SyntaxNode Parse(string token, bool startQuote = false, SyntaxNode parent = null)
         {
             if (token.Length < 2) return null;
 
@@ -110,13 +114,23 @@ namespace Wul.Parser
 
                 if (closeParentheses > openParentheses)
                 {
-                    throw new Exception($"Mismatched parenthesis: {inner}");
+                    throw new Exception($"Mismatched parenthesis:\n\t{inner}");
                 }
 
                 currentIndex++;
                 if ((currentIndex == inner.Length || char.IsWhiteSpace(inner[currentIndex]) || inner[currentIndex] == ')') && openParentheses == closeParentheses)
                 {
                     string currentInner = inner.Substring(startIndex, currentIndex - startIndex).Trim();
+                    int childShouldQuote = 0;
+                    if (currentInner.StartsWith('`'))
+                    {
+                        if (currentInner.StartsWith("``"))
+                        {
+                            childShouldQuote++;
+                        }
+                        currentInner = currentInner.Replace("`", "");
+                        childShouldQuote++;
+                    }
                     if (stringParser.StartsString(currentInner)) 
                     {
                         startedString = true;
@@ -137,7 +151,28 @@ namespace Wul.Parser
                     {
                         if (item is StringNode) startedString = false;
                         if (item is RangeNode) startedRange = false;
-                        children.Add(item);
+                        if (childShouldQuote > 0)
+                        {
+                            ListNode quoteList = new ListNode(currentList, new List<SyntaxNode>());
+                            if (childShouldQuote > 1)
+                            {
+                                ListNode secondQuoteList = new ListNode(quoteList, new List<SyntaxNode>());
+                                secondQuoteList.Children.Add(new IdentifierNode(secondQuoteList, "quote"));
+                                secondQuoteList.Children.Add(new IdentifierNode(secondQuoteList, "quote"));
+                                quoteList.Children.Add(secondQuoteList);
+                            }
+                            else
+                            {
+                                quoteList.Children.Add(new IdentifierNode(quoteList, "quote"));
+
+                            }
+                            quoteList.Children.Add(item);
+                            children.Add(quoteList);
+                        }
+                        else
+                        {
+                            children.Add(item);
+                        }
                     }
                     else if (!string.IsNullOrWhiteSpace(currentInner) && !CommentParser.StartsComment(currentInner))
                     {
@@ -152,6 +187,7 @@ namespace Wul.Parser
             if (startedRange) throw new Exception("unfinished range in list");
 
             currentList.Children.AddRange(children);
+            
             return currentList;
         }
     }

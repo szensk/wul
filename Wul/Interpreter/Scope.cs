@@ -63,6 +63,12 @@ namespace Wul.Interpreter
             }
         }
 
+        //Overwrites current binding but only in this scope
+        public void BindLocal(string key, IValue value)
+        {
+            BoundVariables[key] = new Binding(value);
+        }
+
         public void Assign(string key, IValue value)
         {
             Scope s = this;

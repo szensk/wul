@@ -138,10 +138,12 @@ namespace Wul.Interpreter
             else if (isMacroFunction)
             {
                 var function = value.MetaType.ApplyMacro;
+                //TODO evaluate macro arguments first
                 value = function.Invoke(new List<IValue>{value, list}, currentScope);
                 //TODO how to avoid the ToSyntaxNode step?
                 //Problem is that ListNodes are evaluated to ListTable
                 SyntaxNode node = value.ToSyntaxNode(list.Parent);
+                System.Diagnostics.Debug.WriteLine($"macro -> {node}");
                 value = Interpret(node, currentScope) ?? Value.Nil;
             }
             else

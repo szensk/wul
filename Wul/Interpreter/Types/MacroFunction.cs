@@ -31,7 +31,7 @@ namespace Wul.Interpreter.Types
 
         public virtual IValue Execute(ListNode list, Scope scope)
         {
-            Scope currentScope = ParentScope;
+            Scope currentScope = ParentScope.EmptyChildScope();
 
             var arguments = list.Children.ToArray();
 
