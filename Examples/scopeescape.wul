@@ -1,11 +1,11 @@
 ; Magic functions can evaluate identifiers at run time.
-; This allows it to access any variable in its scope
-; As such a magic function's closure contains EVERY variable that exists when it is defined. 
+; As such a magic function's closure must contain EVERY variable that exists when it is defined.
+
 (def scope-escape (let a 5 (@defn noname (key) (eval (unquote key)))))
 
 (print (scope-escape x)) ; prints nil
 (print (scope-escape a)) ; prints 5
-(print (a (global a)))   ; prints (nil, nil)
+(print a)                ; prints nil
 
-; Implications
-; This means any variable in scope when a magic function is defined is forever in scope.
+; Implication
+; Any variable in scope when a magic function is defined will not be freed until the magic function is freed.
