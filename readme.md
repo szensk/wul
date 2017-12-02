@@ -4,7 +4,7 @@ A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. W
 
 Types
 ======
-There are seven basic types: Bool, Number, String, List, Map, Range, Function. Strings come in two varieties, interpolated (e.g. `"hello {world}."`) and regular (e.g. `'this will appear exactly {as seen here}'`). Functions also exist in two varieties. Regular functions operate as you expect but magic functions are passed unevaluated syntax nodes instead of value arguments. These syntax nodes may be evaluated using the `eval` function. This is useful for implementing short circuit operators or control flow.
+There are seven basic types: Bool, Number, String, List, Map, Range, Function. Strings come in two varieties, interpolated (e.g. `"hello {world}."`) and regular (e.g. `'this will appear exactly {as seen here}'`). Functions also exist in two varieties. Regular functions operate as you expect but macro functions are passed unevaluated syntax nodes instead of value arguments. These syntax nodes may be evaluated using the `eval` function. This makes it easy to implementing short circuit operators or control flow.
 
 MetaTypes
 =========
