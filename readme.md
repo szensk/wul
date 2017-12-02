@@ -28,11 +28,8 @@ Examples
 ```
 
 ```lisp
-; A normal function has its arguments evaluated left-to-right before it is executed
 (defn ltr (a b) (?? a b))
-
-; Magic functions receive unevaluated syntax nodes and may evaluate them in any order
-(@defn rtl (a b) (?? (eval b) (eval a)))
+(defmacro rtl (a b) (`?? b a))
 
 (ltr (print "1") (print "2")) ; prints 1 then 2
 (rtl (print "1") (print "2")) ; prints 2 then 1
