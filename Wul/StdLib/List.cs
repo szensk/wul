@@ -98,5 +98,21 @@ namespace Wul.StdLib
 
             return first.MetaType.Count.Invoke(list, scope);
         }
+
+        [NetFunction("push")]
+        internal static IValue PushEnd(List<IValue> list, Scope scope)
+        {
+            IValue first = list.First();
+
+            return first.MetaType.Push.Invoke(list, scope);
+        }
+
+        [NetFunction("pop")]
+        internal static IValue PopEnd(List<IValue> list, Scope scope)
+        {
+            IValue first = list.First();
+
+            return first.MetaType.Pop.Invoke(list, scope);
+        }
     }
 }

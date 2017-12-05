@@ -73,6 +73,8 @@ namespace Wul.Interpreter
             Remainder = new MetaMethod("rem");
             Count = new MetaMethod("len");
             Concat = new MetaMethod("..");
+            Push = new MetaMethod("push");
+            Pop = new MetaMethod("pop");
 
             Invoke = new MetaMethod("invoke");
             InvokeMagic = new MetaMethod("@invoke");
@@ -108,6 +110,8 @@ namespace Wul.Interpreter
             clone.Remainder = new MetaMethod(Remainder);
             clone.Count = new MetaMethod(Count);
             clone.Concat = new MetaMethod(Concat);
+            clone.Push = new MetaMethod(Push);
+            clone.Pop = new MetaMethod(Pop);
 
             clone.Invoke = new MetaMethod(Invoke);
             clone.InvokeMagic = new MetaMethod(InvokeMagic);
@@ -127,7 +131,7 @@ namespace Wul.Interpreter
                 Add, Subtract, Multiply, Divide, Modulus, Power,
                 Not, And, Or, Xor,
                 Equal, Compare,
-                At, Set, Remainder, Count, Concat,
+                At, Set, Remainder, Count, Concat, Pop, Push,
                 Invoke, InvokeMagic, ApplyMacro,
                 AsString, Type
             };
@@ -171,6 +175,8 @@ namespace Wul.Interpreter
         public MetaMethod Remainder { get; private set; }
         public MetaMethod Count { get; private set; }
         public MetaMethod Concat { get; private set; }
+        public MetaMethod Push { get; private set; }
+        public MetaMethod Pop { get; private set; }
 
         // Other
         public MetaMethod Invoke { get; private set; }

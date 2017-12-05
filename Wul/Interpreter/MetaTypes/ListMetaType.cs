@@ -21,6 +21,9 @@ namespace Wul.Interpreter.MetaTypes
             Count.Method = new NetFunction(Length, Count.Name);
             Concat.Method = new NetFunction(JoinLists, Concat.Name);
 
+            Push.Method = new NetFunction(PushEnd, Push.Name);
+            Pop.Method = new NetFunction(PopEnd, Pop.Name);
+            
             //Other
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
@@ -90,6 +93,29 @@ namespace Wul.Interpreter.MetaTypes
             ListTable right = (ListTable) arguments[1];
 
             return left.AsList().SequenceEqual(right.AsList()) ? Bool.True : Bool.False;
+        }
+
+        public IValue PushEnd(List<IValue> arguments, Scope s)
+        {
+            ListTable left = (ListTable) arguments[0];
+
+            foreach (IValue val in arguments.Skip(1))
+            {
+                left.Add(val);
+            }
+
+            return left;
+        }
+
+        public IValue PopEnd(List<IValue> arguments, Scope s)
+        {
+            ListTable left = (ListTable) arguments[0];
+            if (left.Count < 1) return Value.Nil;
+
+            var list = left.AsList();
+            IValue first = list.First();
+            list.RemoveAt(0);
+            return first;
         }
     }
 }

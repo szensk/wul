@@ -83,7 +83,6 @@ namespace Wul.Interpreter.Types
             var dictListNode = new ListNode(parent, new List<SyntaxNode>());
             dictListNode.Children.Add(new IdentifierNode(dictListNode, "dict"));
             var listNode = new ListNode(dictListNode, new List<SyntaxNode>());
-            //TODO: if key is identifier, quote it?
             listNode.Children.AddRange(_map
                 .SelectMany(kvp =>
                 {

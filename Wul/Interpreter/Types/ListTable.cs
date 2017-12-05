@@ -55,7 +55,7 @@ namespace Wul.Interpreter.Types
             }
         }
 
-        public void Add(IValue key, IValue value)
+        public void Add(IValue value)
         {
             _list.Add(value);
         }

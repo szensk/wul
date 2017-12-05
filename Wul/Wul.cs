@@ -97,48 +97,38 @@ namespace Wul
                 }
                 return ExitSuccess;
             }
-            else if (args.Length == 1)
+
+            if (args.Length == 1)
             {
                 if (args[0] == "-h")
                 {
                     PrintHelp();
                     return ExitSuccess;
                 }
-                else if (args[0].StartsWith('-'))
+                if (args[0].StartsWith('-'))
                 {
                     return Error($"Unrecognized option {args[0]}");
                 }
-                else
+
+                string filePath = args[0];
+                if (File.Exists(filePath))
                 {
-                    string filePath = args[0];
-                    if (File.Exists(filePath))
-                    {
-                        return RunFile(filePath) ? ExitSuccess : ExitError;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Unable to open file {filePath}");
-                        return ExitError;
-                    }
+                    return RunFile(filePath) ? ExitSuccess : ExitError;
                 }
+                return Error($"Unable to open file {filePath}");
             }
-            else if (args.Length == 2)
+            if (args.Length == 2)
             {
-                if (args[0] == "-e" || args[0] == "-ep")
-                {
-                    string input = args[0] == "-ep" ? $"({args[1]})" : args[1];
-                    return RunString(input) ? ExitSuccess : ExitError;
-                }
-                else
+                if (args[0] != "-e" && args[0] != "-ep")
                 {
                     return Error($"Unrecognized or invalid option {args[0]}");
                 }
+                string input = args[0] == "-ep" ? $"({args[1]})" : args[1];
+                return RunString(input) ? ExitSuccess : ExitError;
             }
-            else
-            {
-                PrintHelp();
-                return ExitSuccess;
-            }
+
+            PrintHelp();
+            return ExitSuccess;
         }
     }
 }
