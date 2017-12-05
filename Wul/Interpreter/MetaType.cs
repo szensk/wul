@@ -68,7 +68,7 @@ namespace Wul.Interpreter
             Equal = new MetaMethod("=");
             Compare = new MetaMethod("compare");
 
-            At = new MetaMethod("@");
+            At = new MetaMethod("at");
             Set = new MetaMethod("set");
             Remainder = new MetaMethod("rem");
             Count = new MetaMethod("len");
