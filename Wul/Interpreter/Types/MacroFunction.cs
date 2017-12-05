@@ -70,7 +70,16 @@ namespace Wul.Interpreter.Types
 
         public SyntaxNode ToSyntaxNode(SyntaxNode parent)
         {
-            throw new NotImplementedException();
+            List<SyntaxNode> listNodes = new List<SyntaxNode>
+            {
+                new IdentifierNode(parent, "defmacro"),
+                new IdentifierNode(parent, Name)
+            };
+            ListNode args = new ListNode(parent, new List<SyntaxNode>());
+            args.Children.AddRange(ArgumentNames.Select(a => new IdentifierNode(parent, a)));
+            listNodes.Add(args);
+            listNodes.Add(Body);
+            return new ListNode(parent, listNodes);
         }
 
         public string AsString()
