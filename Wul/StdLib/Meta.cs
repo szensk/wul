@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
@@ -9,7 +10,7 @@ namespace Wul.StdLib
     class Meta
     {
         [MagicFunction("set-metamethod")]
-        internal static IValue SetMetaType(ListNode list, Scope scope)
+        internal static IValue SetMetamethod(ListNode list, Scope scope)
         {
             IValue first = list.Children[1].Eval(scope);
             IdentifierNode identifier = (IdentifierNode) list.Children[2];
@@ -34,6 +35,17 @@ namespace Wul.StdLib
             }
 
             return Value.Nil;
+        }
+
+        [MagicFunction("get-metamethod")]
+        internal static IValue GetMetamethod(ListNode list, Scope scope)
+        {
+            IValue first = list.Children[1].Eval(scope);
+            IdentifierNode identifier = (IdentifierNode)list.Children[2];
+
+            string metaMethodName = identifier.Name;
+            IValue method = first.MetaType.Get(metaMethodName)?.Method;
+            return  method ?? Value.Nil;
         }
 
         [MagicFunction("dump")]
