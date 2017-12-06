@@ -5,7 +5,7 @@ using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
-    class NetFunction : IFunction
+    public class NetFunction : IFunction
     {
         private readonly Func<List<IValue>, Scope, IValue> Body;
 

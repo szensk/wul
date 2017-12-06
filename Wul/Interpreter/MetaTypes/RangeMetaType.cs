@@ -11,18 +11,20 @@ namespace Wul.Interpreter.MetaTypes
         public RangeMetaType() : base(null)
         {
             //Equality
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
+            Equal = new NetFunction(AreEqual, Equal.Name);
 
             //List
-            At.Method = new NetFunction(AtIndex, At.Name);
-            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
-            Count.Method = new NetFunction(Length, Count.Name);
+            At = new NetFunction(AtIndex, At.Name);
+            Remainder = new NetFunction(Remaining, Remainder.Name);
+            Count = new NetFunction(Length, Count.Name);
 
-            Invoke.Method = new NetFunction(RangeIndex, Invoke.Name);
+            Invoke = new NetFunction(RangeIndex, Invoke.Name);
 
             //Other
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
 
         public IValue AreEqual(List<IValue> arguments, Scope s)

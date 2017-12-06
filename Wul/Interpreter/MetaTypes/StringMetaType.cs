@@ -11,18 +11,20 @@ namespace Wul.Interpreter.MetaTypes
         private StringMetaType() : base(null)
         {
             // Comparison
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
-            Compare.Method = new NetFunction(Comparison, Compare.Name);
+            Equal = new NetFunction(AreEqual, Equal.Name);
+            Compare = new NetFunction(Comparison, Compare.Name);
 
-            At.Method = new NetFunction(CharacterAtIndex, At.Name);
-            Concat.Method = new NetFunction(JoinStrings, Concat.Name);
-            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
+            At = new NetFunction(CharacterAtIndex, At.Name);
+            Concat = new NetFunction(JoinStrings, Concat.Name);
+            Remainder = new NetFunction(Remaining, Remainder.Name);
 
             // Count
-            Count.Method = new NetFunction(Length, Count.Name);
+            Count = new NetFunction(Length, Count.Name);
 
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
 
         public IValue AreEqual(List<IValue> arguments, Scope s)

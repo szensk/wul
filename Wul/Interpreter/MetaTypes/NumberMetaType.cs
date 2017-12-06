@@ -12,29 +12,31 @@ namespace Wul.Interpreter.MetaTypes
         private NumberMetaType() : base(null)
         {
             //Arithmetic
-            Add.Method = new NetFunction(DoAdd, Add.Name);
-            Subtract.Method = new NetFunction(DoSubtract, Subtract.Name);
-            Multiply.Method = new NetFunction(DoMultiply, Multiply.Name);
-            Divide.Method = new NetFunction(DoDivide, Divide.Name);
-            Modulus.Method = new NetFunction(DoModulus, Modulus.Name);
-            Power.Method = new NetFunction(DoPower, Power.Name);
-            IntegerDivide.Method = new NetFunction(DoIntegerDivide, IntegerDivide.Name);
+            Add = new NetFunction(DoAdd, Add.Name);
+            Subtract = new NetFunction(DoSubtract, Subtract.Name);
+            Multiply = new NetFunction(DoMultiply, Multiply.Name);
+            Divide = new NetFunction(DoDivide, Divide.Name);
+            Modulus = new NetFunction(DoModulus, Modulus.Name);
+            Power = new NetFunction(DoPower, Power.Name);
+            IntegerDivide = new NetFunction(DoIntegerDivide, IntegerDivide.Name);
 
             //Bitwise
-            BitwiseNot.Method = new NetFunction(NumberBitwiseNot, BitwiseNot.Name);
-            BitwiseAnd.Method = new NetFunction(NumberBitwiseAnd, BitwiseAnd.Name);
-            BitwiseOr.Method = new NetFunction(NumberBitwiseOr, BitwiseOr.Name);
-            BitwiseXor.Method = new NetFunction(NumberBitwiseXor, BitwiseXor.Name);
-            LeftShift.Method = new NetFunction(NumberLeftShift, LeftShift.Name);
-            RightShift.Method = new NetFunction(NumberRightShift, RightShift.Name);
+            BitwiseNot = new NetFunction(NumberBitwiseNot, BitwiseNot.Name);
+            BitwiseAnd = new NetFunction(NumberBitwiseAnd, BitwiseAnd.Name);
+            BitwiseOr = new NetFunction(NumberBitwiseOr, BitwiseOr.Name);
+            BitwiseXor = new NetFunction(NumberBitwiseXor, BitwiseXor.Name);
+            LeftShift = new NetFunction(NumberLeftShift, LeftShift.Name);
+            RightShift = new NetFunction(NumberRightShift, RightShift.Name);
 
             //Comparison
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
-            Compare.Method = new NetFunction(Comparison, Compare.Name);
+            Equal = new NetFunction(AreEqual, Equal.Name);
+            Compare = new NetFunction(Comparison, Compare.Name);
 
             //Other
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
 
         public IValue DoAdd(List<IValue> arguments, Scope s)

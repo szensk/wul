@@ -12,21 +12,23 @@ namespace Wul.Interpreter.MetaTypes
         private ListMetaType() : base(null)
         {
             //Equality
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
+            Equal = new NetFunction(AreEqual, Equal.Name);
 
             //List
-            At.Method = new NetFunction(AtIndex, At.Name);
-            Set.Method = new NetFunction(SetIndex, Set.Name);
-            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
-            Count.Method = new NetFunction(Length, Count.Name);
-            Concat.Method = new NetFunction(JoinLists, Concat.Name);
+            At = new NetFunction(AtIndex, At.Name);
+            Set = new NetFunction(SetIndex, Set.Name);
+            Remainder = new NetFunction(Remaining, Remainder.Name);
+            Count = new NetFunction(Length, Count.Name);
+            Concat = new NetFunction(JoinLists, Concat.Name);
 
-            Push.Method = new NetFunction(PushEnd, Push.Name);
-            Pop.Method = new NetFunction(PopEnd, Pop.Name);
+            Push = new NetFunction(PushEnd, Push.Name);
+            Pop = new NetFunction(PopEnd, Pop.Name);
             
             //Other
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
 
         public IValue Length(List<IValue> arguments, Scope s)

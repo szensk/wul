@@ -10,10 +10,12 @@ namespace Wul.Interpreter.MetaTypes
 
         private MagicFunctionMetaType() : base(null)
         {
-            InvokeMagic.Method = new NetFunction(InvokeMagicFunction, InvokeMagic.Name);
+            InvokeMagic = new NetFunction(InvokeMagicFunction, InvokeMagic.Name);
 
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
 
         public IValue InvokeMagicFunction(List<IValue> arguments, Scope s)
@@ -30,10 +32,12 @@ namespace Wul.Interpreter.MetaTypes
 
         private MacroMetaType() : base(null)
         {
-            ApplyMacro.Method = new NetFunction(ApplyMacroFunction, ApplyMacro.Name);
+            ApplyMacro = new NetFunction(ApplyMacroFunction, ApplyMacro.Name);
 
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
 
         public IValue ApplyMacroFunction(List<IValue> arguments, Scope s)

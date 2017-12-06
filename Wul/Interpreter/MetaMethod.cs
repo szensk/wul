@@ -47,5 +47,14 @@ namespace Wul.Interpreter
                 return Method.Execute((ListNode) arguments[1], s);
             }
         }
+
+        public static implicit operator MetaMethod(NetFunction nf)
+        {
+            MetaMethod mm = new MetaMethod(nf.Name)
+            {
+                Method = nf
+            };
+            return mm;
+        }
     }
 }

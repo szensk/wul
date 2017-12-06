@@ -13,16 +13,18 @@ namespace Wul.Interpreter.MetaTypes
         private MapMetaType() : base(null)
         {
             //Equality
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
+            Equal = new NetFunction(AreEqual, Equal.Name);
 
             //List
-            At.Method = new NetFunction(AtKey, At.Name);
-            Set.Method = new NetFunction(SetKey, Set.Name);
-            Count.Method = new NetFunction(Length, Count.Name);
+            At = new NetFunction(AtKey, At.Name);
+            Set = new NetFunction(SetKey, Set.Name);
+            Count = new NetFunction(Length, Count.Name);
 
             //Other
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
 
         public IValue AtKey(List<IValue> arguments, Scope s)

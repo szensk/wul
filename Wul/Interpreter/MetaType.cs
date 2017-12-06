@@ -13,8 +13,6 @@ namespace Wul.Interpreter
         protected MetaType(MetaType parent)
         {
             Parent = parent ?? DefaultMetaType;
-
-            InitializeDictionary();
         }
 
         private MetaType()
@@ -96,7 +94,7 @@ namespace Wul.Interpreter
             return clone;
         }
 
-        private void InitializeDictionary()
+        protected void InitializeDictionary()
         {
             var metaMethodList = new List<MetaMethod>
             {
@@ -126,49 +124,49 @@ namespace Wul.Interpreter
         public MetaMethod Add
         {
             get => AddMetaMethod ?? Parent?.Add;
-            private set => AddMetaMethod = value;
+            protected set => AddMetaMethod = value;
         }
 
         private MetaMethod SubtractMetaMethod;
         public MetaMethod Subtract
         {
             get => SubtractMetaMethod ?? Parent?.Subtract;
-            private set => SubtractMetaMethod = value;
+            protected set => SubtractMetaMethod = value;
         }
 
         private MetaMethod MultiplyMetaMethod;
         public MetaMethod Multiply
         {
             get => MultiplyMetaMethod ?? Parent?.Multiply;
-            private set => MultiplyMetaMethod = value;
+            protected set => MultiplyMetaMethod = value;
         }
 
         private MetaMethod DivideMetaMethod;
         public MetaMethod Divide
         {
             get => DivideMetaMethod ?? Parent?.Divide;
-            private set => DivideMetaMethod = value;
+            protected set => DivideMetaMethod = value;
         }
 
         private MetaMethod ModulusMetaMethod;
         public MetaMethod Modulus
         {
             get => ModulusMetaMethod ?? Parent?.Modulus;
-            private set => ModulusMetaMethod = value;
+            protected set => ModulusMetaMethod = value;
         }
 
         private MetaMethod PowerMetaMethod;
         public MetaMethod Power
         {
             get => PowerMetaMethod ?? Parent?.Power;
-            private set => PowerMetaMethod = value;
+            protected set => PowerMetaMethod = value;
         }
 
         private MetaMethod IntegerDivideMetaMethod;
         public MetaMethod IntegerDivide
         {
             get => IntegerDivideMetaMethod ?? Parent?.IntegerDivide;
-            private set => IntegerDivideMetaMethod = value;
+            protected set => IntegerDivideMetaMethod = value;
         }
 
         // Logical
@@ -176,7 +174,7 @@ namespace Wul.Interpreter
         public MetaMethod Not
         {
             get => NotMetaMethod ?? Parent?.Not;
-            private set => NotMetaMethod = value;
+            protected set => NotMetaMethod = value;
         }
 
         // Bitwise
@@ -184,21 +182,21 @@ namespace Wul.Interpreter
         public MetaMethod BitwiseNot
         {
             get => BitwiseNotMetaMethod ?? Parent?.BitwiseNot;
-            private set => BitwiseNotMetaMethod = value;
+            protected set => BitwiseNotMetaMethod = value;
         }
 
         private MetaMethod BitwiseAndMetaMethod;
         public MetaMethod BitwiseAnd
         {
             get => BitwiseAndMetaMethod ?? Parent?.BitwiseAnd;
-            private set => BitwiseAndMetaMethod = value;
+            protected set => BitwiseAndMetaMethod = value;
         }
 
         private MetaMethod BitwiseOrMetaMethod;
         public MetaMethod BitwiseOr
         {
             get => BitwiseOrMetaMethod ?? Parent?.BitwiseOr;
-            private set => BitwiseOrMetaMethod = value;
+            protected set => BitwiseOrMetaMethod = value;
         }
 
         private MetaMethod BitwiseXorMetaMethod;
@@ -206,21 +204,21 @@ namespace Wul.Interpreter
         public MetaMethod BitwiseXor
         {
             get => BitwiseXorMetaMethod ?? Parent?.BitwiseXor;
-            private set => BitwiseXorMetaMethod = value;
+            protected set => BitwiseXorMetaMethod = value;
         }
 
         private MetaMethod LeftShiftMetaMethod;
         public MetaMethod LeftShift
         {
             get => LeftShiftMetaMethod ?? Parent?.LeftShift;
-            private set => LeftShiftMetaMethod = value;
+            protected set => LeftShiftMetaMethod = value;
         }
 
         private MetaMethod RightShiftMetaMethod;
         public MetaMethod RightShift
         {
             get => RightShiftMetaMethod ?? Parent?.RightShift;
-            private set => RightShiftMetaMethod = value;
+            protected set => RightShiftMetaMethod = value;
         }
         
         // Comparison
@@ -228,14 +226,14 @@ namespace Wul.Interpreter
         public MetaMethod Equal
         {
             get => EqualMetaMethod ?? Parent?.Equal;
-            private set => EqualMetaMethod = value;
+            protected set => EqualMetaMethod = value;
         }
 
         private MetaMethod CompareMetaMethod;
         public MetaMethod Compare
         {
             get => CompareMetaMethod ?? Parent?.Compare;
-            private set => CompareMetaMethod = value;
+            protected set => CompareMetaMethod = value;
         }
 
         // List
@@ -243,28 +241,28 @@ namespace Wul.Interpreter
         public MetaMethod At
         {
             get => AtMetaMethod ?? Parent?.At;
-            private set => AtMetaMethod = value;
+            protected set => AtMetaMethod = value;
         }
 
         private MetaMethod SetMetaMethod;
         public MetaMethod Set
         {
             get => SetMetaMethod ?? Parent?.Set;
-            private set => SetMetaMethod = value;
+            protected set => SetMetaMethod = value;
         }
 
         private MetaMethod RemainderMetaMethod;
         public MetaMethod Remainder
         {
             get => RemainderMetaMethod ?? Parent?.Remainder;
-            private set => RemainderMetaMethod = value;
+            protected set => RemainderMetaMethod = value;
         }
 
         private MetaMethod CountMetaMethod;
         public MetaMethod Count
         {
             get => CountMetaMethod ?? Parent?.Count;
-            private set => CountMetaMethod = value;
+            protected set => CountMetaMethod = value;
         }
 
         private MetaMethod ConcatMetaMethod;
@@ -276,21 +274,21 @@ namespace Wul.Interpreter
             //    : Parent?.Concat.IsDefined ?? false
             //        ? Parent.Concat
             //        : null;
-            private set => ConcatMetaMethod = value;
+            protected set => ConcatMetaMethod = value;
         }
 
         private MetaMethod PushMetaMethod;
         public MetaMethod Push
         {
             get => PushMetaMethod ?? Parent?.Push;
-            private set => PushMetaMethod = value;
+            protected set => PushMetaMethod = value;
         }
 
         private MetaMethod PopMetaMethod;
         public MetaMethod Pop
         {
             get => PopMetaMethod ?? Parent?.Pop;
-            private set => PopMetaMethod = value;
+            protected set => PopMetaMethod = value;
         }
 
         // Other
@@ -298,7 +296,7 @@ namespace Wul.Interpreter
         public MetaMethod Invoke
         {
             get => InvokeMetaMethod ?? Parent?.Invoke;
-            private set => InvokeMetaMethod = value;
+            protected set => InvokeMetaMethod = value;
         }
 
         //TODO this should be removed
@@ -306,28 +304,28 @@ namespace Wul.Interpreter
         public MetaMethod InvokeMagic
         {
             get => InvokeMagicMetaMethod ?? Parent?.InvokeMagic;
-            private set => InvokeMagicMetaMethod = value;
+            protected set => InvokeMagicMetaMethod = value;
         }
 
         private MetaMethod ApplyMacroMetaMethod;
         public MetaMethod ApplyMacro
         {
             get => ApplyMacroMetaMethod ?? Parent?.ApplyMacro;
-            private set => ApplyMacroMetaMethod = value;
+            protected set => ApplyMacroMetaMethod = value;
         }
 
         private MetaMethod AsStringMetaMethod;
         public MetaMethod AsString
         {
             get => AsStringMetaMethod ?? Parent?.AsString;
-            private set => AsStringMetaMethod = value;
+            protected set => AsStringMetaMethod = value;
         }
 
         private MetaMethod TypeMetaMethod;
         public MetaMethod Type
         {
             get => TypeMetaMethod ?? Parent?.Type;
-            private set => TypeMetaMethod = value;
+            protected set => TypeMetaMethod = value;
         }
 
         public MetaType Parent { get; set; }

@@ -10,16 +10,24 @@ namespace Wul.Interpreter.MetaTypes
 
         private FunctionMetaType() : base(null)
         {
+            //Invoke = new NetFunction(InvokeFunction, Instance.Invoke.Name);
+
+            //AsString = new NetFunction(IdentityString, Instance.AsString.Name);
+            //Type = new NetFunction(IdentityType, Instance.Type.Name);
+
+            //Equal = new NetFunction(IdentityEqual, Instance.Equal.Name);
         }
 
         public static void SetMetaMethods()
         {
-            Instance.Invoke.Method = new NetFunction(InvokeFunction, Instance.Invoke.Name);
+            Instance.Invoke = new NetFunction(InvokeFunction, Instance.Invoke.Name);
 
-            Instance.AsString.Method = new NetFunction(IdentityString, Instance.AsString.Name);
-            Instance.Type.Method = new NetFunction(IdentityType, Instance.Type.Name);
+            Instance.AsString = new NetFunction(IdentityString, Instance.AsString.Name);
+            Instance.Type = new NetFunction(IdentityType, Instance.Type.Name);
 
-            Instance.Equal.Method = new NetFunction(IdentityEqual, Instance.Equal.Name);
+            Instance.Equal = new NetFunction(IdentityEqual, Instance.Equal.Name);
+
+            Instance.InitializeDictionary();
         }
 
         public static IValue InvokeFunction(List<IValue> arguments, Scope s)

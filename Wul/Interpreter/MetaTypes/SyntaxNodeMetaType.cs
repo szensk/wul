@@ -8,8 +8,10 @@ namespace Wul.Interpreter.MetaTypes
 
         private SyntaxNodeMetaType() : base(null)
         {
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
     }
 }

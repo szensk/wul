@@ -14,19 +14,21 @@ namespace Wul.Interpreter.MetaTypes
         private NetObjectMetaType() : base(null)
         {
             //Equality
-            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
+            Equal = new NetFunction(IdentityEqual, Equal.Name);
 
             //Arithmetic
-            Add.Method = new NetFunction(DoAdd, Add.Name);
+            Add = new NetFunction(DoAdd, Add.Name);
 
             //List 
-            At.Method = new NetFunction(AtKey, At.Name);
-            Set.Method = new NetFunction(SetKey, Set.Name);
+            At = new NetFunction(AtKey, At.Name);
+            Set = new NetFunction(SetKey, Set.Name);
 
             //Other
-            AsString.Method = new NetFunction(ConvertToString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
-            ApplyMacro.Method = new NetFunction(InvokeMethod, Invoke.Name);
+            AsString = new NetFunction(ConvertToString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+            ApplyMacro = new NetFunction(InvokeMethod, Invoke.Name);
+
+            InitializeDictionary();
         }
 
         public IValue AtKey(List<IValue> arguments, Scope s)

@@ -12,16 +12,18 @@ namespace Wul.Interpreter.MetaTypes
         private BoolMetaType() : base(null)
         {
             //Logical
-            Not.Method = new NetFunction(DoNot, Not.Name);
+            Not = new NetFunction(DoNot, Not.Name);
 
             //TODO Bitwise
 
             //Equality
-            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
+            Equal = new NetFunction(IdentityEqual, Equal.Name);
 
             //String
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString = new NetFunction(IdentityString, AsString.Name);
+            Type = new NetFunction(IdentityType, Type.Name);
+
+            InitializeDictionary();
         }
 
         public IValue DoNot(List<IValue> arguments, Scope s)
