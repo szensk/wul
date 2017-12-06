@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
@@ -64,7 +63,7 @@ namespace Wul.StdLib
         [MagicFunction("new-metatype")]
         internal static IValue NewMetatype(ListNode list, Scope scope)
         {
-            MetaType newmt = MetaType.DefaultMetaType.Clone();
+            MetaType newmt = MetaType.EmptyMetaType();
 
             //TODO look at arguments in list
 

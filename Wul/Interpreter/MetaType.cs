@@ -8,15 +8,12 @@ namespace Wul.Interpreter
 {
     public class MetaType : IValue
     {
-        public static readonly MetaType DefaultMetaType = new MetaType();
+        public static readonly MetaType DefaultMetaType = new MetaType(null);
 
         protected MetaType(MetaType parent)
         {
             Parent = parent ?? DefaultMetaType;
-        }
 
-        private MetaType()
-        {
             Add = new MetaMethod("+");
             Subtract = new MetaMethod("-");
             Multiply = new MetaMethod("*");
@@ -52,6 +49,11 @@ namespace Wul.Interpreter
             Type = new MetaMethod("type");
 
             InitializeDictionary();
+        }
+
+        public static MetaType EmptyMetaType()
+        {
+            return new MetaType(null);
         }
 
         //Surely there is a better way
@@ -107,7 +109,7 @@ namespace Wul.Interpreter
                 AsString, Type
             };
 
-            _metaMethods = metaMethodList.ToDictionary(key => key.Name);
+            _metaMethods = metaMethodList.Where(mm => mm != null).ToDictionary(key => key.Name);
         }
 
         private Dictionary<string, MetaMethod> _metaMethods;
@@ -240,7 +242,10 @@ namespace Wul.Interpreter
         private MetaMethod AtMetaMethod;
         public MetaMethod At
         {
-            get => AtMetaMethod ?? Parent?.At;
+            //get => AtMetaMethod ?? Parent?.At;
+            get => AtMetaMethod.IsDefined
+                ? AtMetaMethod
+                : Parent?.AtMetaMethod ?? AtMetaMethod;
             protected set => AtMetaMethod = value;
         }
 
@@ -268,12 +273,10 @@ namespace Wul.Interpreter
         private MetaMethod ConcatMetaMethod;
         public MetaMethod Concat
         {
-            get => ConcatMetaMethod ?? Parent?.Concat;
-            //get => ConcatMetaMethod.IsDefined
-            //    ? ConcatMetaMethod
-            //    : Parent?.Concat.IsDefined ?? false
-            //        ? Parent.Concat
-            //        : null;
+            //get => ConcatMetaMethod ?? Parent?.Concat;
+            get => ConcatMetaMethod.IsDefined
+                ? ConcatMetaMethod
+                : Parent?.Concat ?? ConcatMetaMethod;
             protected set => ConcatMetaMethod = value;
         }
 
