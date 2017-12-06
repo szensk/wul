@@ -14,9 +14,9 @@ namespace Wul.StdLib
             foreach (IValue value in list)
             {
                 string stringValue;
-                if (value.MetaType?.AsString?.IsDefined ?? false)
+                if (value.Metatype?.AsString?.IsDefined ?? false)
                 {
-                    UString ustring = (UString) value.MetaType.AsString.Invoke(new List<IValue> {value}, scope);
+                    UString ustring = (UString) value.Metatype.AsString.Invoke(new List<IValue> {value}, scope);
                     stringValue = ustring.Value;
                 }
                 else

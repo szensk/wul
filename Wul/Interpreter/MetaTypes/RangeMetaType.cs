@@ -8,7 +8,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly RangeMetaType Instance = new RangeMetaType();
 
-        public RangeMetaType()
+        public RangeMetaType() : base(null)
         {
             //Equality
             Equal.Method = new NetFunction(AreEqual, Equal.Name);
@@ -40,12 +40,12 @@ namespace Wul.Interpreter.MetaTypes
             Range range = arguments[0] as Range;
             IValue target = arguments[1];
 
-            if (range == null || target == null || !(target.MetaType?.At.IsDefined ?? false)) return Value.Nil;
+            if (range == null || target == null || !(target.Metatype?.At.IsDefined ?? false)) return Value.Nil;
 
             var indexes = range.AsList().AsList();
             if (indexes.Count == 1)
             {
-                return target.MetaType.At.Invoke(new List<IValue>{target, indexes[0]}, s);
+                return target.Metatype.At.Invoke(new List<IValue>{target, indexes[0]}, s);
             }
 
             List<IValue> values = new List<IValue>(indexes.Count);
@@ -53,7 +53,7 @@ namespace Wul.Interpreter.MetaTypes
             foreach (var index in indexes)
             {
                 atArguments[1] = index;
-                values.Add(target.MetaType.At.Invoke(atArguments, s));
+                values.Add(target.Metatype.At.Invoke(atArguments, s));
             }
             return new ListTable(values);
         }

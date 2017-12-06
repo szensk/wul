@@ -8,7 +8,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly FunctionMetaType Instance = new FunctionMetaType();
 
-        private FunctionMetaType()
+        private FunctionMetaType() : base(null)
         {
         }
 

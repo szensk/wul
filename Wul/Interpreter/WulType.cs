@@ -14,11 +14,11 @@ namespace Wul.Interpreter
         {
             Name = name;
             RawType = type;
-            MetaType = TypeMetaType.Instance;
+            Metatype = TypeMetaType.Instance;
         }
 
         //MetaType of WulType itself
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
 
         public abstract MetaType DefaultMetaType { get; }
 

@@ -14,7 +14,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             ArgumentNames = null;
             Body = body;
-            MetaType = FunctionMetaType.Instance;
+            Metatype = FunctionMetaType.Instance;
         }
 
         public string Name { get; }
@@ -48,6 +48,6 @@ namespace Wul.Interpreter.Types
             return $"Function[{Name}]";
         }
 
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
     }
 }

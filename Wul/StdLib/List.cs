@@ -26,7 +26,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.At.Invoke(new List<IValue>{ first, (Number) 0}, scope);
+            return first.Metatype.At.Invoke(new List<IValue>{ first, (Number) 0}, scope);
         }
 
         [NetFunction("last")]
@@ -34,9 +34,9 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            Number count = (Number) first.MetaType.Count.Invoke(list, scope);
+            Number count = (Number) first.Metatype.Count.Invoke(list, scope);
 
-            return first.MetaType.At.Invoke(new List<IValue> {first, (Number) (count.Value - 1)}, scope);
+            return first.Metatype.At.Invoke(new List<IValue> {first, (Number) (count.Value - 1)}, scope);
         }
 
         [NetFunction("rem")]
@@ -44,7 +44,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Remainder.Invoke(list, scope);
+            return first.Metatype.Remainder.Invoke(list, scope);
         }
 
         [MagicFunction("at")]
@@ -55,12 +55,12 @@ namespace Wul.StdLib
             //TODO UnpackList
             if (first.Type == MapType.Instance || first is NetObject)
             {
-                return first.MetaType.At.Invoke(new List<IValue> {list}, scope);
+                return first.Metatype.At.Invoke(new List<IValue> {list}, scope);
             }
             else
             {
                 var evaluatedArguments = list.Children.Skip(1).Select(c => c.EvalOnce(scope)).ToList();
-                return first.MetaType.At.Invoke(evaluatedArguments, scope);
+                return first.Metatype.At.Invoke(evaluatedArguments, scope);
             }
         }
 
@@ -71,12 +71,12 @@ namespace Wul.StdLib
 
             if (first.Type == MapType.Instance)
             {
-                return first.MetaType.Set.Invoke(new List<IValue> { list }, scope);
+                return first.Metatype.Set.Invoke(new List<IValue> { list }, scope);
             }
             else
             {
                 var evaluatedArguments = list.Children.Skip(1).Select(c => c.EvalOnce(scope)).ToList();
-                return first.MetaType.Set.Invoke(evaluatedArguments, scope);
+                return first.Metatype.Set.Invoke(evaluatedArguments, scope);
             }
         }
 
@@ -85,7 +85,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            Number count = (Number) first.MetaType.Count.Invoke(list, scope);
+            Number count = (Number) first.Metatype.Count.Invoke(list, scope);
 
             return count == 0 ? Bool.True : Bool.False;
         }
@@ -96,7 +96,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Count.Invoke(list, scope);
+            return first.Metatype.Count.Invoke(list, scope);
         }
 
         [NetFunction("push")]
@@ -104,7 +104,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Push.Invoke(list, scope);
+            return first.Metatype.Push.Invoke(list, scope);
         }
 
         [NetFunction("pop")]
@@ -112,7 +112,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Pop.Invoke(list, scope);
+            return first.Metatype.Pop.Invoke(list, scope);
         }
     }
 }

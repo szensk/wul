@@ -22,13 +22,13 @@ namespace Wul.Interpreter.Types
         public MapTable()
         {
             _map = new Dictionary<IValue, IValue>();
-            MetaType = MapMetaType.Instance;
+            Metatype = MapMetaType.Instance;
         }
 
         public MapTable(IDictionary<IValue, IValue> dict)
         {
             _map = dict;
-            MetaType = MapMetaType.Instance;
+            Metatype = MapMetaType.Instance;
         }
 
         public MapTable(ListTable list)
@@ -38,7 +38,7 @@ namespace Wul.Interpreter.Types
             {
                 _map.Add(i, list[i]);
             }
-            MetaType = MapMetaType.Instance;
+            Metatype = MapMetaType.Instance;
         }
 
         public IDictionary<IValue, IValue> AsDictionary()
@@ -119,7 +119,7 @@ namespace Wul.Interpreter.Types
             return objectMap;
         }
 
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
 
         public IValue this[IValue key]
         {

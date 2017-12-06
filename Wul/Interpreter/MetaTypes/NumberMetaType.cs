@@ -9,7 +9,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly NumberMetaType Instance = new NumberMetaType();
 
-        private NumberMetaType()
+        private NumberMetaType() : base(null)
         {
             //Arithmetic
             Add.Method = new NetFunction(DoAdd, Add.Name);

@@ -5,7 +5,7 @@ namespace Wul.Interpreter.Types
     public interface IValue
     {    
         //Meta-type
-        MetaType MetaType { get; set; }
+        MetaType Metatype { get; set; }
 
         WulType Type { get; }
 

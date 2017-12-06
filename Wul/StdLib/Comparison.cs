@@ -12,9 +12,9 @@ namespace Wul.StdLib
         {
             IValue first = list[0];
 
-            if (first.MetaType != null)
+            if (first.Metatype != null)
             {
-                return first.MetaType.Equal.Invoke(list, scope);
+                return first.Metatype.Equal.Invoke(list, scope);
             }
             else
             {
@@ -27,7 +27,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            Number comparison = (Number) first.MetaType.Compare.Invoke(list, scope);
+            Number comparison = (Number) first.Metatype.Compare.Invoke(list, scope);
             int value = (int) comparison.Value;
             return value == -1 ? Bool.True : Bool.False;
         }
@@ -37,7 +37,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            Number comparison = (Number)first.MetaType.Compare.Invoke(list, scope);
+            Number comparison = (Number)first.Metatype.Compare.Invoke(list, scope);
             int value = (int)comparison.Value;
         
             return value == -1 || value == 0 ? Bool.True : Bool.False;
@@ -48,7 +48,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            Number comparison = (Number)first.MetaType.Compare.Invoke(list, scope);
+            Number comparison = (Number)first.Metatype.Compare.Invoke(list, scope);
             int value = (int)comparison.Value;
             return value == 1 ? Bool.True : Bool.False;
         }
@@ -58,7 +58,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            Number comparison = (Number)first.MetaType.Compare.Invoke(list, scope);
+            Number comparison = (Number)first.Metatype.Compare.Invoke(list, scope);
             int value = (int)comparison.Value;
 
             return value == 1 || value == 0 ? Bool.True : Bool.False;
@@ -69,7 +69,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Compare.Invoke(list, scope);
+            return first.Metatype.Compare.Invoke(list, scope);
         }
     }
 }

@@ -1,0 +1,10 @@
+; Metatype inheritance example
+
+(defn newat (l index) (let raw-at (get-metamethod () at) (raw-at l (inc index))))
+(def listtype (new-metatype))
+(set-metamethod listtype at newat)
+(set-metamethod listtype parent (get-metatype ()))
+(def l (1 2 3))
+(set-metatype l listtype)
+(at l 0) ; => 2
+(.. l (1 2 3)) ; calls the parent's concat metamethod

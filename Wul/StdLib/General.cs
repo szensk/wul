@@ -158,9 +158,9 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            if (first.MetaType?.Type?.IsDefined ?? false)
+            if (first.Metatype?.Type?.IsDefined ?? false)
             {
-                return first.MetaType.Type.Invoke(list, scope);
+                return first.Metatype.Type.Invoke(list, scope);
             }
             else
             {

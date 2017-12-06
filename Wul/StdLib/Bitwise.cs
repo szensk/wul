@@ -13,7 +13,7 @@ namespace Wul.StdLib
         {
             IValue first = arguments.First();
 
-            return first.MetaType.BitwiseAnd.Invoke(arguments, s);
+            return first.Metatype.BitwiseAnd.Invoke(arguments, s);
         }
 
         [NetFunction("|")]
@@ -21,7 +21,7 @@ namespace Wul.StdLib
         {
             IValue first = arguments.First();
 
-            return first.MetaType.BitwiseOr.Invoke(arguments, s);
+            return first.Metatype.BitwiseOr.Invoke(arguments, s);
         }
 
         [NetFunction("^")]
@@ -29,7 +29,7 @@ namespace Wul.StdLib
         {
             IValue first = arguments.First();
 
-            return first.MetaType.BitwiseXor.Invoke(arguments, s);
+            return first.Metatype.BitwiseXor.Invoke(arguments, s);
         }
 
         [NetFunction("<<")]
@@ -37,7 +37,7 @@ namespace Wul.StdLib
         {
             IValue first = arguments.First();
 
-            return first.MetaType.LeftShift.Invoke(arguments, s);
+            return first.Metatype.LeftShift.Invoke(arguments, s);
         }
 
         [NetFunction(">>")]
@@ -45,7 +45,7 @@ namespace Wul.StdLib
         {
             IValue first = arguments.First();
 
-            return first.MetaType.RightShift.Invoke(arguments, s);
+            return first.Metatype.RightShift.Invoke(arguments, s);
         }
 
         [NetFunction("~")]
@@ -53,7 +53,7 @@ namespace Wul.StdLib
         {
             IValue first = arguments.First();
 
-            return first.MetaType.BitwiseNot.Invoke(arguments, s);
+            return first.Metatype.BitwiseNot.Invoke(arguments, s);
         }
 
         [NetFunction("bin")]

@@ -10,7 +10,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly MapMetaType Instance = new MapMetaType();
 
-        private MapMetaType()
+        private MapMetaType() : base(null)
         {
             //Equality
             Equal.Method = new NetFunction(AreEqual, Equal.Name);

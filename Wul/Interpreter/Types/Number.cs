@@ -36,13 +36,13 @@ namespace Wul.Interpreter.Types
         private Number(int i)
         {
             Value = i;
-            MetaType = NumberMetaType.Instance;
+            Metatype = NumberMetaType.Instance;
         }
 
         private Number(double d)
         {
             Value = d;
-            MetaType = NumberMetaType.Instance;
+            Metatype = NumberMetaType.Instance;
         }
 
         // Conversions
@@ -102,6 +102,6 @@ namespace Wul.Interpreter.Types
             return Value;
         }
 
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
     }
 }

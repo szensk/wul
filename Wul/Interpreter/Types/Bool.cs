@@ -18,14 +18,14 @@ namespace Wul.Interpreter.Types
         public static Bool True = new Bool(true);
         public static Bool False = new Bool(false);
 
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
 
         public readonly bool Value;
 
         private Bool(bool value)
         {
             Value = value;
-            MetaType = BoolMetaType.Instance;
+            Metatype = BoolMetaType.Instance;
         }
 
         public static implicit operator bool(Bool b)

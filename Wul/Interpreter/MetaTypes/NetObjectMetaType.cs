@@ -11,7 +11,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly NetObjectMetaType Instance = new NetObjectMetaType();
 
-        private NetObjectMetaType()
+        private NetObjectMetaType() : base(null)
         {
             //Equality
             Equal.Method = new NetFunction(IdentityEqual, Equal.Name);

@@ -29,7 +29,7 @@ namespace Wul.Interpreter.Types
             _increment = increment;
         }
 
-        public MetaType MetaType { get; set; } = RangeMetaType.Instance;
+        public MetaType Metatype { get; set; } = RangeMetaType.Instance;
         public WulType Type => RangeType.Instance;
 
         public ListTable AsList()

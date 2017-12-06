@@ -15,12 +15,12 @@ namespace Wul.Interpreter.Types
 
     public class UString : IValue
     {
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
 
         public UString(string value)
         {
             Value = value;
-            MetaType = StringMetaType.Instance;
+            Metatype = StringMetaType.Instance;
         }
 
         public override int GetHashCode()

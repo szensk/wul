@@ -9,7 +9,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly BoolMetaType Instance = new BoolMetaType();
 
-        private BoolMetaType()
+        private BoolMetaType() : base(null)
         {
             //Logical
             Not.Method = new NetFunction(DoNot, Not.Name);

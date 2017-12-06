@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
@@ -14,24 +15,36 @@ namespace Wul.StdLib
         {
             IValue first = list.Children[1].Eval(scope);
             IdentifierNode identifier = (IdentifierNode) list.Children[2];
-            IValue function = list.Children[3].Eval(scope);
+            IValue newMethod = list.Children[3].Eval(scope);
 
             string metaMethodName = identifier.Name;
 
             if (first is WulType type)
             {
                 var metaMethod = type.DefaultMetaType.Get(metaMethodName);
-                metaMethod.Method = ReferenceEquals(function, Value.Nil) ? null : (IFunction)function;
+                metaMethod.Method = ReferenceEquals(newMethod, Value.Nil) ? null : (IFunction)newMethod;
+            }
+            else if (first is MetaType mt)
+            {
+                if (metaMethodName == "parent")
+                {
+                    mt.Parent = ReferenceEquals(newMethod, Value.Nil) ? null : (MetaType) newMethod;
+                }
+                else
+                {
+                    var metaMethod = mt.Get(metaMethodName);
+                    metaMethod.Method = ReferenceEquals(newMethod, Value.Nil) ? null : (IFunction) newMethod;
+                }
             }
             else
             {
                 //Set the metamethod on the value
-                var newMetaType = first.MetaType.Clone();
+                var newMetaType = first.Metatype.Clone();
 
                 var metaMethod = newMetaType.Get(metaMethodName);
-                metaMethod.Method = ReferenceEquals(function, Value.Nil) ? null : (IFunction) function;
+                metaMethod.Method = ReferenceEquals(newMethod, Value.Nil) ? null : (IFunction) newMethod;
 
-                first.MetaType = newMetaType;
+                first.Metatype = newMetaType;
             }
 
             return Value.Nil;
@@ -44,8 +57,34 @@ namespace Wul.StdLib
             IdentifierNode identifier = (IdentifierNode)list.Children[2];
 
             string metaMethodName = identifier.Name;
-            IValue method = first.MetaType.Get(metaMethodName)?.Method;
+            IValue method = first.Metatype.Get(metaMethodName)?.Method;
             return  method ?? Value.Nil;
+        }
+
+        [MagicFunction("new-metatype")]
+        internal static IValue NewMetatype(ListNode list, Scope scope)
+        {
+            MetaType newmt = MetaType.DefaultMetaType.Clone();
+
+            //TODO look at arguments in list
+
+            return newmt;
+        }
+
+        [NetFunction("get-metatype")]
+        internal static IValue GetMetatype(List<IValue> list, Scope scope)
+        {
+            IValue first = list[0];
+            return first.Metatype;
+        }
+
+        [NetFunction("set-metatype")]
+        internal static IValue SetMetatype(List<IValue> list, Scope scope)
+        {
+            IValue first = list[0];
+            MetaType mt = (MetaType) list[1];
+            first.Metatype = mt;
+            return first;
         }
 
         [MagicFunction("dump")]
@@ -102,7 +141,7 @@ namespace Wul.StdLib
             var body = (ListNode)children[2];
             scope[name] = Value.Nil;
             var function = new MacroFunction(body, name, argNames.ToList(), scope);
-            function.MetaType = MacroMetaType.Instance;
+            function.Metatype = MacroMetaType.Instance;
             scope[name] = function;
 
             return function;

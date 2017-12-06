@@ -8,9 +8,9 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly MagicFunctionMetaType Instance = new MagicFunctionMetaType();
 
-        private MagicFunctionMetaType()
+        private MagicFunctionMetaType() : base(null)
         {
-            InvokeMagic.Method = new NetFunction(InvokeMagicFunction, ApplyMacro.Name);
+            InvokeMagic.Method = new NetFunction(InvokeMagicFunction, InvokeMagic.Name);
 
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
@@ -28,7 +28,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly MacroMetaType Instance = new MacroMetaType();
 
-        private MacroMetaType()
+        private MacroMetaType() : base(null)
         {
             ApplyMacro.Method = new NetFunction(ApplyMacroFunction, ApplyMacro.Name);
 
@@ -38,8 +38,8 @@ namespace Wul.Interpreter.MetaTypes
 
         public IValue ApplyMacroFunction(List<IValue> arguments, Scope s)
         {
-            IFunction function = (IFunction)arguments[0];
-            ListNode listNode = (ListNode)arguments[1];
+            IFunction function = (IFunction) arguments[0];
+            ListNode listNode = (ListNode) arguments[1];
             return function.Execute(listNode, s);
         }
     }

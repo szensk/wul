@@ -18,7 +18,7 @@ namespace Wul.Interpreter.Types
             Body = body;
             ArgumentNames = argumentNames;
             ParentScope = parentScope.CloseScope(body);
-            MetaType = MagicFunctionMetaType.Instance;
+            Metatype = MacroMetaType.Instance;
         }
 
         public string Name { get; }
@@ -58,7 +58,7 @@ namespace Wul.Interpreter.Types
             return result;
         }
 
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
 
         public WulType Type => MagicFunctionType.Instance;
 
@@ -84,7 +84,7 @@ namespace Wul.Interpreter.Types
 
         public string AsString()
         {
-            return $"Function[{Name}]";
+            return $"Macro[{Name}]";
         }
     }
 }

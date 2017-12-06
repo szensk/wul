@@ -9,7 +9,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly ListMetaType Instance = new ListMetaType();
 
-        private ListMetaType()
+        private ListMetaType() : base(null)
         {
             //Equality
             Equal.Method = new NetFunction(AreEqual, Equal.Name);

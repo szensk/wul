@@ -39,7 +39,7 @@ namespace Wul.Interpreter.Types
             Body = body;
             ArgumentNames = argumentNames;
             ParentScope = parentScope.CloseScope(body);
-            MetaType = FunctionMetaType.Instance;
+            Metatype = FunctionMetaType.Instance;
         }
 
         ~Function()
@@ -103,6 +103,6 @@ namespace Wul.Interpreter.Types
             return null;
         }
 
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
     }
 }

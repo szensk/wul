@@ -7,7 +7,7 @@ namespace Wul.Parser
 {
     public abstract class SyntaxNode : IValue
     {
-        public MetaType MetaType { get; set; } = SyntaxNodeMetaType.Instance;
+        public MetaType Metatype { get; set; } = SyntaxNodeMetaType.Instance;
 
         public WulType Type => SyntaxNodeType.Instance;
 

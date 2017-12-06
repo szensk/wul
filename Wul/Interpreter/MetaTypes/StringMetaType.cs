@@ -8,7 +8,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly StringMetaType Instance = new StringMetaType();
 
-        private StringMetaType()
+        private StringMetaType() : base(null)
         {
             // Comparison
             Equal.Method = new NetFunction(AreEqual, Equal.Name);

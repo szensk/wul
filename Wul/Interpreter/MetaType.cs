@@ -1,57 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
 using Wul.Parser;
 
 namespace Wul.Interpreter
 {
-    public class MetaMethod 
+    public class MetaType : IValue
     {
-        public IFunction Method
+        public static readonly MetaType DefaultMetaType = new MetaType();
+
+        protected MetaType(MetaType parent)
         {
-            get;
-            set;
+            Parent = parent ?? DefaultMetaType;
+
+            InitializeDictionary();
         }
 
-        public bool IsDefined => Method != null;
-
-        public string Name { get; }
-
-        public MetaMethod(string name)
-        {
-            Name = name;
-        }
-
-        public MetaMethod(MetaMethod other)
-        {
-            Method = other.Method;
-            Name = other.Name;
-        }
-
-        public IValue Invoke(List<IValue> arguments, Scope s)
-        {
-            if (Method == null)
-            {
-                IValue lhs = arguments.First();
-                throw new NotSupportedException($"Unable to invoke metamethod `{Name}` on type {lhs.Type.Name}");
-            }
-
-            if (Method.MetaType == FunctionMetaType.Instance)
-            {
-                return Method.Evaluate(arguments, s);
-            }
-            else
-            {
-                return Method.Execute((ListNode) arguments[1], s);
-            }
-        }
-    }
-
-    public abstract class MetaType
-    {
-        protected MetaType()
+        private MetaType()
         {
             Add = new MetaMethod("+");
             Subtract = new MetaMethod("-");
@@ -93,41 +59,37 @@ namespace Wul.Interpreter
         //Surely there is a better way
         public MetaType Clone()
         {
-            var clone = (MetaType) MemberwiseClone();
-
-            clone.Add = new MetaMethod(Add);
-            clone.Subtract = new MetaMethod(Subtract);
-            clone.Multiply = new MetaMethod(Multiply);
-            clone.Divide = new MetaMethod(Divide);
-            clone.Modulus = new MetaMethod(Modulus);
-            clone.Power = new MetaMethod(Power);
-            clone.IntegerDivide = new MetaMethod(IntegerDivide);
-
-            clone.Not = new MetaMethod(Not);
-
-            clone.BitwiseNot = new MetaMethod(BitwiseNot);
-            clone.BitwiseAnd = new MetaMethod(BitwiseAnd);
-            clone.BitwiseOr = new MetaMethod(BitwiseOr);
-            clone.BitwiseXor = new MetaMethod(BitwiseXor);
-            clone.LeftShift = new MetaMethod(LeftShift);
-            clone.RightShift = new MetaMethod(RightShift);
-
-            clone.Equal = new MetaMethod(Equal);
-            clone.Compare = new MetaMethod(Compare);
-
-            clone.At = new MetaMethod(At);
-            clone.Set = new MetaMethod(Set);
-            clone.Remainder = new MetaMethod(Remainder);
-            clone.Count = new MetaMethod(Count);
-            clone.Concat = new MetaMethod(Concat);
-            clone.Push = new MetaMethod(Push);
-            clone.Pop = new MetaMethod(Pop);
-
-            clone.Invoke = new MetaMethod(Invoke);
-            clone.InvokeMagic = new MetaMethod(InvokeMagic);
-            clone.ApplyMacro = new MetaMethod(ApplyMacro);
-            clone.AsString = new MetaMethod(AsString);
-            clone.Type = new MetaMethod(Type);
+            MetaType clone = new MetaType(Parent)
+            {
+                Add = new MetaMethod(Add),
+                Subtract = new MetaMethod(Subtract),
+                Multiply = new MetaMethod(Multiply),
+                Divide = new MetaMethod(Divide),
+                Modulus = new MetaMethod(Modulus),
+                Power = new MetaMethod(Power),
+                IntegerDivide = new MetaMethod(IntegerDivide),
+                Not = new MetaMethod(Not),
+                BitwiseNot = new MetaMethod(BitwiseNot),
+                BitwiseAnd = new MetaMethod(BitwiseAnd),
+                BitwiseOr = new MetaMethod(BitwiseOr),
+                BitwiseXor = new MetaMethod(BitwiseXor),
+                LeftShift = new MetaMethod(LeftShift),
+                RightShift = new MetaMethod(RightShift),
+                Equal = new MetaMethod(Equal),
+                Compare = new MetaMethod(Compare),
+                At = new MetaMethod(At),
+                Set = new MetaMethod(Set),
+                Remainder = new MetaMethod(Remainder),
+                Count = new MetaMethod(Count),
+                Concat = new MetaMethod(Concat),
+                Push = new MetaMethod(Push),
+                Pop = new MetaMethod(Pop),
+                Invoke = new MetaMethod(Invoke),
+                InvokeMagic = new MetaMethod(InvokeMagic),
+                ApplyMacro = new MetaMethod(ApplyMacro),
+                AsString = new MetaMethod(AsString),
+                Type = new MetaMethod(Type)
+            };
 
             clone.InitializeDictionary();
 
@@ -159,54 +121,248 @@ namespace Wul.Interpreter
         }
 
         // Arithmetic
-        public MetaMethod Add { get; private set; }
-        public MetaMethod Subtract { get; private set; }
-        public MetaMethod Multiply { get; private set; }
-        public MetaMethod Divide { get; private set; }
-        public MetaMethod Modulus { get; private set; }
-        public MetaMethod Power { get; private set; }
-        public MetaMethod IntegerDivide { get; private set; }
-        
+        private MetaMethod AddMetaMethod;
+
+        public MetaMethod Add
+        {
+            get => AddMetaMethod ?? Parent?.Add;
+            private set => AddMetaMethod = value;
+        }
+
+        private MetaMethod SubtractMetaMethod;
+        public MetaMethod Subtract
+        {
+            get => SubtractMetaMethod ?? Parent?.Subtract;
+            private set => SubtractMetaMethod = value;
+        }
+
+        private MetaMethod MultiplyMetaMethod;
+        public MetaMethod Multiply
+        {
+            get => MultiplyMetaMethod ?? Parent?.Multiply;
+            private set => MultiplyMetaMethod = value;
+        }
+
+        private MetaMethod DivideMetaMethod;
+        public MetaMethod Divide
+        {
+            get => DivideMetaMethod ?? Parent?.Divide;
+            private set => DivideMetaMethod = value;
+        }
+
+        private MetaMethod ModulusMetaMethod;
+        public MetaMethod Modulus
+        {
+            get => ModulusMetaMethod ?? Parent?.Modulus;
+            private set => ModulusMetaMethod = value;
+        }
+
+        private MetaMethod PowerMetaMethod;
+        public MetaMethod Power
+        {
+            get => PowerMetaMethod ?? Parent?.Power;
+            private set => PowerMetaMethod = value;
+        }
+
+        private MetaMethod IntegerDivideMetaMethod;
+        public MetaMethod IntegerDivide
+        {
+            get => IntegerDivideMetaMethod ?? Parent?.IntegerDivide;
+            private set => IntegerDivideMetaMethod = value;
+        }
+
         // Logical
-        public MetaMethod Not { get; private set; }
+        private MetaMethod NotMetaMethod;
+        public MetaMethod Not
+        {
+            get => NotMetaMethod ?? Parent?.Not;
+            private set => NotMetaMethod = value;
+        }
 
         // Bitwise
-        public MetaMethod BitwiseNot { get; private set; }
-        public MetaMethod BitwiseAnd { get; private set; }
-        public MetaMethod BitwiseOr { get; private set; }
-        public MetaMethod BitwiseXor { get; private set; }
-        public MetaMethod LeftShift { get; private set; }
-        public MetaMethod RightShift { get; private set; }
+        private MetaMethod BitwiseNotMetaMethod;
+        public MetaMethod BitwiseNot
+        {
+            get => BitwiseNotMetaMethod ?? Parent?.BitwiseNot;
+            private set => BitwiseNotMetaMethod = value;
+        }
 
+        private MetaMethod BitwiseAndMetaMethod;
+        public MetaMethod BitwiseAnd
+        {
+            get => BitwiseAndMetaMethod ?? Parent?.BitwiseAnd;
+            private set => BitwiseAndMetaMethod = value;
+        }
 
+        private MetaMethod BitwiseOrMetaMethod;
+        public MetaMethod BitwiseOr
+        {
+            get => BitwiseOrMetaMethod ?? Parent?.BitwiseOr;
+            private set => BitwiseOrMetaMethod = value;
+        }
+
+        private MetaMethod BitwiseXorMetaMethod;
+
+        public MetaMethod BitwiseXor
+        {
+            get => BitwiseXorMetaMethod ?? Parent?.BitwiseXor;
+            private set => BitwiseXorMetaMethod = value;
+        }
+
+        private MetaMethod LeftShiftMetaMethod;
+        public MetaMethod LeftShift
+        {
+            get => LeftShiftMetaMethod ?? Parent?.LeftShift;
+            private set => LeftShiftMetaMethod = value;
+        }
+
+        private MetaMethod RightShiftMetaMethod;
+        public MetaMethod RightShift
+        {
+            get => RightShiftMetaMethod ?? Parent?.RightShift;
+            private set => RightShiftMetaMethod = value;
+        }
+        
         // Comparison
-        public MetaMethod Equal { get; private set; }
-        public MetaMethod Compare { get; private set; }
+        private MetaMethod EqualMetaMethod;
+        public MetaMethod Equal
+        {
+            get => EqualMetaMethod ?? Parent?.Equal;
+            private set => EqualMetaMethod = value;
+        }
+
+        private MetaMethod CompareMetaMethod;
+        public MetaMethod Compare
+        {
+            get => CompareMetaMethod ?? Parent?.Compare;
+            private set => CompareMetaMethod = value;
+        }
 
         // List
-        public MetaMethod At { get; private set; }
-        public MetaMethod Set { get; private set; }
-        public MetaMethod Remainder { get; private set; }
-        public MetaMethod Count { get; private set; }
-        public MetaMethod Concat { get; private set; }
-        public MetaMethod Push { get; private set; }
-        public MetaMethod Pop { get; private set; }
+        private MetaMethod AtMetaMethod;
+        public MetaMethod At
+        {
+            get => AtMetaMethod ?? Parent?.At;
+            private set => AtMetaMethod = value;
+        }
+
+        private MetaMethod SetMetaMethod;
+        public MetaMethod Set
+        {
+            get => SetMetaMethod ?? Parent?.Set;
+            private set => SetMetaMethod = value;
+        }
+
+        private MetaMethod RemainderMetaMethod;
+        public MetaMethod Remainder
+        {
+            get => RemainderMetaMethod ?? Parent?.Remainder;
+            private set => RemainderMetaMethod = value;
+        }
+
+        private MetaMethod CountMetaMethod;
+        public MetaMethod Count
+        {
+            get => CountMetaMethod ?? Parent?.Count;
+            private set => CountMetaMethod = value;
+        }
+
+        private MetaMethod ConcatMetaMethod;
+        public MetaMethod Concat
+        {
+            get => ConcatMetaMethod ?? Parent?.Concat;
+            //get => ConcatMetaMethod.IsDefined
+            //    ? ConcatMetaMethod
+            //    : Parent?.Concat.IsDefined ?? false
+            //        ? Parent.Concat
+            //        : null;
+            private set => ConcatMetaMethod = value;
+        }
+
+        private MetaMethod PushMetaMethod;
+        public MetaMethod Push
+        {
+            get => PushMetaMethod ?? Parent?.Push;
+            private set => PushMetaMethod = value;
+        }
+
+        private MetaMethod PopMetaMethod;
+        public MetaMethod Pop
+        {
+            get => PopMetaMethod ?? Parent?.Pop;
+            private set => PopMetaMethod = value;
+        }
 
         // Other
-        public MetaMethod Invoke { get; private set; }
-        public MetaMethod InvokeMagic { get; private set; }
-        public MetaMethod ApplyMacro { get; private set; }
-        public MetaMethod AsString { get; private set; }
-        public MetaMethod Type { get; private set; }
+        private MetaMethod InvokeMetaMethod;
+        public MetaMethod Invoke
+        {
+            get => InvokeMetaMethod ?? Parent?.Invoke;
+            private set => InvokeMetaMethod = value;
+        }
 
-        protected static IValue IdentityEqual (List<IValue> arguments, Scope s)
+        //TODO this should be removed
+        private MetaMethod InvokeMagicMetaMethod;
+        public MetaMethod InvokeMagic
+        {
+            get => InvokeMagicMetaMethod ?? Parent?.InvokeMagic;
+            private set => InvokeMagicMetaMethod = value;
+        }
+
+        private MetaMethod ApplyMacroMetaMethod;
+        public MetaMethod ApplyMacro
+        {
+            get => ApplyMacroMetaMethod ?? Parent?.ApplyMacro;
+            private set => ApplyMacroMetaMethod = value;
+        }
+
+        private MetaMethod AsStringMetaMethod;
+        public MetaMethod AsString
+        {
+            get => AsStringMetaMethod ?? Parent?.AsString;
+            private set => AsStringMetaMethod = value;
+        }
+
+        private MetaMethod TypeMetaMethod;
+        public MetaMethod Type
+        {
+            get => TypeMetaMethod ?? Parent?.Type;
+            private set => TypeMetaMethod = value;
+        }
+
+        public MetaType Parent { get; set; }
+
+        public MetaType Metatype
+        {
+            get => null; 
+            set => throw new NotImplementedException();
+        }
+
+        WulType IValue.Type => throw new NotImplementedException();
+
+        public SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            throw new NotImplementedException();
+        }
+
+        string IValue.AsString()
+        {
+            return "MetaType";
+        }
+
+        public object ToObject()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected static Bool IdentityEqual (List<IValue> arguments, Scope s)
         {
             IValue first = arguments.First();
             IValue second = arguments.Skip(1).First();
             return first.Equals(second) ? Bool.True : Bool.False;
         }
 
-        protected static IValue IdentityString(List<IValue> arguments, Scope s)
+        protected static UString IdentityString(List<IValue> arguments, Scope s)
         {
             IValue first = arguments.First();
             return new UString(first.AsString());

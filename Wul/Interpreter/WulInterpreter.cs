@@ -102,9 +102,9 @@ namespace Wul.Interpreter
                 value = Evaluate((RangeNode) first, currentScope);
             }
 
-            bool isFunction = value.MetaType?.Invoke?.IsDefined ?? false;
-            bool isMagicFunction = value.MetaType?.InvokeMagic?.IsDefined ?? false;
-            bool isMacroFunction = value.MetaType?.ApplyMacro?.IsDefined ?? false;
+            bool isFunction = value.Metatype?.Invoke?.IsDefined ?? false;
+            bool isMagicFunction = value.Metatype?.InvokeMagic?.IsDefined ?? false;
+            bool isMacroFunction = value.Metatype?.ApplyMacro?.IsDefined ?? false;
             if (isFunction)
             {
                 var evalutedList = list.Children
@@ -115,7 +115,7 @@ namespace Wul.Interpreter
 
                 evalutedList = UnpackList.Replace(evalutedList);
 
-                var function = value.MetaType.Invoke.Method;
+                var function = value.Metatype.Invoke.Method;
 
                 var finalList = new List<IValue> {value};
                 finalList.AddRange(evalutedList);
@@ -125,12 +125,12 @@ namespace Wul.Interpreter
             else if (isMagicFunction)
             {
                 //Magic functions are passed syntax nodes, not fully evaluated arguments
-                var function = value.MetaType.InvokeMagic;
+                var function = value.Metatype.InvokeMagic;
                 value = function.Invoke(new List<IValue>{value, list}, currentScope);
             }
             else if (isMacroFunction)
             {
-                var function = value.MetaType.ApplyMacro;
+                var function = value.Metatype.ApplyMacro;
                 //TODO evaluate macro arguments first
                 value = function.Invoke(new List<IValue>{value, list}, currentScope);
                 //TODO how to avoid the ToSyntaxNode step?

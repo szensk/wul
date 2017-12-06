@@ -8,7 +8,7 @@ namespace Wul.Interpreter.Types
     public class UnpackList : IValue
     {
         public List<IValue> Values { get; }
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
         public WulType Type => null;
 
         public UnpackList(ListTable list)

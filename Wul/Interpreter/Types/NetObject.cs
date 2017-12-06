@@ -44,7 +44,7 @@ namespace Wul.Interpreter.Types
         {
             Value = o;
             ValueType = o.GetType();
-            MetaType = NetObjectMetaType.Instance;
+            Metatype = NetObjectMetaType.Instance;
         }
 
         public IValue Get(string name)
@@ -105,7 +105,7 @@ namespace Wul.Interpreter.Types
             throw new Exception($"Unable to find method {ValueType}.{name}({argumentTypes})");
         }
 
-        public MetaType MetaType { get; set; }
+        public MetaType Metatype { get; set; }
 
         public WulType Type => NetObjectType.GetTypeForObject(Value);
 

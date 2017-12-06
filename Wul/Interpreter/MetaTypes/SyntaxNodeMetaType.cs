@@ -6,7 +6,7 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly SyntaxNodeMetaType Instance = new SyntaxNodeMetaType();
 
-        private SyntaxNodeMetaType()
+        private SyntaxNodeMetaType() : base(null)
         {
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
