@@ -59,6 +59,7 @@ namespace Wul.Interpreter
             Divide = new MetaMethod("/");
             Modulus = new MetaMethod("%");
             Power = new MetaMethod("**");
+            IntegerDivide = new MetaMethod("//");
 
             Not = new MetaMethod("not");
             And = new MetaMethod("and");
@@ -96,6 +97,7 @@ namespace Wul.Interpreter
             clone.Divide = new MetaMethod(Divide);
             clone.Modulus = new MetaMethod(Modulus);
             clone.Power = new MetaMethod(Power);
+            clone.IntegerDivide = new MetaMethod(IntegerDivide);
 
             clone.Not = new MetaMethod(Not);
             clone.And = new MetaMethod(And);
@@ -128,7 +130,7 @@ namespace Wul.Interpreter
         {
             var metaMethodList = new List<MetaMethod>
             {
-                Add, Subtract, Multiply, Divide, Modulus, Power,
+                Add, Subtract, Multiply, Divide, Modulus, Power, IntegerDivide,
                 Not, And, Or, Xor,
                 Equal, Compare,
                 At, Set, Remainder, Count, Concat, Pop, Push,
@@ -154,7 +156,7 @@ namespace Wul.Interpreter
         public MetaMethod Divide { get; private set; }
         public MetaMethod Modulus { get; private set; }
         public MetaMethod Power { get; private set; }
-        //public MetaMethod IntegerDivide { get; private set; }
+        public MetaMethod IntegerDivide { get; private set; }
         
         // Logical
         public MetaMethod Not { get; private set; }

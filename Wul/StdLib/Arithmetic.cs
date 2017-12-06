@@ -51,6 +51,14 @@ namespace Wul.StdLib
             return first.MetaType.Divide.Invoke(list, scope);
         }
 
+        [NetFunction("//")]
+        internal static IValue IntegerDivide(List<IValue> list, Scope scope)
+        {
+            IValue first = list.First();
+
+            return first.MetaType.IntegerDivide.Invoke(list, scope);
+        }
+
         [NetFunction("%")]
         internal static IValue Modulus(List<IValue> list, Scope scope) 
         {

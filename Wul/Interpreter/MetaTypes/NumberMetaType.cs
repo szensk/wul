@@ -18,6 +18,7 @@ namespace Wul.Interpreter.MetaTypes
             Divide.Method = new NetFunction(DoDivide, Divide.Name);
             Modulus.Method = new NetFunction(DoModulus, Modulus.Name);
             Power.Method = new NetFunction(DoPower, Power.Name);
+            IntegerDivide.Method = new NetFunction(DoIntegerDivide, IntegerDivide.Name);
 
             //TODO Bitwise and maybe some logical
 
@@ -109,12 +110,29 @@ namespace Wul.Interpreter.MetaTypes
             return (Number)(first.Value / second.Value);
         }
 
+        public IValue DoIntegerDivide(List<IValue> arguments, Scope s)
+        {
+            var numbers = arguments.Select(x => x as Number).ToArray();
+            if (!numbers.Any())
+            {
+                return Value.Nil;
+            }
+            if (numbers.Any(a => a == null))
+            {
+                throw new InvalidOperationException("All arguments to / must be numbers");
+            }
+
+            var first = numbers.First();
+            var second = numbers.Skip(1).First();
+            return (Number)Math.Floor(first.Value / second.Value);
+        }
+
         public IValue DoModulus(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
             var first = numbers.First();
             var second = numbers.Skip(1).First();
-            return (Number)((int)first.Value % (int)second.Value);
+            return (Number)(first.Value % second.Value);
         }
 
         public IValue DoPower(List<IValue> arguments, Scope s)
