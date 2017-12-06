@@ -67,11 +67,6 @@ namespace Wul.Interpreter
             return boolean.Value ? Bool.True : Bool.False;
         }
 
-        private static IValue Evaluate(CommentNode comment)
-        {
-            return null;
-        }
-
         private static IValue Evaluate(RangeNode rangeNode, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
