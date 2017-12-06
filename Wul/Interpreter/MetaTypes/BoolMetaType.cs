@@ -13,10 +13,6 @@ namespace Wul.Interpreter.MetaTypes
         {
             //Logical
             Not.Method = new NetFunction(DoNot, Not.Name);
-            //TODO lazy evaluate and/or
-            And.Method = new NetFunction(DoAnd, And.Name);
-            Or.Method = new NetFunction(DoOr, Or.Name);
-            //TODO Xor
 
             //TODO Bitwise
 

@@ -62,9 +62,13 @@ namespace Wul.Interpreter
             IntegerDivide = new MetaMethod("//");
 
             Not = new MetaMethod("not");
-            And = new MetaMethod("and");
-            Or = new MetaMethod("or");
-            Xor = new MetaMethod("xor");
+
+            BitwiseNot = new MetaMethod("~");
+            BitwiseAnd = new MetaMethod("&");
+            BitwiseOr = new MetaMethod("|");
+            BitwiseXor = new MetaMethod("^");
+            LeftShift = new MetaMethod("<<");
+            RightShift = new MetaMethod(">>");
 
             Equal = new MetaMethod("=");
             Compare = new MetaMethod("compare");
@@ -100,9 +104,13 @@ namespace Wul.Interpreter
             clone.IntegerDivide = new MetaMethod(IntegerDivide);
 
             clone.Not = new MetaMethod(Not);
-            clone.And = new MetaMethod(And);
-            clone.Or = new MetaMethod(Or);
-            clone.Xor = new MetaMethod(Xor);
+
+            clone.BitwiseNot = new MetaMethod(BitwiseNot);
+            clone.BitwiseAnd = new MetaMethod(BitwiseAnd);
+            clone.BitwiseOr = new MetaMethod(BitwiseOr);
+            clone.BitwiseXor = new MetaMethod(BitwiseXor);
+            clone.LeftShift = new MetaMethod(LeftShift);
+            clone.RightShift = new MetaMethod(RightShift);
 
             clone.Equal = new MetaMethod(Equal);
             clone.Compare = new MetaMethod(Compare);
@@ -131,7 +139,8 @@ namespace Wul.Interpreter
             var metaMethodList = new List<MetaMethod>
             {
                 Add, Subtract, Multiply, Divide, Modulus, Power, IntegerDivide,
-                Not, And, Or, Xor,
+                Not,
+                BitwiseNot, BitwiseAnd, BitwiseOr, BitwiseXor, LeftShift, RightShift,
                 Equal, Compare,
                 At, Set, Remainder, Count, Concat, Pop, Push,
                 Invoke, InvokeMagic, ApplyMacro,
@@ -160,12 +169,15 @@ namespace Wul.Interpreter
         
         // Logical
         public MetaMethod Not { get; private set; }
-        public MetaMethod And { get; private set; }
-        public MetaMethod Or { get; private set; }
-        public MetaMethod Xor { get; private set; }
 
         // Bitwise
-        //TODO
+        public MetaMethod BitwiseNot { get; private set; }
+        public MetaMethod BitwiseAnd { get; private set; }
+        public MetaMethod BitwiseOr { get; private set; }
+        public MetaMethod BitwiseXor { get; private set; }
+        public MetaMethod LeftShift { get; private set; }
+        public MetaMethod RightShift { get; private set; }
+
 
         // Comparison
         public MetaMethod Equal { get; private set; }

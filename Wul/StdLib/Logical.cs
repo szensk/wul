@@ -49,13 +49,5 @@ namespace Wul.StdLib
             }
             return value;
         }
-
-        [NetFunction("xor")]
-        internal static IValue Xor(List<IValue> list, Scope scope)
-        {
-            IValue first = list.First();
-
-            return first.MetaType.Xor.Invoke(list, scope);
-        }
     }
 }

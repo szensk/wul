@@ -20,7 +20,13 @@ namespace Wul.Interpreter.MetaTypes
             Power.Method = new NetFunction(DoPower, Power.Name);
             IntegerDivide.Method = new NetFunction(DoIntegerDivide, IntegerDivide.Name);
 
-            //TODO Bitwise and maybe some logical
+            //Bitwise
+            BitwiseNot.Method = new NetFunction(NumberBitwiseNot, BitwiseNot.Name);
+            BitwiseAnd.Method = new NetFunction(NumberBitwiseAnd, BitwiseAnd.Name);
+            BitwiseOr.Method = new NetFunction(NumberBitwiseOr, BitwiseOr.Name);
+            BitwiseXor.Method = new NetFunction(NumberBitwiseXor, BitwiseXor.Name);
+            LeftShift.Method = new NetFunction(NumberLeftShift, LeftShift.Name);
+            RightShift.Method = new NetFunction(NumberRightShift, RightShift.Name);
 
             //Comparison
             Equal.Method = new NetFunction(AreEqual, Equal.Name);
@@ -141,6 +147,76 @@ namespace Wul.Interpreter.MetaTypes
             var first = numbers.First();
             var second = numbers.Skip(1).First();
             return (Number)Math.Pow(first.Value, second.Value);
+        }
+
+        internal static Number NumberBitwiseAnd(List<IValue> arguments, Scope s)
+        {
+            if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
+            Number first = arguments[0] as Number;
+            Number second = arguments[1] as Number;
+
+            if (first == null || second == null) throw new Exception("Argument not a number");
+
+            int result = first & second;
+            return result;
+        }
+
+        internal static Number NumberBitwiseOr(List<IValue> arguments, Scope s)
+        {
+            if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
+            Number first = arguments[0] as Number;
+            Number second = arguments[1] as Number;
+
+            if (first == null || second == null) throw new Exception("Argument not a number");
+
+            int result = first | second;
+            return result;
+        }
+
+        internal static Number NumberBitwiseXor(List<IValue> arguments, Scope s)
+        {
+            if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
+            Number first = arguments[0] as Number;
+            Number second = arguments[1] as Number;
+
+            if (first == null || second == null) throw new Exception("Argument not a number");
+
+            int result = first ^ second;
+            return result;
+        }
+
+        internal static Number NumberLeftShift(List<IValue> arguments, Scope s)
+        {
+            if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
+            Number first = arguments[0] as Number;
+            Number second = arguments[1] as Number;
+
+            if (first == null || second == null) throw new Exception("Argument not a number");
+
+            int result = first << (int)second;
+            return result;
+        }
+
+        internal static Number NumberRightShift(List<IValue> arguments, Scope s)
+        {
+            if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
+            Number first = arguments[0] as Number;
+            Number second = arguments[1] as Number;
+
+            if (first == null || second == null) throw new Exception("Argument not a number");
+
+            int result = first >> (int)second;
+            return result;
+        }
+
+        internal static Number NumberBitwiseNot(List<IValue> arguments, Scope s)
+        {
+            if (arguments.Count < 1) throw new Exception("Invalid number of arguments &");
+            Number first = arguments[0] as Number;
+
+            if (first == null) throw new Exception("Argument not a number");
+
+            return ~first;
         }
 
         public IValue AreEqual(List<IValue> arguments, Scope s)
