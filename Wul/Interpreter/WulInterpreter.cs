@@ -31,8 +31,6 @@ namespace Wul.Interpreter
         {
             switch (node)
             {
-                case CommentNode c:
-                    return Evaluate(c);
                 case IdentifierNode i:
                     return Evaluate(i, currentScope);
                 case NumericNode n:
@@ -145,7 +143,6 @@ namespace Wul.Interpreter
             {
                 //Evaluate a list
                 var remaining = list.Children
-                    .Where(node => !(node is CommentNode))
                     .Select(node => Interpret(node, currentScope))
                     .ToList();
 

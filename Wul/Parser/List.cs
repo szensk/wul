@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Wul.Parser
 {
@@ -66,6 +66,11 @@ namespace Wul.Parser
             int countOpen = chars.Count(c => c == '(');
             int countClosed = chars.Count(c => c == ')');
             return countOpen > countClosed;
+        }
+
+        private bool StartsComment(string token)
+        {
+            return Regex.Match(token, ";(.*)$").Success;
         }
 
         public override SyntaxNode Parse(string token, SyntaxNode parent = null)
@@ -179,7 +184,7 @@ namespace Wul.Parser
                             children.Add(item);
                         }
                     }
-                    else if (!string.IsNullOrWhiteSpace(currentInner) && !CommentParser.StartsComment(currentInner))
+                    else if (!string.IsNullOrWhiteSpace(currentInner) && StartsComment(currentInner))
                     {
                         throw new Exception($"trash in list\n\t'{currentInner}'");
                     }
