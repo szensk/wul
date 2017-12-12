@@ -20,7 +20,7 @@ namespace Wul.StdLib
         internal static IValue Stringify(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
-
+            if (ReferenceEquals(first, Value.Nil)) return new UString("nil");
             return first.MetaType.AsString.Invoke(list, scope);
         }
 

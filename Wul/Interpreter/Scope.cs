@@ -69,6 +69,7 @@ namespace Wul.Interpreter
             BoundVariables[key] = new Binding(value);
         }
 
+        //If you assign nil, it removes the reference
         public void Assign(string key, IValue value)
         {
             Scope s = this;
