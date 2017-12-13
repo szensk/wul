@@ -69,7 +69,7 @@ namespace Wul.Interpreter
             BoundVariables[key] = new Binding(value);
         }
 
-        //If you assign nil, it removes the reference
+        //If you assign the nil value, it removes the binding
         public void Assign(string key, IValue value)
         {
             Scope s = this;
@@ -95,6 +95,8 @@ namespace Wul.Interpreter
             }
         }
 
+        //A closed scope binds variables at the point of definition
+        //construct a new closed scope, only referenced bindings
         public Scope CloseScope(ListNode body)
         {
             var identifierNodes = body.IdentifierNodes();
@@ -102,7 +104,6 @@ namespace Wul.Interpreter
 
             Scope closedScope = new Scope();
 
-            //Construct a new scope with referenced bindings
             foreach (string name in referencedNames)
             {
                 Binding binding = GetBinding(name);
@@ -115,6 +116,7 @@ namespace Wul.Interpreter
             return closedScope;
         }
 
+        //constructs a new closed scope, including unreferenced bindings
         public Scope CompletelyCloseScope()
         {
             Scope closedScope = new Scope();
