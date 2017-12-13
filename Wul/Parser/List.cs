@@ -7,6 +7,7 @@ namespace Wul.Parser
 {
     public class ListNode : SyntaxNode
     {
+        public bool NamedParameterList;
         public List<SyntaxNode> Children { get; set; }
 
         public ListNode(SyntaxNode parent, List<SyntaxNode> children) : base(parent)
@@ -78,7 +79,39 @@ namespace Wul.Parser
             return Parse(token, false, parent);
         }
 
-        public SyntaxNode Parse(string token, bool startQuote = false, SyntaxNode parent = null)
+        private void QuoteChild(int childShouldQuote, ListNode currentList, SyntaxNode itemToAdd, List<SyntaxNode> childList)
+        {
+            if (childShouldQuote > 0)
+            {
+                ListNode quoteList = new ListNode(currentList, new List<SyntaxNode>());
+                if (childShouldQuote > 1)
+                {
+                    ListNode secondQuoteList = new ListNode(quoteList, new List<SyntaxNode>());
+                    secondQuoteList.Children.Add(new IdentifierNode(secondQuoteList, "quote"));
+                    secondQuoteList.Children.Add(new IdentifierNode(secondQuoteList, "quote"));
+                    quoteList.Children.Add(secondQuoteList);
+                }
+                else
+                {
+                    quoteList.Children.Add(new IdentifierNode(quoteList, "quote"));
+
+                }
+                quoteList.Children.Add(itemToAdd);
+                childList.Add(quoteList);
+            }
+            else
+            {
+                childList.Add(itemToAdd);
+            }
+        }
+
+        private bool IsNamedParemeter(SyntaxNode item)
+        {
+            var identifer = item as IdentifierNode;
+            return identifer?.Name.EndsWith(':') ?? false;
+        }
+
+        private string GetInnerString(string token)
         {
             if (token.Length < 2) return null;
 
@@ -94,17 +127,24 @@ namespace Wul.Parser
 
             if (openIndex == -1 || lastCloseIndex == -1) return null;
 
-            string inner = token.Substring(openIndex + 1, lastCloseIndex - (openIndex + 1));
-            List<SyntaxNode> children = new List<SyntaxNode>();
-            
+           return token.Substring(openIndex + 1, lastCloseIndex - (openIndex + 1));
+        }
+
+        public SyntaxNode Parse(string token, bool startQuote = false, SyntaxNode parent = null)
+        {
+            string inner = GetInnerString(token);
+            if (string.IsNullOrWhiteSpace(inner)) return null;
+
             int currentIndex = 0;
             int openParentheses = 0;
             int closeParentheses = 0;
             int startIndex = 0;
             bool startedString = false;
             bool startedRange = false;
-            ListNode currentList = new ListNode(parent, new List<SyntaxNode>());
 
+            ListNode currentList = new ListNode(parent, new List<SyntaxNode>());
+            List<SyntaxNode> children = new List<SyntaxNode>();
+            
             while (currentIndex < inner.Length)
             {
                 if (inner[currentIndex] == '(')
@@ -157,32 +197,13 @@ namespace Wul.Parser
                                       ?? stringParser.Parse(currentInner, currentList)
                                       ?? rangeParser.Parse(currentInner, currentList)
                                       ?? Parse(currentInner, currentList);
+
+                    if (IsNamedParemeter(item)) currentList.NamedParameterList = true;
                     if (item != null)
                     {
                         if (item is StringNode) startedString = false;
                         if (item is RangeNode) startedRange = false;
-                        if (childShouldQuote > 0)
-                        {
-                            ListNode quoteList = new ListNode(currentList, new List<SyntaxNode>());
-                            if (childShouldQuote > 1)
-                            {
-                                ListNode secondQuoteList = new ListNode(quoteList, new List<SyntaxNode>());
-                                secondQuoteList.Children.Add(new IdentifierNode(secondQuoteList, "quote"));
-                                secondQuoteList.Children.Add(new IdentifierNode(secondQuoteList, "quote"));
-                                quoteList.Children.Add(secondQuoteList);
-                            }
-                            else
-                            {
-                                quoteList.Children.Add(new IdentifierNode(quoteList, "quote"));
-
-                            }
-                            quoteList.Children.Add(item);
-                            children.Add(quoteList);
-                        }
-                        else
-                        {
-                            children.Add(item);
-                        }
+                        QuoteChild(childShouldQuote, currentList, item, children);
                     }
                     else if (!string.IsNullOrWhiteSpace(currentInner) && StartsComment(currentInner))
                     {

@@ -77,6 +77,43 @@ namespace Wul.Interpreter
             return new UString(str.Value(currentScope));
         }
 
+        private static List<IValue> GetEvaluatedArgumentsForNamedParameters(IFunction function, ListNode list, Scope currentScope)
+        {
+            List<IValue> evaluatedArguments = new List<IValue>();
+            for (int i = 0; i < function.ArgumentNames.Count; ++i)
+            {
+                evaluatedArguments.Add(Value.Nil);
+            }
+            
+            //TODO error handling
+            string name = null;
+            IValue namedValue = null;
+            foreach (var child in list.Children.Skip(1))
+            {
+                if (child is IdentifierNode id && id.Name.Contains(":"))
+                {
+                    name = id.Name.Substring(0, id.Name.Length - 1);
+                }
+                else
+                {
+                    namedValue = Interpret(child, currentScope);
+                }
+
+                if (name != null && namedValue != null)
+                {
+                    int index = function.ArgumentNames.IndexOf(name);
+                    if (index != -1)
+                    {
+                        evaluatedArguments[index] = namedValue;
+                    }
+                    name = null;
+                    namedValue = null;
+                }
+            }
+            
+            return evaluatedArguments;
+        }
+
         private static IValue Evaluate(ListNode list, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
@@ -107,11 +144,19 @@ namespace Wul.Interpreter
             bool isMacroFunction = value.MetaType?.ApplyMacro?.IsDefined ?? false;
             if (isFunction)
             {
-                var evalutedList = list.Children
-                    .Skip(1)
-                    .Select(node => Interpret(node, currentScope))
-                    .Where(v => v != null)
-                    .ToList();
+                List<IValue> evalutedList;
+                if (list.NamedParameterList)
+                {
+                    evalutedList = GetEvaluatedArgumentsForNamedParameters((IFunction) value, list, currentScope);
+                }
+                else
+                {
+                    evalutedList = list.Children
+                        .Skip(1)
+                        .Select(node => Interpret(node, currentScope))
+                        .Where(v => v != null)
+                        .ToList();
+                }
 
                 evalutedList = UnpackList.Replace(evalutedList);
 
