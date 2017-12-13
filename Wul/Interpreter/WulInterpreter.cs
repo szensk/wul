@@ -88,15 +88,21 @@ namespace Wul.Interpreter
             //TODO error handling
             string name = null;
             IValue namedValue = null;
+            int positionalIndex = 0;
             foreach (var child in list.Children.Skip(1))
             {
-                if (child is IdentifierNode id && id.Name.Contains(":"))
+                if (child is IdentifierNode id && id.Name.EndsWith(":"))
                 {
                     name = id.Name.Substring(0, id.Name.Length - 1);
                 }
-                else
+                else if (name != null)
                 {
                     namedValue = Interpret(child, currentScope);
+                }
+                else
+                {
+                    evaluatedArguments[positionalIndex] = Interpret(child, currentScope);
+                    positionalIndex++;
                 }
 
                 if (name != null && namedValue != null)
