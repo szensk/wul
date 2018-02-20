@@ -104,8 +104,7 @@ namespace Wul.Interpreter
             var identifierNodes = body.IdentifierNodes();
             var referencedNames = identifierNodes.Select(i => i.Name).ToHashSet();
 
-            Scope closedScope = new Scope();
-            closedScope.Usings = Usings.ToList();
+            Scope closedScope = new Scope { Usings = Usings.ToList() };
 
             foreach (string name in referencedNames)
             {
@@ -122,7 +121,7 @@ namespace Wul.Interpreter
         //constructs a new closed scope, including unreferenced bindings
         public Scope CompletelyCloseScope()
         {
-            Scope closedScope = new Scope();
+            Scope closedScope = new Scope { Usings = Usings.ToList() };
 
             Scope currentScope = this;
             while (currentScope != null)

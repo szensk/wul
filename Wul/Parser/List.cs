@@ -133,7 +133,8 @@ namespace Wul.Parser
         public SyntaxNode Parse(string token, bool startQuote = false, SyntaxNode parent = null)
         {
             string inner = GetInnerString(token);
-            if (string.IsNullOrWhiteSpace(inner)) return null;
+            if (inner == null) return null;
+            if (string.IsNullOrWhiteSpace(inner)) return new ListNode(parent, new List<SyntaxNode>());
 
             int currentIndex = 0;
             int openParentheses = 0;
@@ -196,7 +197,9 @@ namespace Wul.Parser
                                       ?? numericParser.Parse(currentInner, currentList)
                                       ?? stringParser.Parse(currentInner, currentList)
                                       ?? rangeParser.Parse(currentInner, currentList)
-                                      ?? Parse(currentInner, currentList);
+                                      ?? (string.IsNullOrWhiteSpace(GetInnerString(currentInner))
+                                        ? new ListNode(currentList, new List<SyntaxNode>())
+                                        : Parse(currentInner, currentList));
 
                     if (IsNamedParemeter(item)) currentList.NamedParameterList = true;
                     if (item != null)
