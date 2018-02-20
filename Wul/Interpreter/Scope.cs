@@ -20,11 +20,13 @@ namespace Wul.Interpreter
     {
         public Scope Parent;
         private readonly Dictionary<string, Binding> BoundVariables;
+        public List<string> Usings { get; private set; }
 
         public Scope(Scope parent = null)
         {
             Parent = parent;
             BoundVariables = new Dictionary<string, Binding>();
+            Usings = parent?.Usings.Select(s=>s).ToList() ?? new List<string>();
         }
 
         public Scope EmptyChildScope()
@@ -103,6 +105,7 @@ namespace Wul.Interpreter
             var referencedNames = identifierNodes.Select(i => i.Name).ToHashSet();
 
             Scope closedScope = new Scope();
+            closedScope.Usings = Usings.ToList();
 
             foreach (string name in referencedNames)
             {

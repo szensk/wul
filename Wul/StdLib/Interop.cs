@@ -63,67 +63,67 @@ namespace Wul.StdLib
             }
         }
         
-        private static object InvokeNetFunction(string name, params IValue[] arguments)
+        private static object InvokeNetFunction(Scope scope, string name, params IValue[] arguments)
         {
             //TODO load assemblies on demand
             //TODO no dots?
-            int lastDot = name.LastIndexOf('.');
-            string className = name.Substring(0, lastDot);
-            string methodName = name.Substring(lastDot + 1);
+            var usings = new List<string> {""};
+            usings.AddRange(scope.Usings);
 
-            var types = AllTypes[className];
-            var objectArguments = arguments.Select(a => a.ToObject()).ToArray();
-            Type[] argTypes = objectArguments.Select(a => a.GetType()).ToArray();
-
-            foreach (var type in types)
+            foreach(string use in usings)
             {
-                MethodInfo methodInfo = null;
-                try
+                string fullName = string.IsNullOrEmpty(use) ? name : use + "." + name;
+                int lastDot = fullName.LastIndexOf('.');
+                string className = fullName.Substring(0, lastDot);
+                string methodName = fullName.Substring(lastDot + 1);
+
+                var types = AllTypes[className];
+                var objectArguments = arguments.Select(a => a.ToObject()).ToArray();
+                Type[] argTypes = objectArguments.Select(a => a.GetType()).ToArray();
+
+                foreach (var type in types)
                 {
-                    methodInfo = type.GetMethod(methodName, argTypes);
-                    if (methodInfo == null)
+                    MethodInfo methodInfo = null;
+                    try
                     {
-                        objectArguments = arguments.Select(a =>
+                        methodInfo = type.GetMethod(methodName, argTypes);
+                        if (methodInfo == null)
                         {
-                            if (a is Number n) return (int) n.Value;
-                            return a.ToObject();
-                        }).ToArray();
-                        methodInfo = type.GetMethod(methodName, objectArguments.Select(a => a.GetType()).ToArray());
+                            objectArguments = arguments.Select(a =>
+                            {
+                                if (a is Number n) return (int) n.Value;
+                                return a.ToObject();
+                            }).ToArray();
+                            methodInfo = type.GetMethod(methodName, objectArguments.Select(a => a.GetType()).ToArray());
+                        }
                     }
-                }
-                catch
-                {
-                    //We might want to display something
-                }
-
-                PropertyInfo propertyInfo = null;
-                try
-                {
-                    propertyInfo = type.GetProperty(methodName);
-                }
-                catch
-                {
-                    //We might want to display something
-                }
-
-                if (propertyInfo != null)
-                {
-                    if (arguments.Length > 0)
+                    catch
                     {
-                        methodInfo = propertyInfo.SetMethod;
+                        //We might want to display something
                     }
-                    else
-                    {
-                        methodInfo = propertyInfo.GetMethod;
-                    }
-                }
 
-                if (methodInfo != null)
-                {
-                    return methodInfo.Invoke(null, objectArguments);
+                    PropertyInfo propertyInfo = null;
+                    try
+                    {
+                        propertyInfo = type.GetProperty(methodName);
+                    }
+                    catch
+                    {
+                        //We might want to display something
+                    }
+
+                    if (propertyInfo != null)
+                    {
+                        methodInfo = arguments.Length > 0 ? propertyInfo.SetMethod : propertyInfo.GetMethod;
+                    }
+
+                    if (methodInfo != null)
+                    {
+                        return methodInfo.Invoke(null, objectArguments);
+                    }
                 }
             }
-            throw new MethodNotFoundException($"Method {methodName} not found in {className}");
+            throw new MethodNotFoundException($"Method {name} not found");
         }
 
         private static object NewObject(string className, params object[] arguments)
@@ -145,11 +145,11 @@ namespace Wul.StdLib
             if (children.Length > 1)
             {
                 var evaluatedArguments = children.Skip(1).Select(s => s.Eval(scope)).ToArray();
-                result = InvokeNetFunction(name, evaluatedArguments);
+                result = InvokeNetFunction(scope, name, evaluatedArguments);
             }
             else
             {
-                result = InvokeNetFunction(name);
+                result = InvokeNetFunction(scope, name);
             }
 
             return ConvertToIValue(result);
@@ -194,6 +194,21 @@ namespace Wul.StdLib
             });
 
             return new ListTable(items);
+        }
+
+        [MagicFunction("using")]
+        internal static IValue Using(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+
+            foreach (var value in children)
+            {
+                if (value is IdentifierNode id)
+                {
+                    scope.Usings.Add(id.Name);
+                }
+            }
+            return Value.Nil;
         }
     }
 }
