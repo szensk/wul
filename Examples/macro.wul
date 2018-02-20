@@ -1,0 +1,8 @@
+(defmacro timex (f)
+	(let sw (:: System.Diagnostics.Stopwatch.StartNew)
+		(eval f)
+		(sw Stop)
+		(convert (at sw ElapsedMilliseconds))
+	)
+)
+(timex (:: System.Threading.Thread.Sleep 100))

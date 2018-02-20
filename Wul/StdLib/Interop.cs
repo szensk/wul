@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Wul.Interpreter;
@@ -30,8 +31,39 @@ namespace Wul.StdLib
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes()).ToLookup(key => key.FullName);
         }
+
+        private class MethodNotFoundException : Exception
+        {
+            public MethodNotFoundException(string message) : base(message)
+            {
+                
+            }
+        }
+
+        //TODO Is there a better way?
+        //TODO IEnumerables to Lists
+        private static IValue ConvertToIValue(object o)
+        {
+            switch (o)
+            {
+                case string s:
+                    return new UString(s);
+                case bool b:
+                    return b ? Bool.True : Bool.False;
+                case double d:
+                    return (Number)d;
+                case int i:
+                    return (Number)i;
+                case int[] ia:
+                    return new ListTable(ia.Select(n => (Number)n));
+                case null:
+                    return Value.Nil;
+                default:
+                    return new NetObject(o);
+            }
+        }
         
-        private static object InvokeNetFunction(string name, params object[] arguments)
+        private static object InvokeNetFunction(string name, params IValue[] arguments)
         {
             //TODO load assemblies on demand
             //TODO no dots?
@@ -40,7 +72,8 @@ namespace Wul.StdLib
             string methodName = name.Substring(lastDot + 1);
 
             var types = AllTypes[className];
-            Type[] argTypes = arguments.Select(a => a.GetType()).ToArray();
+            var objectArguments = arguments.Select(a => a.ToObject()).ToArray();
+            Type[] argTypes = objectArguments.Select(a => a.GetType()).ToArray();
 
             foreach (var type in types)
             {
@@ -48,6 +81,15 @@ namespace Wul.StdLib
                 try
                 {
                     methodInfo = type.GetMethod(methodName, argTypes);
+                    if (methodInfo == null)
+                    {
+                        objectArguments = arguments.Select(a =>
+                        {
+                            if (a is Number n) return (int) n.Value;
+                            return a.ToObject();
+                        }).ToArray();
+                        methodInfo = type.GetMethod(methodName, objectArguments.Select(a => a.GetType()).ToArray());
+                    }
                 }
                 catch
                 {
@@ -78,10 +120,10 @@ namespace Wul.StdLib
 
                 if (methodInfo != null)
                 {
-                    return methodInfo.Invoke(null, arguments);
+                    return methodInfo.Invoke(null, objectArguments);
                 }
             }
-            throw new Exception($"Method {methodName} not found in {className}");
+            throw new MethodNotFoundException($"Method {methodName} not found in {className}");
         }
 
         private static object NewObject(string className, params object[] arguments)
@@ -102,8 +144,7 @@ namespace Wul.StdLib
             object result;
             if (children.Length > 1)
             {
-                object[] evaluatedArguments = children.Skip(1).Select(s => s.Eval(scope).ToObject()).ToArray();
-
+                var evaluatedArguments = children.Skip(1).Select(s => s.Eval(scope)).ToArray();
                 result = InvokeNetFunction(name, evaluatedArguments);
             }
             else
@@ -111,25 +152,7 @@ namespace Wul.StdLib
                 result = InvokeNetFunction(name);
             }
 
-            //TODO find a better way
-            //TODO IEnumerables to Lists
-            switch (result)
-            {
-                case string s:
-                    return new UString(s);
-                case bool b:
-                    return b ? Bool.True : Bool.False;
-                case double d:
-                    return (Number)d;
-                case int i:
-                    return (Number)i;
-                case int[] ia:
-                    return new ListTable(ia.Select(n => (Number)n));
-                case null:
-                    return Value.Nil;
-                default:
-                    return new NetObject(result);
-            }
+            return ConvertToIValue(result);
         }
 
         [MagicFunction("new-object")]
@@ -153,6 +176,24 @@ namespace Wul.StdLib
             }
 
             return result == null ? (IValue) Value.Nil : new NetObject(result);
+        }
+
+        [NetFunction("convert")]
+        internal static IValue Convert(List<IValue> list, Scope scope)
+        {
+            if (list.Count == 1 && list.First() is NetObject n)
+            {
+                return ConvertToIValue(n.NetValue);
+            }
+
+            IEnumerable<IValue> items = list.Select(item =>
+            {
+                var netObject = item as NetObject;
+                if (netObject == null) return item;
+                return ConvertToIValue(netObject.NetValue);
+            });
+
+            return new ListTable(items);
         }
     }
 }

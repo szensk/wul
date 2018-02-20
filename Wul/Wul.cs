@@ -36,6 +36,9 @@ namespace Wul
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
+#if DEBUG
+                Console.WriteLine(e.StackTrace);
+#endif
                 return false;
             }
             return true;
@@ -59,6 +62,7 @@ namespace Wul
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
+                System.Diagnostics.Debug.WriteLine(e.StackTrace);
                 return false;
             }
         }
@@ -87,6 +91,7 @@ namespace Wul
                 string input = "";
 
                 Scope replScope = Global.Scope.EmptyChildScope();
+
                 Console.WriteLine($"wul interpreter {Version}");
                 Console.WriteLine("to leave type 'exit'");
 

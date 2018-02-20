@@ -40,12 +40,19 @@ namespace Wul.Interpreter.Types
         private readonly object Value;
         private readonly Type ValueType;
 
-        public NetObject(object o)
+        public NetObject(object o) : this(o, o.GetType())
+        {
+        }
+
+        private NetObject(object o, Type t)
         {
             Value = o;
-            ValueType = o.GetType();
+            ValueType = t;
             MetaType = NetObjectMetaType.Instance;
+
         }
+
+        public object NetValue => Value;
 
         public IValue Get(string name)
         {
@@ -98,7 +105,7 @@ namespace Wul.Interpreter.Types
 
             if (method != null)
             {
-                return new NetObject(method.Invoke(Value, values));
+                return new NetObject(method.Invoke(Value, values), method.ReturnType);
             }
 
             string argumentTypes = string.Join(", ", types.Select(t => t.Name));
@@ -111,7 +118,7 @@ namespace Wul.Interpreter.Types
 
         public SyntaxNode ToSyntaxNode(SyntaxNode parent)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public string AsString()
