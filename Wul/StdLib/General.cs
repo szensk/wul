@@ -78,15 +78,27 @@ namespace Wul.StdLib
         }
 
         [MagicFunction("lambda")]
+        [MagicFunction("->")] //TODO sugar -> (+ $1 $2)
         internal static IValue Lambda(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
-            var arguments = (ListNode) children[0];
-            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
+            List<string> argNames;
+            if (children.Length == 2)
+            {
+                var arguments = (ListNode) children[0];
+                argNames = arguments.Children
+                    .OfType<IdentifierNode>()
+                    .Select(a => a.Name)
+                    .ToList();
+            }
+            else
+            {
+                argNames = new List<string>();
+            }
 
-            var body = (ListNode) children[1];
-            var function = new Function(body, "unnamed function", argNames.ToList(), scope);
+            var body = (ListNode) children[children.Length == 2 ? 1 : 0];
+            var function = new Function(body, "unnamed function", argNames, scope);
 
             return function;
         }
