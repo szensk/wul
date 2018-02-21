@@ -12,13 +12,13 @@ namespace Wul.Interpreter.MetaTypes
         {
             InvokeMagic.Method = new NetFunction(InvokeMagicFunction, ApplyMacro.Name);
 
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
 
-            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
+            Equal.Method = NetFunction.FromSingle(IdentityEqual, Equal.Name);
         }
 
-        private IValue InvokeMagicFunction(List<IValue> arguments, Scope s)
+        private List<IValue> InvokeMagicFunction(List<IValue> arguments, Scope s)
         {
             IFunction function = (IFunction) arguments[0];
             ListNode listNode = (ListNode) arguments[1];
@@ -34,13 +34,13 @@ namespace Wul.Interpreter.MetaTypes
         {
             ApplyMacro.Method = new NetFunction(ApplyMacroFunction, ApplyMacro.Name);
 
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
 
-            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
+            Equal.Method = NetFunction.FromSingle(IdentityEqual, Equal.Name);
         }
 
-        private IValue ApplyMacroFunction(List<IValue> arguments, Scope s)
+        private List<IValue> ApplyMacroFunction(List<IValue> arguments, Scope s)
         {
             IFunction function = (IFunction)arguments[0];
             ListNode listNode = (ListNode)arguments[1];

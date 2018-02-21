@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
@@ -16,7 +17,7 @@ namespace Wul.StdLib
                 string stringValue;
                 if (value.MetaType?.AsString?.IsDefined ?? false)
                 {
-                    UString ustring = (UString) value.MetaType.AsString.Invoke(new List<IValue> {value}, scope);
+                    UString ustring = (UString) value.MetaType.AsString.Invoke(new List<IValue> {value}, scope).First();
                     stringValue = ustring.Value;
                 }
                 else

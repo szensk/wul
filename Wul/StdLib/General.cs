@@ -172,7 +172,7 @@ namespace Wul.StdLib
 
             if (first.MetaType?.Type?.IsDefined ?? false)
             {
-                return first.MetaType.Type.Invoke(list, scope);
+                return first.MetaType.Type.Invoke(list, scope).First();
             }
             else
             {
@@ -189,16 +189,6 @@ namespace Wul.StdLib
             Environment.Exit((int) exitCode);
 
             return (Number) exitCode;
-        }
-
-        [NetFunction("unpack")]
-        internal static IValue Unpack(List<IValue> list, Scope scope)
-        {
-            if (!(list[0] is ListTable listTable)) return Value.Nil;
-
-            UnpackList unpack = new UnpackList(listTable);
-
-            return unpack;
         }
 
         [MagicFunction("time")]
@@ -246,6 +236,31 @@ namespace Wul.StdLib
             scope.Assign(identifier.Name, value);
 
             return value;
+        }
+
+        [MultiNetFunction("unpack")]
+        private static List<IValue> Unpack(List<IValue> list, Scope scope)
+        {
+            var result = new List<IValue>();
+            foreach (var item in list)
+            {
+                if (item is ListTable lt)
+                {
+                    result.AddRange(lt.AsList());
+                }
+                else
+                {
+                    result.Add(item);
+                }
+
+            }
+            return result;
+        }
+
+        [MultiNetFunction("return")]
+        private static List<IValue> Return(List<IValue> list, Scope scope)
+        {
+            return list;
         }
     }
 }

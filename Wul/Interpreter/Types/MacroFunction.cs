@@ -25,12 +25,12 @@ namespace Wul.Interpreter.Types
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 
-        public IValue Evaluate(List<IValue> arguments, Scope scope)
+        public List<IValue> Evaluate(List<IValue> arguments, Scope scope)
         {
             throw new NotImplementedException();
         }
 
-        public IValue Execute(ListNode list, Scope scope)
+        public List<IValue> Execute(ListNode list, Scope scope)
         {
             Scope currentScope = ParentScope.EmptyChildScope(macroScope: true);
 
@@ -55,8 +55,7 @@ namespace Wul.Interpreter.Types
                 }
             }
 
-            IValue result = WulInterpreter.Interpret(Body, currentScope);
-            return result;
+            return WulInterpreter.Interpret(Body, currentScope);
         }
 
         public MetaType MetaType { get; set; }

@@ -13,7 +13,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Not.Invoke(list, scope);
+            return first.MetaType.Not.Invoke(list, scope).First();
         }
 
         [MagicFunction("or")]

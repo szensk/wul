@@ -9,10 +9,10 @@ namespace Wul.Interpreter
 {
     public class WulInterpreter
     {
-        public static IValue Interpret(ProgramNode program, Scope scope = null)
+        public static List<IValue> Interpret(ProgramNode program, Scope scope = null)
         {
             Scope currentScope = scope ?? Global.Scope.EmptyChildScope();
-            IValue lastResult = null;
+            List<IValue> lastResult = null;
             foreach (var list in program.Expressions)
             {
                 lastResult = Evaluate(list, currentScope);       
@@ -21,13 +21,13 @@ namespace Wul.Interpreter
             return lastResult;
         }
 
-        internal static IValue Interpret(ListNode list, Scope currentScope)
+        internal static List<IValue> Interpret(ListNode list, Scope currentScope)
         {
             return Evaluate(list, currentScope);
         }
 
         //TODO polymorphic dispatch for Evaluate
-        internal static IValue Interpret(SyntaxNode node, Scope currentScope)
+        internal static List<IValue> Interpret(SyntaxNode node, Scope currentScope)
         {
             switch (node)
             {
@@ -48,33 +48,33 @@ namespace Wul.Interpreter
             }
         }
         
-        private static IValue Evaluate(IdentifierNode identifier, Scope currentScope = null)
+        private static List<IValue> Evaluate(IdentifierNode identifier, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
 
-            return currentScope[identifier.Name];
+            return Value.ListWith(currentScope[identifier.Name]);
         }
 
-        private static IValue Evaluate(NumericNode numeric)
+        private static List<IValue> Evaluate(NumericNode numeric)
         {
-            return (Number) numeric.Value;
+            return Value.ListWith((Number) numeric.Value);
         }
 
-        private static IValue Evaluate(BooleanNode boolean)
+        private static List<IValue> Evaluate(BooleanNode boolean)
         {
-            return boolean.Value ? Bool.True : Bool.False;
+            return Value.ListWith(boolean.Value ? Bool.True : Bool.False);
         }
 
-        private static IValue Evaluate(RangeNode rangeNode, Scope currentScope = null)
+        private static List<IValue> Evaluate(RangeNode rangeNode, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
             var arguments = rangeNode.Children.Select(c => c.Eval(currentScope));
-            return StdLib.Range.RangeFromArguments(arguments.ToList(), currentScope);
+            return Value.ListWith(StdLib.Range.RangeFromArguments(arguments.ToList(), currentScope));
         }
 
-        private static IValue Evaluate(StringNode str, Scope currentScope = null)
+        private static List<IValue> Evaluate(StringNode str, Scope currentScope = null)
         {
-            return new UString(str.Value(currentScope));
+            return Value.ListWith(new UString(str.Value(currentScope)));
         }
 
         private static List<IValue> GetEvaluatedArgumentsForNamedParameters(IFunction function, ListNode list, Scope currentScope)
@@ -97,11 +97,11 @@ namespace Wul.Interpreter
                 }
                 else if (name != null)
                 {
-                    namedValue = Interpret(child, currentScope);
+                    namedValue = Interpret(child, currentScope).First();
                 }
                 else
                 {
-                    evaluatedArguments[positionalIndex] = Interpret(child, currentScope);
+                    evaluatedArguments[positionalIndex] = Interpret(child, currentScope).First();
                     positionalIndex++;
                 }
 
@@ -120,21 +120,21 @@ namespace Wul.Interpreter
             return evaluatedArguments;
         }
 
-        private static IValue Evaluate(ListNode list, Scope currentScope = null)
+        private static List<IValue> Evaluate(ListNode list, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
 
-            if (list.Children.Count == 0) return new ListTable();
+            if (list.Children.Count == 0) return Value.EmptyList;
 
             var first = list.Children.First();
-            IValue value = Value.Nil;
+            List<IValue> value = Value.EmptyList;
 
             //TODO Really this is an recursive call to Interpret
             if (first is IdentifierNode)
             {
                 IdentifierNode identifier = first as IdentifierNode;
                 string key = identifier.Name;
-                value = currentScope[key];
+                value = Value.ListWith(currentScope[key]);
             } 
             else if (first is ListNode)
             {
@@ -145,30 +145,29 @@ namespace Wul.Interpreter
                 value = Evaluate((RangeNode) first, currentScope);
             }
 
-            bool isFunction = value.MetaType?.Invoke?.IsDefined ?? false;
-            bool isMagicFunction = value.MetaType?.InvokeMagic?.IsDefined ?? false;
-            bool isMacroFunction = value.MetaType?.ApplyMacro?.IsDefined ?? false;
+            var firstValue = value.FirstOrDefault();
+            bool isFunction = firstValue?.MetaType?.Invoke?.IsDefined ?? false;
+            bool isMagicFunction = firstValue?.MetaType?.InvokeMagic?.IsDefined ?? false;
+            bool isMacroFunction = firstValue?.MetaType?.ApplyMacro?.IsDefined ?? false;
             if (isFunction)
             {
                 List<IValue> evalutedList;
                 if (list.NamedParameterList)
                 {
-                    evalutedList = GetEvaluatedArgumentsForNamedParameters((IFunction) value, list, currentScope);
+                    evalutedList = GetEvaluatedArgumentsForNamedParameters((IFunction) firstValue, list, currentScope);
                 }
                 else
                 {
                     evalutedList = list.Children
                         .Skip(1)
-                        .Select(node => Interpret(node, currentScope))
+                        .SelectMany(node => Interpret(node, currentScope))
                         .Where(v => v != null)
                         .ToList();
                 }
 
-                evalutedList = UnpackList.Replace(evalutedList);
+                var function = firstValue.MetaType.Invoke.Method;
 
-                var function = value.MetaType.Invoke.Method;
-
-                var finalList = new List<IValue> {value};
+                var finalList = new List<IValue> {firstValue};
                 finalList.AddRange(evalutedList);
 
                 value = function.Evaluate(finalList, currentScope);
@@ -176,36 +175,34 @@ namespace Wul.Interpreter
             else if (isMagicFunction)
             {
                 //Magic functions are passed syntax nodes, not fully evaluated arguments
-                var function = value.MetaType.InvokeMagic;
-                value = function.Invoke(new List<IValue>{value, list}, currentScope);
+                var function = firstValue.MetaType.InvokeMagic;
+                value = function.Invoke(new List<IValue>{ firstValue, list}, currentScope);
             }
             else if (isMacroFunction)
             {
-                var function = value.MetaType.ApplyMacro;
+                var function = firstValue.MetaType.ApplyMacro;
                 //TODO evaluate macro arguments first
 
-                value = function.Invoke(new List<IValue>{value, list}, currentScope);
+                firstValue = function.Invoke(new List<IValue>{ firstValue, list}, currentScope).FirstOrDefault();
                 //TODO how to avoid the ToSyntaxNode step?
                 //Problem is that ListNodes are evaluated to ListTable
-                SyntaxNode node = value as SyntaxNode ?? value.ToSyntaxNode(list.Parent);
+                SyntaxNode node = firstValue as SyntaxNode ?? firstValue.ToSyntaxNode(list.Parent);
                 if (node != null)
                 {
                     System.Diagnostics.Debug.WriteLine($"macro -> {node}");
-                    value = Interpret(node, currentScope) ?? Value.Nil;
+                    value = Interpret(node, currentScope) ?? Value.EmptyList;
                 }
             }
             else
             {
                 //Evaluate a list
                 var remaining = list.Children
-                    .Select(node => Interpret(node, currentScope))
+                    .Select(node => Interpret(node, currentScope).First())
                     .ToList();
-
-                remaining = UnpackList.Replace(remaining);
 
                 if (remaining.Count > 0)
                 {
-                    value = new ListTable(remaining);
+                    value = Value.ListWith(new ListTable(remaining));
                 }
             }
             

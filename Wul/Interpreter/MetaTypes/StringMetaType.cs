@@ -11,21 +11,21 @@ namespace Wul.Interpreter.MetaTypes
         private StringMetaType()
         {
             // Comparison
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
-            Compare.Method = new NetFunction(Comparison, Compare.Name);
+            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
+            Compare.Method = NetFunction.FromSingle(Comparison, Compare.Name);
 
-            At.Method = new NetFunction(CharacterAtIndex, At.Name);
-            Concat.Method = new NetFunction(JoinStrings, Concat.Name);
-            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
+            At.Method = NetFunction.FromSingle(CharacterAtIndex, At.Name);
+            Concat.Method = NetFunction.FromSingle(JoinStrings, Concat.Name);
+            Remainder.Method = NetFunction.FromSingle(Remaining, Remainder.Name);
 
             // Count
-            Count.Method = new NetFunction(Length, Count.Name);
+            Count.Method = NetFunction.FromSingle(Length, Count.Name);
 
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
         }
 
-        public IValue AreEqual(List<IValue> arguments, Scope s)
+        private IValue AreEqual(List<IValue> arguments, Scope s)
         {
             var strings = arguments.Select(a => a as UString).ToArray();
             UString first = strings[0];
@@ -33,7 +33,7 @@ namespace Wul.Interpreter.MetaTypes
             return first.Value.Equals(second.Value) ? Bool.True : Bool.False;
         }
 
-        public IValue Comparison(List<IValue> arguments, Scope s)
+        private IValue Comparison(List<IValue> arguments, Scope s)
         {
             var strings = arguments.Select(a => a as UString).ToArray();
             UString first = strings[0];
@@ -41,7 +41,7 @@ namespace Wul.Interpreter.MetaTypes
             return (Number) string.CompareOrdinal(first.Value, second.Value);
         }
 
-        public IValue JoinStrings(List<IValue> argumetns, Scope s)
+        private IValue JoinStrings(List<IValue> argumetns, Scope s)
         {
             var strings = argumetns.OfType<UString>().Select(x => x.Value).ToList();
             if (!strings.Any())
@@ -51,7 +51,7 @@ namespace Wul.Interpreter.MetaTypes
             return new UString(string.Join("", strings));
         }
 
-        public IValue Remaining(List<IValue> arguments, Scope s)
+        private IValue Remaining(List<IValue> arguments, Scope s)
         {
             var first = (UString)arguments[0];
             if (first.Value.Length == 0)
@@ -62,7 +62,7 @@ namespace Wul.Interpreter.MetaTypes
             return new UString(first.Value.Substring(1));
         }
 
-        public IValue CharacterAtIndex(List<IValue> arguments, Scope s)
+        private IValue CharacterAtIndex(List<IValue> arguments, Scope s)
         {
             UString str = (UString)arguments.First();
             Number index = (Number)arguments.Skip(1).First();
@@ -70,7 +70,7 @@ namespace Wul.Interpreter.MetaTypes
             return new UString(str.Value[index].ToString());
         }
 
-        public IValue Length(List<IValue> arguments, Scope s)
+        private IValue Length(List<IValue> arguments, Scope s)
         {
             UString first = (UString)arguments[0];
 

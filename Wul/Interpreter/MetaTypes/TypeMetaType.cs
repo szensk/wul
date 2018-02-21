@@ -10,19 +10,19 @@ namespace Wul.Interpreter.MetaTypes
 
         private TypeMetaType()
         {
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(NoType, Type.Name);
+            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
+            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(NoType, Type.Name);
         }
 
-        protected IValue AreEqual(List<IValue> arguments, Scope s)
+        private IValue AreEqual(List<IValue> arguments, Scope s)
         {
             WulType first = (WulType) arguments.First();
             WulType second = (WulType) arguments.Skip(1).First();
             return first.RawType == second.RawType ? Bool.True : Bool.False;
         }
 
-        public IValue NoType(List<IValue> arguments, Scope s)
+        private IValue NoType(List<IValue> arguments, Scope s)
         {
             return Value.Nil;
         }

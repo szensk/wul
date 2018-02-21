@@ -13,19 +13,19 @@ namespace Wul.Interpreter.MetaTypes
         private MapMetaType()
         {
             //Equality
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
+            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
 
             //List
-            At.Method = new NetFunction(AtKey, At.Name);
-            Set.Method = new NetFunction(SetKey, Set.Name);
-            Count.Method = new NetFunction(Length, Count.Name);
+            At.Method = NetFunction.FromSingle(AtKey, At.Name);
+            Set.Method = NetFunction.FromSingle(SetKey, Set.Name);
+            Count.Method = NetFunction.FromSingle(Length, Count.Name);
 
             //Other
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
         }
 
-        public IValue AtKey(List<IValue> arguments, Scope s)
+        private IValue AtKey(List<IValue> arguments, Scope s)
         {
             if (arguments.Count == 2)
             {
@@ -48,7 +48,7 @@ namespace Wul.Interpreter.MetaTypes
             }
         }
 
-        public IValue SetKey(List<IValue> arguments, Scope s)
+        private IValue SetKey(List<IValue> arguments, Scope s)
         {
             ListNode list = (ListNode)arguments[0];
             MapTable map = (MapTable)list.Children[1].Eval(s);
@@ -67,7 +67,7 @@ namespace Wul.Interpreter.MetaTypes
             return map;
         }
 
-        public IValue AreEqual(List<IValue> arguments, Scope s)
+        private IValue AreEqual(List<IValue> arguments, Scope s)
         {
             MapTable left = (MapTable)arguments[0];
             MapTable right = (MapTable)arguments[1];
@@ -75,7 +75,7 @@ namespace Wul.Interpreter.MetaTypes
             return left.AsDictionary().SequenceEqual(right.AsDictionary()) ? Bool.True : Bool.False;
         }
 
-        public IValue Length(List<IValue> arguments, Scope s)
+        private IValue Length(List<IValue> arguments, Scope s)
         {
             MapTable map = (MapTable)arguments.First();
 

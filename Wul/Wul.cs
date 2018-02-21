@@ -52,10 +52,14 @@ namespace Wul
             {
                 var programNode = (ProgramNode) Parser.Parse(input.Trim());
                 var result = WulInterpreter.Interpret(programNode, currentScope);
-                if (result != null && !ReferenceEquals(result, Value.Nil))
+                if (result != null && result.Any())
                 {
-                    if (result is UString) result = new UString($"'{result.AsString()}'");
-                    IO.Print(new List<IValue> {result}, Global.Scope);
+                    foreach (var item in result)
+                    {
+                        if (ReferenceEquals(item, Value.Nil) && result.Count == 1) continue;
+                        var args = new List<IValue> {item is UString ? new UString($"'{item.AsString()}'") : item};
+                        IO.Print(args, Global.Scope);
+                    }
                 }
                 return true;
             }

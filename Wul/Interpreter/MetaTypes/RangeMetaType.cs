@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Wul.Interpreter.Types;
 
 namespace Wul.Interpreter.MetaTypes
@@ -8,24 +9,24 @@ namespace Wul.Interpreter.MetaTypes
     {
         public static readonly RangeMetaType Instance = new RangeMetaType();
 
-        public RangeMetaType()
+        private RangeMetaType()
         {
             //Equality
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
+            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
 
             //List
-            At.Method = new NetFunction(AtIndex, At.Name);
-            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
-            Count.Method = new NetFunction(Length, Count.Name);
+            At.Method = NetFunction.FromSingle(AtIndex, At.Name);
+            Remainder.Method = NetFunction.FromSingle(Remaining, Remainder.Name);
+            Count.Method = NetFunction.FromSingle(Length, Count.Name);
 
-            Invoke.Method = new NetFunction(RangeIndex, Invoke.Name);
+            Invoke.Method = NetFunction.FromSingle(RangeIndex, Invoke.Name);
 
             //Other
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
         }
 
-        public IValue AreEqual(List<IValue> arguments, Scope s)
+        private IValue AreEqual(List<IValue> arguments, Scope s)
         {
             Range left = arguments[0] as Range;
             Range right = arguments[1] as Range;
@@ -35,7 +36,7 @@ namespace Wul.Interpreter.MetaTypes
             return left == right ? Bool.True : Bool.False;
         }
 
-        public IValue RangeIndex(List<IValue> arguments, Scope s)
+        private IValue RangeIndex(List<IValue> arguments, Scope s)
         {
             Range range = arguments[0] as Range;
             IValue target = arguments[1];
@@ -45,7 +46,7 @@ namespace Wul.Interpreter.MetaTypes
             var indexes = range.AsList().AsList();
             if (indexes.Count == 1)
             {
-                return target.MetaType.At.Invoke(new List<IValue>{target, indexes[0]}, s);
+                return target.MetaType.At.Invoke(new List<IValue>{target, indexes[0]}, s).First();
             }
 
             List<IValue> values = new List<IValue>(indexes.Count);
@@ -53,12 +54,12 @@ namespace Wul.Interpreter.MetaTypes
             foreach (var index in indexes)
             {
                 atArguments[1] = index;
-                values.Add(target.MetaType.At.Invoke(atArguments, s));
+                values.Add(target.MetaType.At.Invoke(atArguments, s).First());
             }
             return new ListTable(values);
         }
 
-        public IValue AtIndex(List<IValue> arguments, Scope s)
+        private IValue AtIndex(List<IValue> arguments, Scope s)
         {
             Range range = (Range) arguments[0];
             Number index = (Number) arguments[1];
@@ -71,7 +72,7 @@ namespace Wul.Interpreter.MetaTypes
             return range.First;
         }
 
-        public IValue Remaining(List<IValue> arguments, Scope s)
+        private IValue Remaining(List<IValue> arguments, Scope s)
         {
             Range range = (Range) arguments[0];
 
@@ -83,7 +84,7 @@ namespace Wul.Interpreter.MetaTypes
             return remainder;
         }
 
-        public IValue Length(List<IValue> arguments, Scope s)
+        private IValue Length(List<IValue> arguments, Scope s)
         {
             Range range = (Range) arguments[0];
 

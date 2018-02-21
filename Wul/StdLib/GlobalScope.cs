@@ -19,6 +19,7 @@ namespace Wul.StdLib
         {
             public MethodInfo Method;
             public IEnumerable<NetFunctionAttribute> NetAttributes;
+            public IEnumerable<MultiNetFunctionAttribute> MultiNetAttributes;
             public IEnumerable<MagicFunctionAttribute> MagicAttributes;
         }
 
@@ -26,7 +27,18 @@ namespace Wul.StdLib
         {
             string defaultName = method.NetAttributes.First().Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, IValue>));
-            NetFunction netFunction = new NetFunction((Func<List<IValue>, Scope, IValue>)deleg, defaultName);
+            NetFunction netFunction = NetFunction.FromSingle((Func<List<IValue>, Scope, IValue>)deleg, defaultName);
+            foreach (var globalname in method.NetAttributes)
+            {
+                Scope[globalname.Name] = netFunction;
+            }
+        }
+
+        private static void RegisterMultiNetFunction(FunctionRegistration method)
+        {
+            string defaultName = method.NetAttributes.First().Name;
+            var deleg = method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, List<IValue>>));
+            NetFunction netFunction = new NetFunction((Func<List<IValue>, Scope, List <IValue>>)deleg, defaultName);
             foreach (var globalname in method.NetAttributes)
             {
                 Scope[globalname.Name] = netFunction;
@@ -37,7 +49,7 @@ namespace Wul.StdLib
         {
             string defaultName = method.MagicAttributes.First().Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<ListNode, Scope, IValue>));
-            MagicFunction magicFunction = new MagicFunction((Func<ListNode, Scope, IValue>)deleg, defaultName);
+            MagicFunction magicFunction = MagicFunction.FromSingle((Func<ListNode, Scope, IValue>)deleg, defaultName);
             foreach (var globalname in method.MagicAttributes)
             {
                 Scope[globalname.Name] = magicFunction;
@@ -67,19 +79,24 @@ namespace Wul.StdLib
                 {
                     Method = m,
                     NetAttributes = m.GetCustomAttributes<NetFunctionAttribute>(),
+                    MultiNetAttributes = m.GetCustomAttributes<MultiNetFunctionAttribute>(),
                     MagicAttributes = m.GetCustomAttributes<MagicFunctionAttribute>()
                 })
                 .ToList();
 
             foreach (FunctionRegistration method in namedMethods)
             {
-                if (method.NetAttributes.Any())
+                if (method.MultiNetAttributes.Any())
                 {
-                    RegisterNetFunction(method);
+                    RegisterMultiNetFunction(method);
                 }
                 else if (method.MagicAttributes.Any())
                 {
                     RegisterMagicFunction(method);
+                }
+                else if (method.NetAttributes.Any())
+                {
+                    RegisterNetFunction(method);
                 }
             }
 

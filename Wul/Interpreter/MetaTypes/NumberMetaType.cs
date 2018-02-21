@@ -12,32 +12,32 @@ namespace Wul.Interpreter.MetaTypes
         private NumberMetaType()
         {
             //Arithmetic
-            Add.Method = new NetFunction(DoAdd, Add.Name);
-            Subtract.Method = new NetFunction(DoSubtract, Subtract.Name);
-            Multiply.Method = new NetFunction(DoMultiply, Multiply.Name);
-            Divide.Method = new NetFunction(DoDivide, Divide.Name);
-            Modulus.Method = new NetFunction(DoModulus, Modulus.Name);
-            Power.Method = new NetFunction(DoPower, Power.Name);
-            IntegerDivide.Method = new NetFunction(DoIntegerDivide, IntegerDivide.Name);
+            Add.Method = NetFunction.FromSingle(DoAdd, Add.Name);
+            Subtract.Method = NetFunction.FromSingle(DoSubtract, Subtract.Name);
+            Multiply.Method = NetFunction.FromSingle(DoMultiply, Multiply.Name);
+            Divide.Method = NetFunction.FromSingle(DoDivide, Divide.Name);
+            Modulus.Method = NetFunction.FromSingle(DoModulus, Modulus.Name);
+            Power.Method = NetFunction.FromSingle(DoPower, Power.Name);
+            IntegerDivide.Method = NetFunction.FromSingle(DoIntegerDivide, IntegerDivide.Name);
 
             //Bitwise
-            BitwiseNot.Method = new NetFunction(NumberBitwiseNot, BitwiseNot.Name);
-            BitwiseAnd.Method = new NetFunction(NumberBitwiseAnd, BitwiseAnd.Name);
-            BitwiseOr.Method = new NetFunction(NumberBitwiseOr, BitwiseOr.Name);
-            BitwiseXor.Method = new NetFunction(NumberBitwiseXor, BitwiseXor.Name);
-            LeftShift.Method = new NetFunction(NumberLeftShift, LeftShift.Name);
-            RightShift.Method = new NetFunction(NumberRightShift, RightShift.Name);
+            BitwiseNot.Method = NetFunction.FromSingle(NumberBitwiseNot, BitwiseNot.Name);
+            BitwiseAnd.Method = NetFunction.FromSingle(NumberBitwiseAnd, BitwiseAnd.Name);
+            BitwiseOr.Method = NetFunction.FromSingle(NumberBitwiseOr, BitwiseOr.Name);
+            BitwiseXor.Method = NetFunction.FromSingle(NumberBitwiseXor, BitwiseXor.Name);
+            LeftShift.Method = NetFunction.FromSingle(NumberLeftShift, LeftShift.Name);
+            RightShift.Method = NetFunction.FromSingle(NumberRightShift, RightShift.Name);
 
             //Comparison
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
-            Compare.Method = new NetFunction(Comparison, Compare.Name);
+            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
+            Compare.Method = NetFunction.FromSingle(Comparison, Compare.Name);
 
             //Other
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
         }
 
-        public IValue DoAdd(List<IValue> arguments, Scope s)
+        private IValue DoAdd(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(a => a as Number).ToList();
             if (!numbers.Any())
@@ -52,7 +52,7 @@ namespace Wul.Interpreter.MetaTypes
             return (Number)sum;
         }
 
-        public IValue DoSubtract(List<IValue> arguments, Scope s)
+        private IValue DoSubtract(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 1)
             {
@@ -79,7 +79,7 @@ namespace Wul.Interpreter.MetaTypes
             return (Number)(first.Value - sum);
         }
 
-        public IValue DoMultiply(List<IValue> arguments, Scope s)
+        private IValue DoMultiply(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
             if (!numbers.Any())
@@ -99,7 +99,7 @@ namespace Wul.Interpreter.MetaTypes
             return (Number)multiplied;
         }
 
-        public IValue DoDivide(List<IValue> arguments, Scope s)
+        private IValue DoDivide(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
             if (!numbers.Any())
@@ -116,7 +116,7 @@ namespace Wul.Interpreter.MetaTypes
             return (Number)(first.Value / second.Value);
         }
 
-        public IValue DoIntegerDivide(List<IValue> arguments, Scope s)
+        private IValue DoIntegerDivide(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
             if (!numbers.Any())
@@ -133,7 +133,7 @@ namespace Wul.Interpreter.MetaTypes
             return (Number)Math.Floor(first.Value / second.Value);
         }
 
-        public IValue DoModulus(List<IValue> arguments, Scope s)
+        private IValue DoModulus(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
             var first = numbers.First();
@@ -141,7 +141,7 @@ namespace Wul.Interpreter.MetaTypes
             return (Number)(first.Value % second.Value);
         }
 
-        public IValue DoPower(List<IValue> arguments, Scope s)
+        private IValue DoPower(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
             var first = numbers.First();
@@ -149,7 +149,7 @@ namespace Wul.Interpreter.MetaTypes
             return (Number)Math.Pow(first.Value, second.Value);
         }
 
-        internal static Number NumberBitwiseAnd(List<IValue> arguments, Scope s)
+        private static Number NumberBitwiseAnd(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
@@ -161,7 +161,7 @@ namespace Wul.Interpreter.MetaTypes
             return result;
         }
 
-        internal static Number NumberBitwiseOr(List<IValue> arguments, Scope s)
+        private static Number NumberBitwiseOr(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
@@ -173,7 +173,7 @@ namespace Wul.Interpreter.MetaTypes
             return result;
         }
 
-        internal static Number NumberBitwiseXor(List<IValue> arguments, Scope s)
+        private static Number NumberBitwiseXor(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
@@ -185,7 +185,7 @@ namespace Wul.Interpreter.MetaTypes
             return result;
         }
 
-        internal static Number NumberLeftShift(List<IValue> arguments, Scope s)
+        private static Number NumberLeftShift(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
@@ -197,7 +197,7 @@ namespace Wul.Interpreter.MetaTypes
             return result;
         }
 
-        internal static Number NumberRightShift(List<IValue> arguments, Scope s)
+        private static Number NumberRightShift(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
@@ -209,7 +209,7 @@ namespace Wul.Interpreter.MetaTypes
             return result;
         }
 
-        internal static Number NumberBitwiseNot(List<IValue> arguments, Scope s)
+        private static Number NumberBitwiseNot(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 1) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
@@ -219,7 +219,7 @@ namespace Wul.Interpreter.MetaTypes
             return ~first;
         }
 
-        public IValue AreEqual(List<IValue> arguments, Scope s)
+        private IValue AreEqual(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
             var first = numbers.First();
@@ -227,7 +227,7 @@ namespace Wul.Interpreter.MetaTypes
             return Equals(first, second) ? Bool.True : Bool.False;
         }
 
-        public IValue Comparison(List<IValue> arguments, Scope s)
+        private IValue Comparison(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
             var first = numbers.First();

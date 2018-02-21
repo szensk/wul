@@ -7,24 +7,30 @@ namespace Wul.Interpreter.Types
 {
     sealed class MagicFunction : IFunction
     {
-        private readonly Func<ListNode, Scope, IValue> Body;
+        private readonly Func<ListNode, Scope, List<IValue>> Body;
 
-        public MagicFunction(Func<ListNode, Scope, IValue> body, string name) 
+        public MagicFunction(Func<ListNode, Scope, List<IValue>> body, string name) 
         {
             Name = name;
             ArgumentNames = null;
             Body = body;
             MetaType = MagicFunctionMetaType.Instance;
         }
+
+        public static MagicFunction FromSingle(Func<ListNode, Scope, IValue> body, string name)
+        {
+            return new MagicFunction((list, scope) => Value.ListWith(body(list, scope)), name);
+        }
+
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 
-        public IValue Evaluate(List<IValue> arguments, Scope scope)
+        public List<IValue> Evaluate(List<IValue> arguments, Scope scope)
         {
             throw new NotImplementedException();
         }
 
-        public IValue Execute(ListNode list, Scope scope)
+        public List<IValue> Execute(ListNode list, Scope scope)
         {
             return Body(list, scope);
         }

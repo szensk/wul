@@ -12,31 +12,31 @@ namespace Wul.Interpreter.MetaTypes
         private ListMetaType()
         {
             //Equality
-            Equal.Method = new NetFunction(AreEqual, Equal.Name);
+            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
 
             //List
-            At.Method = new NetFunction(AtIndex, At.Name);
-            Set.Method = new NetFunction(SetIndex, Set.Name);
-            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
-            Count.Method = new NetFunction(Length, Count.Name);
-            Concat.Method = new NetFunction(JoinLists, Concat.Name);
+            At.Method = NetFunction.FromSingle(AtIndex, At.Name);
+            Set.Method = NetFunction.FromSingle(SetIndex, Set.Name);
+            Remainder.Method = NetFunction.FromSingle(Remaining, Remainder.Name);
+            Count.Method = NetFunction.FromSingle(Length, Count.Name);
+            Concat.Method = NetFunction.FromSingle(JoinLists, Concat.Name);
 
-            Push.Method = new NetFunction(PushEnd, Push.Name);
-            Pop.Method = new NetFunction(PopEnd, Pop.Name);
+            Push.Method = NetFunction.FromSingle(PushEnd, Push.Name);
+            Pop.Method = NetFunction.FromSingle(PopEnd, Pop.Name);
             
             //Other
-            AsString.Method = new NetFunction(IdentityString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
+            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
         }
 
-        public IValue Length(List<IValue> arguments, Scope s)
+        private IValue Length(List<IValue> arguments, Scope s)
         {
             ListTable list = (ListTable) arguments.First();
 
             return list.Count;
         }
 
-        public IValue Remaining(List<IValue> arguments, Scope s)
+        private IValue Remaining(List<IValue> arguments, Scope s)
         {
             var firstList = (ListTable)arguments[0];
             if (firstList == null || firstList.Count == 0)
@@ -48,7 +48,7 @@ namespace Wul.Interpreter.MetaTypes
             return new ListTable(values);
         }
 
-        public IValue AtIndex(List<IValue> arguments, Scope s)
+        private IValue AtIndex(List<IValue> arguments, Scope s)
         {
             ListTable list = (ListTable) arguments.First();
             Number index = (Number) arguments.Skip(1).First();
@@ -56,7 +56,7 @@ namespace Wul.Interpreter.MetaTypes
             return list[index];
         }
 
-        public IValue SetIndex(List<IValue> arguments, Scope s)
+        private IValue SetIndex(List<IValue> arguments, Scope s)
         {
             ListTable list = (ListTable) arguments[0];
             Number index = (Number)arguments[1];
@@ -67,7 +67,7 @@ namespace Wul.Interpreter.MetaTypes
             return list;
         }
 
-        public IValue JoinLists(List<IValue> argument, Scope s)
+        private IValue JoinLists(List<IValue> argument, Scope s)
         {
             var lists = argument.Select(a => a as ListTable).ToList();
             if (!lists.Any())
@@ -87,7 +87,7 @@ namespace Wul.Interpreter.MetaTypes
             return new ListTable(results.ToArray());
         }
 
-        public IValue AreEqual(List<IValue> arguments, Scope s)
+        private IValue AreEqual(List<IValue> arguments, Scope s)
         {
             ListTable left = (ListTable) arguments[0];
             ListTable right = (ListTable) arguments[1];
@@ -95,7 +95,7 @@ namespace Wul.Interpreter.MetaTypes
             return left.AsList().SequenceEqual(right.AsList()) ? Bool.True : Bool.False;
         }
 
-        public IValue PushEnd(List<IValue> arguments, Scope s)
+        private IValue PushEnd(List<IValue> arguments, Scope s)
         {
             ListTable left = (ListTable) arguments[0];
 
@@ -107,7 +107,7 @@ namespace Wul.Interpreter.MetaTypes
             return left;
         }
 
-        public IValue PopEnd(List<IValue> arguments, Scope s)
+        private IValue PopEnd(List<IValue> arguments, Scope s)
         {
             ListTable left = (ListTable) arguments[0];
             if (left.Count < 1) return Value.Nil;
