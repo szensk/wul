@@ -119,9 +119,19 @@ namespace Wul.Parser
             }
         }
 
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new InterpolatedStringNode(parent, _Value);
+        }
+
         public override string AsString()
         {
             return $"InterpolatedString[{_Value}]";
+        }
+
+        public override string ToString()
+        {
+            return $"\"{_Value}\"";
         }
     }
 
