@@ -7,11 +7,13 @@ namespace Wul.Parser
 {
     public class ListNode : SyntaxNode
     {
+        public int Line { get; }
         public bool NamedParameterList;
-        public List<SyntaxNode> Children { get; set; }
+        public List<SyntaxNode> Children { get; }
 
-        public ListNode(SyntaxNode parent, List<SyntaxNode> children) : base(parent)
+        public ListNode(SyntaxNode parent, List<SyntaxNode> children, int? line = null) : base(parent)
         {
+            Line = line ?? 0;
             Children = children;
         }
 
@@ -76,7 +78,7 @@ namespace Wul.Parser
 
         public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
-            return Parse(token, false, parent);
+            return Parse(token, 1, parent);
         }
 
         private void QuoteChild(int childShouldQuote, ListNode currentList, SyntaxNode itemToAdd, List<SyntaxNode> childList)
@@ -130,7 +132,7 @@ namespace Wul.Parser
            return token.Substring(openIndex + 1, lastCloseIndex - (openIndex + 1));
         }
 
-        public SyntaxNode Parse(string token, bool startQuote = false, SyntaxNode parent = null)
+        public SyntaxNode Parse(string token, int lineCount, SyntaxNode parent = null)
         {
             string inner = GetInnerString(token);
             if (inner == null) return null;
@@ -143,7 +145,7 @@ namespace Wul.Parser
             bool startedString = false;
             bool startedRange = false;
 
-            ListNode currentList = new ListNode(parent, new List<SyntaxNode>());
+            ListNode currentList = new ListNode(parent, new List<SyntaxNode>(), lineCount);
             List<SyntaxNode> children = new List<SyntaxNode>();
             
             while (currentIndex < inner.Length)
@@ -171,7 +173,9 @@ namespace Wul.Parser
                 currentIndex++;
                 if ((currentIndex == inner.Length || char.IsWhiteSpace(inner[currentIndex]) || inner[currentIndex] == ')') && openParentheses == closeParentheses)
                 {
-                    string currentInner = inner.Substring(startIndex, currentIndex - startIndex).Trim();
+                    var nextInner = inner.Substring(startIndex, currentIndex - startIndex);
+                    lineCount += nextInner.Count(c => c == '\n');
+                    string currentInner = nextInner.Trim();
                     int childShouldQuote = 0;
                     if (currentInner.StartsWith('`'))
                     {
@@ -199,7 +203,7 @@ namespace Wul.Parser
                                       ?? rangeParser.Parse(currentInner, currentList)
                                       ?? (string.IsNullOrWhiteSpace(GetInnerString(currentInner))
                                         ? new ListNode(currentList, new List<SyntaxNode>())
-                                        : Parse(currentInner, currentList));
+                                        : Parse(currentInner, lineCount, currentList));
 
                     if (IsNamedParemeter(item)) currentList.NamedParameterList = true;
                     if (item != null)

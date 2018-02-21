@@ -9,7 +9,7 @@ namespace Wul.Interpreter.Types
 {
     class NetObjectType : WulType
     {
-        public NetObjectType(Type type) : base(type.Name, type)
+        private NetObjectType(Type type) : base(type.Name, type)
         {
             
         }
@@ -49,10 +49,7 @@ namespace Wul.Interpreter.Types
             Value = o;
             ValueType = t;
             MetaType = NetObjectMetaType.Instance;
-
         }
-
-        public object NetValue => Value;
 
         public IValue Get(string name)
         {

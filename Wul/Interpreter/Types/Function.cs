@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Wul.Interpreter.MetaTypes;
 using Wul.Parser;
 
@@ -35,6 +36,7 @@ namespace Wul.Interpreter.Types
 
         public Function(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
+            Line = body.Line;
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
@@ -47,6 +49,7 @@ namespace Wul.Interpreter.Types
             Debug.WriteLine($"Deleting function {Name}");
         }
 
+        public int Line { get; }
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 
@@ -107,8 +110,8 @@ namespace Wul.Interpreter.Types
 
         public object ToObject()
         {
-            //TODO Should return a Func<object...>
-            return null;
+            IValue action() => Evaluate(Value.EmptyList, null).First();
+            return (Func<IValue>) action;
         }
 
         public MetaType MetaType { get; set; }

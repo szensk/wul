@@ -14,6 +14,7 @@ namespace Wul.Interpreter.Types
 
         public MacroFunction(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
+            Line = body.Line;
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
@@ -22,6 +23,7 @@ namespace Wul.Interpreter.Types
             MetaType = MagicFunctionMetaType.Instance;
         }
 
+        public int Line { get; }
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 

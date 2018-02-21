@@ -1,0 +1,7 @@
+; debug getinfo
+(defn func1 () (print "ok"))
+
+(print (debug.getinfo func1))
+
+(defmacro func2 () (print "ok2"))
+(print (debug.getinfo func2))

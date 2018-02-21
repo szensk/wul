@@ -38,7 +38,7 @@ namespace Wul.Parser
     {
         private readonly string FileName;
 
-        public ProgramParser(string fileName)
+        public ProgramParser(string fileName = null)
         {
             FileName = fileName;
         }
@@ -46,6 +46,11 @@ namespace Wul.Parser
         private readonly ListParser listParser = new ListParser();
 
         public override SyntaxNode Parse(string token, SyntaxNode parent = null)
+        {
+            return Parse(token, 1, parent);
+        }
+
+        public SyntaxNode Parse(string token, int lineCount, SyntaxNode parent = null)
         {
             string program = token.Trim();
 
@@ -63,7 +68,11 @@ namespace Wul.Parser
 
             while (currentIndex < program.Length)
             {
-                if (program[currentIndex] == '(')
+                if (program[currentIndex] == '\n')
+                {
+                    lineCount++;
+                }
+                else if (program[currentIndex] == '(')
                 {
                     openParenthesis++;
                 }
@@ -74,6 +83,7 @@ namespace Wul.Parser
                 else if (program[currentIndex] == ';')
                 {
                     int endIndex = program.IndexOf('\n', currentIndex);
+                    if (endIndex != -1) lineCount++;
                     currentIndex = endIndex == -1 ? program.Length : endIndex + 1;
                     continue;
                 }
@@ -87,7 +97,7 @@ namespace Wul.Parser
                 if (openParenthesis > 0 && openParenthesis == closeParenthesis)
                 {
                     string substring = program.Substring(startIndex, currentIndex - startIndex);
-                    ListNode expression = (ListNode) listParser.Parse(substring, currentProgram);
+                    ListNode expression = (ListNode) listParser.Parse(substring, lineCount, currentProgram);
                     if (expression != null) expressions.Add(expression);
                     startIndex = currentIndex;
                 }

@@ -9,19 +9,21 @@ namespace Wul.Interpreter.Types
     {
         private readonly Func<List<IValue>, Scope, List<IValue>> Body;
 
-        public NetFunction(Func<List<IValue>, Scope, List<IValue>> body, string name)
+        public NetFunction(Func<List<IValue>, Scope, List<IValue>> body, string name, int line = 0)
         {
+            Line = line;
             Name = name;
             ArgumentNames = null;
             Body = body;
             MetaType = FunctionMetaType.Instance;
         }
 
-        public static NetFunction FromSingle(Func<List<IValue>, Scope, IValue> body, string name)
+        public static NetFunction FromSingle(Func<List<IValue>, Scope, IValue> body, string name, int line = 0)
         {
-            return new NetFunction((list, scope) => Value.ListWith(body(list, scope)), name);
+            return new NetFunction((list, scope) => Value.ListWith(body(list, scope)), name, line);
         }
 
+        public int Line { get; }
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 

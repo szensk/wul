@@ -12,7 +12,7 @@ using Wul.StdLib;
 namespace Wul
 {
     //WUL: Worthless Unnecessary Language
-    class Wul
+    static class Wul
     {
         private const int ExitSuccess = 0;
         private const int ExitError = 1;
@@ -111,6 +111,7 @@ namespace Wul
                 while (input != "exit")
                 {
                     input = Console.ReadLine();
+                    System.Diagnostics.Debug.WriteLine(input);
                     RunString(input, replScope);
                 }
                 return ExitSuccess;

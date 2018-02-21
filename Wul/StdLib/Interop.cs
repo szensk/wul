@@ -183,14 +183,14 @@ namespace Wul.StdLib
         {
             if (list.Count == 1 && list.First() is NetObject n)
             {
-                return ConvertToIValue(n.NetValue);
+                return ConvertToIValue(n.ToObject());
             }
 
             IEnumerable<IValue> items = list.Select(item =>
             {
                 var netObject = item as NetObject;
                 if (netObject == null) return item;
-                return ConvertToIValue(netObject.NetValue);
+                return ConvertToIValue(netObject.ToObject());
             });
 
             return new ListTable(items);
