@@ -107,7 +107,7 @@ namespace Wul.Parser
             }
         }
 
-        private bool IsNamedParemeter(SyntaxNode item)
+        private bool IsNamedParameter(SyntaxNode item)
         {
             var identifer = item as IdentifierNode;
             return identifer?.Name.EndsWith(':') ?? false;
@@ -200,14 +200,27 @@ namespace Wul.Parser
                     SyntaxNode item = identifierParser.Parse(currentInner, currentList)
                                       ?? numericParser.Parse(currentInner, currentList)
                                       ?? stringParser.Parse(currentInner, currentList)
-                                      ?? rangeParser.Parse(currentInner, currentList)
-                                      ?? (string.IsNullOrWhiteSpace(GetInnerString(currentInner))
-                                        ? new ListNode(currentList, new List<SyntaxNode>())
-                                        : Parse(currentInner, lineCount, currentList));
+                                      ?? rangeParser.Parse(currentInner, currentList);
 
-                    if (IsNamedParemeter(item)) currentList.NamedParameterList = true;
+                    if (item == null)
+                    {
+                        var innerString = GetInnerString(currentInner);
+                        if (innerString == null)
+                        {
+                            startIndex = currentIndex;
+                            currentInner = null;
+                        }
+                        else 
+                        {
+                            item =  string.IsNullOrWhiteSpace(innerString)
+                                ? new ListNode(currentList, new List<SyntaxNode>())
+                                : Parse(currentInner, lineCount, currentList);
+                        } 
+                    }
+
                     if (item != null)
                     {
+                        if (IsNamedParameter(item)) currentList.NamedParameterList = true;
                         if (item is StringNode) startedString = false;
                         if (item is RangeNode) startedRange = false;
                         QuoteChild(childShouldQuote, currentList, item, children);
