@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
@@ -112,6 +113,29 @@ namespace Wul.StdLib
             IValue first = list.First();
 
             return first.MetaType.Pop.Invoke(list, scope).First();
+        }
+
+        [NetFunction("map")]
+        internal static IValue Map(List<IValue> list, Scope scope)
+        {
+            var listToMap = list[0] as ListTable;
+            if (listToMap == null && list[0] is Interpreter.Types.Range r)
+            {
+                listToMap = r.AsList();
+            }
+            var callback = list[1];
+            var func = callback.MetaType.Invoke;
+
+            if (!func.IsDefined)
+            {
+                throw new Exception("Callback is not a function or invokeable");
+            }
+
+            var result = listToMap.AsList()
+                .Select(item => func.Invoke(Value.ListWith(callback, item), scope)
+                .First());
+
+            return new ListTable(result);
         }
     }
 }
