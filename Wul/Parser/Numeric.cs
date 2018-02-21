@@ -1,23 +1,24 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Wul.Parser
 {
-    //TODO for hex literals etc
-    class Digit
-    {
-        
-    }
-
-    class Integer
+    static class Integer
     {
         public static bool Literal(string token)
         {
             var match = Regex.Match(token, @"^\-?[0-9]+$");
             return match.Success;
-        }    
+        }
+
+        public static bool HexLiteral(string token)
+        {
+            var match = Regex.Match(token, @"^0x[0-9a-fA-F]+$");
+            return match.Success;
+        }
     }
 
-    class Decimal
+    static class Decimal
     {
         public static bool Literal(string token)
         {
@@ -26,16 +27,16 @@ namespace Wul.Parser
         }
     }
 
-    class NumericNode : SyntaxNode
+    public class NumericNode : SyntaxNode
     {
-        public NumericNode(SyntaxNode parent, double value) : base(parent)
+        private NumericNode(SyntaxNode parent, double value) : base(parent)
         {
             Value = value;
         }
 
-        public NumericNode(SyntaxNode parent, string match) : base(parent)
+        public NumericNode(SyntaxNode parent, string match, bool hex = false) : base(parent)
         {
-            Value = double.Parse(match);
+            Value = hex ? Convert.ToInt32(match, 16) : double.Parse(match);
         }
 
         public double Value { get; }
@@ -56,13 +57,17 @@ namespace Wul.Parser
         }
     }
 
-    class NumericParser : SyntaxNodeParser
+    public class NumericParser : SyntaxNodeParser
     {
         public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
             if (Integer.Literal(token) || Decimal.Literal(token))
             {
                 return new NumericNode(parent, token);
+            }
+            else if (Integer.HexLiteral(token))
+            {
+                return new NumericNode(parent, token, hex: true);
             }
             else
             {

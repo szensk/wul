@@ -53,7 +53,7 @@ namespace Wul.Parser
 
             //Assume token has been trimmed
             int openIndex = token.IndexOf("[", StringComparison.Ordinal);
-            int closeIndex = token.LastIndexOf("]", StringComparison.Ordinal); //TODO shouldn't this be IndexOf?
+            int closeIndex = token.IndexOf("]", StringComparison.Ordinal);
 
             if (openIndex == -1 || closeIndex == -1) return null;
 
