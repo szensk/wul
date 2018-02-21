@@ -1,6 +1,6 @@
 (defn fact (a)
 	(if (< a 2) 
-		(then 1) 
+		(then 1) ; some comment
 		(else (* a (fact (- a 1))))
 	)
 )

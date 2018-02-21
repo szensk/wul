@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wul.Parser;
 
 namespace Unit.Test
@@ -122,6 +123,21 @@ namespace Unit.Test
 
             //Assert
             Assert.AreEqual(1, node.Expressions.Count);
+        }
+
+        [TestMethod]
+        public void ProgramParser_FactorialExample()
+        {
+            //Arrange
+            const string program = "(defn fact (a)\r\n\t(if (< a 2) \r\n\t\t(then 1) \r\n\t\t(else (* a (fact (- a 1))))\r\n\t)\r\n)";
+            ProgramParser parser = new ProgramParser();
+
+            //Act
+            ProgramNode node = (ProgramNode)parser.Parse(program);
+
+            //Assert
+            Assert.AreEqual(1, node.Expressions.Count);
+            Assert.AreEqual(4, node.Expressions.First().Children.Count);
         }
     }
 }
