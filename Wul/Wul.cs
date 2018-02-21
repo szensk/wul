@@ -34,6 +34,15 @@ namespace Wul
             {
                 WulInterpreter.Interpret(LoadFile(filePath));
             }
+            catch (ParseException pe)
+            {
+                string program = File.ReadLines(filePath).Skip(pe.Line-1).First();
+                Console.WriteLine(program);
+                string underline = pe.GetUnderline;
+                if (underline != null) Console.WriteLine(underline);
+                Console.WriteLine(pe.GetErrorMessage);
+                return false;
+            }
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");

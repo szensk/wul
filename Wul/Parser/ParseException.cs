@@ -5,7 +5,7 @@ namespace Wul.Parser
     public class ParseException : Exception
     {
         private string File { get; }
-        private int Line { get; }
+        public int Line { get; }
         private int StartCharacter { get; }
         private int EndCharacter { get; }
 

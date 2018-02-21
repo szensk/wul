@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Wul.Parser
 {
@@ -47,12 +46,14 @@ namespace Wul.Parser
 
         public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
-            return Parse(token, 1, parent);
+            return Parse(token, 1);
         }
 
-        public SyntaxNode Parse(string token, int lineCount, SyntaxNode parent = null)
+        private SyntaxNode Parse(string token, int lineCount)
         {
             string program = token.Trim();
+            //Maps from line # to last character of that line
+            Dictionary<int, int> lineMap = new Dictionary<int, int>();
 
             if (program == "")
             {
@@ -70,6 +71,7 @@ namespace Wul.Parser
             {
                 if (program[currentIndex] == '\n')
                 {
+                    lineMap.Add(lineCount, currentIndex);
                     lineCount++;
                 }
                 else if (program[currentIndex] == '(')
@@ -83,8 +85,16 @@ namespace Wul.Parser
                 else if (program[currentIndex] == ';')
                 {
                     int endIndex = program.IndexOf('\n', currentIndex);
-                    if (endIndex != -1) lineCount++;
-                    currentIndex = endIndex == -1 ? program.Length : endIndex + 1;
+                    if (endIndex != -1)
+                    {
+                        lineMap.Add(lineCount, currentIndex);
+                        lineCount++;
+                        currentIndex = endIndex + 1;
+                    }
+                    else
+                    {
+                        currentIndex = program.Length;
+                    }
                     continue;
                 }
 
@@ -105,8 +115,9 @@ namespace Wul.Parser
 
             if (startIndex < program.Length && openParenthesis > closeParenthesis)
             {
-                int line = token.Substring(0, startIndex).Count(c => c == '\n');
-                throw new ParseException(FileName, line, startIndex, currentIndex, "unfinished list");
+                int lineEnd;
+                if (!lineMap.TryGetValue(lineCount - 1, out lineEnd)) lineEnd = -1;
+                throw new ParseException(FileName, lineCount, 0, currentIndex - lineEnd - 1, "unfinished list");
             }
 
             currentProgram.Expressions.AddRange(expressions);
