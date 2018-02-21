@@ -53,7 +53,8 @@ namespace Wul.Parser
             var strings = _chunks.Select(c =>
                 {
                     if (c.String != null) return c.String;
-                    if (c.Interpolation != null) return WulInterpreter.Interpret(c.Interpolation, scope).AsString(); //TODO call tostring metamethod
+                    //TODO call tostring metamethod
+                    if (c.Interpolation != null) return WulInterpreter.Interpret(c.Interpolation, scope).First().AsString();
                     return null;
                 })
                 .Where(s => s != null);
@@ -119,9 +120,19 @@ namespace Wul.Parser
             }
         }
 
+        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
+        {
+            return new InterpolatedStringNode(parent, _Value);
+        }
+
         public override string AsString()
         {
             return $"InterpolatedString[{_Value}]";
+        }
+
+        public override string ToString()
+        {
+            return $"\"{_Value}\"";
         }
     }
 

@@ -1,0 +1,4 @@
+(defn whileFunc (c f) (if (c) (then (do (f) (whileFunc c f)))))
+(defmacro while (c f) (whileFunc (lambda (eval c)) (lambda (eval f))))
+(def x 0)
+(while (< x 5) (do (print x) (assign x (inc x)))) ; print 0 1 2 3 4

@@ -13,7 +13,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Concat.Invoke(list, scope);
+            return first.MetaType.Concat.Invoke(list, scope).First();
         }
 
         [NetFunction("string")]
@@ -21,7 +21,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
             if (ReferenceEquals(first, Value.Nil)) return new UString("nil");
-            return first.MetaType.AsString.Invoke(list, scope);
+            return first.MetaType.AsString.Invoke(list, scope).First();
         }
 
         [NetFunction("substring")]

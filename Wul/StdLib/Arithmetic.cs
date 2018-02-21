@@ -18,7 +18,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Add.Invoke(list, scope);
+            return first.MetaType.Add.Invoke(list, scope).First();
         }
 
         [NetFunction("dec")]
@@ -32,7 +32,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Subtract.Invoke(list, scope);
+            return first.MetaType.Subtract.Invoke(list, scope).First();
         }
 
         [NetFunction("*")]
@@ -40,7 +40,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Multiply.Invoke(list, scope);
+            return first.MetaType.Multiply.Invoke(list, scope).First();
         }
 
         [NetFunction("/")]
@@ -48,7 +48,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Divide.Invoke(list, scope);
+            return first.MetaType.Divide.Invoke(list, scope).First();
         }
 
         [NetFunction("//")]
@@ -56,7 +56,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.IntegerDivide.Invoke(list, scope);
+            return first.MetaType.IntegerDivide.Invoke(list, scope).First();
         }
 
         [NetFunction("%")]
@@ -64,7 +64,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Modulus.Invoke(list, scope);
+            return first.MetaType.Modulus.Invoke(list, scope).First();
         }
 
         [NetFunction("**")]
@@ -72,7 +72,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Power.Invoke(list, scope);
+            return first.MetaType.Power.Invoke(list, scope).First();
         }
 
         [NetFunction("int")]

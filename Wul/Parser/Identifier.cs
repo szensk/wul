@@ -4,7 +4,7 @@ namespace Wul.Parser
 {
     public class IdentifierNode : SyntaxNode
     {
-        public string Name { get; set; }
+        public string Name { get; }
 
         public IdentifierNode(SyntaxNode parent, string name) : base(parent)
         {

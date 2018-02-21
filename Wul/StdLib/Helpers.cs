@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
@@ -9,17 +10,17 @@ namespace Wul.StdLib
     {
         public static IValue Eval(this SyntaxNode node, Scope scope)
         {
-            IValue result = WulInterpreter.Interpret(node, scope) ?? Value.Nil;
+            IValue result = WulInterpreter.Interpret(node, scope).FirstOrDefault() ?? Value.Nil;
             while (result is SyntaxNode)
             {
-                result = WulInterpreter.Interpret(result as SyntaxNode, scope) ?? Value.Nil;
+                result = WulInterpreter.Interpret(result as SyntaxNode, scope).FirstOrDefault() ?? Value.Nil;
             }
             return result;
         }
 
         public static IValue EvalOnce(this SyntaxNode node, Scope scope)
         {
-            return WulInterpreter.Interpret(node, scope) ?? Value.Nil;
+            return WulInterpreter.Interpret(node, scope).FirstOrDefault() ?? Value.Nil;
         }
 
 

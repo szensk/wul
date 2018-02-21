@@ -6,32 +6,35 @@ using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
-    class MacroFunction : IFunction
+    sealed class MacroFunction : IFunction
     {
-        public ListNode Body;
+        private readonly ListNode Body;
 
-        public Scope ParentScope { get; }
+        private Scope ParentScope { get; }
 
         public MacroFunction(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
+            Line = body.Line;
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
             ParentScope = parentScope.CloseScope(body);
+            ParentScope.Parent = parentScope;
             MetaType = MagicFunctionMetaType.Instance;
         }
 
+        public int Line { get; }
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 
-        public IValue Evaluate(List<IValue> arguments, Scope scope)
+        public List<IValue> Evaluate(List<IValue> arguments, Scope scope)
         {
             throw new NotImplementedException();
         }
 
-        public virtual IValue Execute(ListNode list, Scope scope)
+        public List<IValue> Execute(ListNode list, Scope scope)
         {
-            Scope currentScope = ParentScope.EmptyChildScope();
+            Scope currentScope = ParentScope.EmptyChildScope(macroScope: true);
 
             var arguments = list.Children.ToArray();
 
@@ -54,8 +57,7 @@ namespace Wul.Interpreter.Types
                 }
             }
 
-            IValue result = WulInterpreter.Interpret(Body, currentScope);
-            return result;
+            return WulInterpreter.Interpret(Body, currentScope);
         }
 
         public MetaType MetaType { get; set; }

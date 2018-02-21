@@ -5,9 +5,10 @@ namespace Wul.Interpreter.Types
 {
     public interface IFunction : IValue
     {
+        int Line { get; }
         string Name { get; }
         List<string> ArgumentNames { get; }
-        IValue Evaluate(List<IValue> arguments, Scope scope);
-        IValue Execute(ListNode list, Scope scope);
+        List<IValue> Evaluate(List<IValue> arguments, Scope scope);
+        List<IValue> Execute(ListNode list, Scope scope);
     }
 }

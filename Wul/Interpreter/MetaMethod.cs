@@ -30,7 +30,7 @@ namespace Wul.Interpreter
             Name = other.Name;
         }
 
-        public IValue Invoke(List<IValue> arguments, Scope s)
+        public List<IValue> Invoke(List<IValue> arguments, Scope s)
         {
             if (Method == null)
             {

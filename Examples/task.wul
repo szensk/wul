@@ -1,0 +1,17 @@
+; tasks
+(defn slow-task () (?? (sleep 1000) (print 'ok') 100))
+
+; start
+((task slow-task) Start)
+
+; await
+(def x (await (task slow-task)))
+(print x) ; prints 100 after 1 second
+
+; waitall
+(defn slp (n) (lambda (do (sleep n) (print "done {n}"))))
+(def task1 (task (slp 1000)))
+(def task2 (task (slp 2000)))
+(do (task1 Start) (task2 Start) (waitall task1 task2))
+
+; waitany

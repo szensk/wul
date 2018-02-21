@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Wul.Parser;
 
@@ -6,7 +7,6 @@ namespace Wul.Interpreter.Types
 {
     abstract class Value : IValue
     {
-        //TODO do I want a nil meta type?
         public MetaType MetaType { get; set; } = null;
 
         public WulType Type => null;
@@ -17,7 +17,14 @@ namespace Wul.Interpreter.Types
 
         public abstract object ToObject();
 
-        public static Value Nil = new Nill();
+        public static readonly Value Nil = new Nill();
+
+        public static readonly List<IValue> EmptyList = new List<IValue>();
+
+        public static List<IValue> ListWith(params IValue[] values)
+        {
+            return new List<IValue>(values);
+        }
     }
 
     internal class Nill : Value

@@ -12,12 +12,12 @@ using Wul.StdLib;
 namespace Wul
 {
     //WUL: Worthless Unnecessary Language
-    class Wul
+    static class Wul
     {
         private const int ExitSuccess = 0;
         private const int ExitError = 1;
 
-        private static readonly ProgramParser Parser = new ProgramParser();
+        private static ProgramParser Parser;
 
         private static string Version => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
         
@@ -29,13 +29,26 @@ namespace Wul
 
         private static bool RunFile(string filePath)
         {
+            Parser = new ProgramParser(new FileInfo(filePath).Name);
             try
             {
                 WulInterpreter.Interpret(LoadFile(filePath));
             }
+            catch (ParseException pe)
+            {
+                string program = File.ReadLines(filePath).Skip(pe.Line-1).First();
+                Console.WriteLine(program);
+                string underline = pe.GetUnderline;
+                if (underline != null) Console.WriteLine(underline);
+                Console.WriteLine(pe.GetErrorMessage);
+                return false;
+            }
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
+#if DEBUG
+                Console.WriteLine(e.StackTrace);
+#endif
                 return false;
             }
             return true;
@@ -43,22 +56,35 @@ namespace Wul
 
         private static bool RunString(string input, Scope scope = null)
         {
+            Parser = new ProgramParser(null);
             Scope currentScope = scope ?? Global.Scope.EmptyChildScope();
 
             try
             {
                 var programNode = (ProgramNode) Parser.Parse(input.Trim());
                 var result = WulInterpreter.Interpret(programNode, currentScope);
-                if (result != null && !ReferenceEquals(result, Value.Nil))
+                if (result != null && result.Any())
                 {
-                    if (result is UString) result = new UString($"'{result.AsString()}'");
-                    IO.Print(new List<IValue> {result}, Global.Scope);
+                    foreach (var item in result)
+                    {
+                        if (ReferenceEquals(item, Value.Nil) && result.Count == 1) continue;
+                        var args = new List<IValue> {item is UString ? new UString($"'{item.AsString()}'") : item};
+                        IO.Print(args, Global.Scope);
+                    }
                 }
                 return true;
+            }
+            catch (ParseException pe)
+            {
+                string underline = pe.GetUnderline;
+                if (underline != null) Console.WriteLine(underline);
+                Console.WriteLine(pe.GetErrorMessage);
+                return false;
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
+                System.Diagnostics.Debug.WriteLine(e.StackTrace);
                 return false;
             }
         }
@@ -87,12 +113,14 @@ namespace Wul
                 string input = "";
 
                 Scope replScope = Global.Scope.EmptyChildScope();
+
                 Console.WriteLine($"wul interpreter {Version}");
                 Console.WriteLine("to leave type 'exit'");
 
                 while (input != "exit")
                 {
                     input = Console.ReadLine();
+                    System.Diagnostics.Debug.WriteLine(input);
                     RunString(input, replScope);
                 }
                 return ExitSuccess;

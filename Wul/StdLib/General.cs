@@ -78,15 +78,27 @@ namespace Wul.StdLib
         }
 
         [MagicFunction("lambda")]
+        [MagicFunction("->")] //TODO sugar -> (+ $1 $2)
         internal static IValue Lambda(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
-            var arguments = (ListNode) children[0];
-            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
+            List<string> argNames;
+            if (children.Length == 2)
+            {
+                var arguments = (ListNode) children[0];
+                argNames = arguments.Children
+                    .OfType<IdentifierNode>()
+                    .Select(a => a.Name)
+                    .ToList();
+            }
+            else
+            {
+                argNames = new List<string>();
+            }
 
-            var body = (ListNode) children[1];
-            var function = new Function(body, "unnamed function", argNames.ToList(), scope);
+            var body = (ListNode) children[children.Length == 2 ? 1 : 0];
+            var function = new Function(body, "unnamed function", argNames, scope);
 
             return function;
         }
@@ -160,7 +172,7 @@ namespace Wul.StdLib
 
             if (first.MetaType?.Type?.IsDefined ?? false)
             {
-                return first.MetaType.Type.Invoke(list, scope);
+                return first.MetaType.Type.Invoke(list, scope).First();
             }
             else
             {
@@ -177,16 +189,6 @@ namespace Wul.StdLib
             Environment.Exit((int) exitCode);
 
             return (Number) exitCode;
-        }
-
-        [NetFunction("unpack")]
-        internal static IValue Unpack(List<IValue> list, Scope scope)
-        {
-            if (!(list[0] is ListTable listTable)) return Value.Nil;
-
-            UnpackList unpack = new UnpackList(listTable);
-
-            return unpack;
         }
 
         [MagicFunction("time")]
@@ -234,6 +236,39 @@ namespace Wul.StdLib
             scope.Assign(identifier.Name, value);
 
             return value;
+        }
+
+        [MultiNetFunction("unpack")]
+        private static List<IValue> Unpack(List<IValue> list, Scope scope)
+        {
+            var result = new List<IValue>();
+            foreach (var item in list)
+            {
+                if (item is ListTable lt)
+                {
+                    result.AddRange(lt.AsList());
+                }
+                else
+                {
+                    result.Add(item);
+                }
+
+            }
+            return result;
+        }
+
+        [MultiNetFunction("return")]
+        private static List<IValue> Return(List<IValue> list, Scope scope)
+        {
+            switch (list.Count)
+            {
+                case 0:
+                    return Value.ListWith(Value.Nil);
+                case 1:
+                    return Value.ListWith(list.First());
+                default:
+                    return list;
+            }
         }
     }
 }

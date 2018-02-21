@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Wul.Interpreter.MetaTypes;
 using Wul.Parser;
 
@@ -27,18 +28,19 @@ namespace Wul.Interpreter.Types
         public override MetaType DefaultMetaType => MagicFunctionMetaType.Instance;
     }
 
-    class Function : IFunction
+    sealed class Function : IFunction
     {
-        public ListNode Body;
+        private readonly ListNode Body;
 
-        public Scope ParentScope { get; }
+        private Scope ParentScope { get; }
 
         public Function(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
+            Line = body.Line;
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            ParentScope = parentScope.CloseScope(body);
+            ParentScope = parentScope.MacroScope ? parentScope : parentScope.CloseScope(body);
             MetaType = FunctionMetaType.Instance;
         }
 
@@ -47,10 +49,11 @@ namespace Wul.Interpreter.Types
             Debug.WriteLine($"Deleting function {Name}");
         }
 
+        public int Line { get; }
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 
-        public IValue Evaluate(List<IValue> arguments, Scope scope)
+        public List<IValue> Evaluate(List<IValue> arguments, Scope scope)
         {
             Scope currentScope = ParentScope.EmptyChildScope();
 
@@ -69,12 +72,20 @@ namespace Wul.Interpreter.Types
                     currentScope[argName] = argValue;
                 } 
             }
+            // If the function has no named parameters, then bind them to $0, $1...
+            if (ArgumentNames.Count == 0)
+            {
+                currentScope["$args"] = new ListTable(arguments);
+                for(int i = 0; i < arguments.Count; ++i)
+                {
+                    currentScope["$" + i] = arguments[i];
+                }
+            }
 
-            IValue result = WulInterpreter.Interpret(Body, currentScope);
-            return result;
+            return WulInterpreter.Interpret(Body, currentScope);
         }
 
-        public virtual IValue Execute(ListNode list, Scope scope)
+        public List<IValue> Execute(ListNode list, Scope scope)
         {
             throw new NotImplementedException();
         }
@@ -99,8 +110,8 @@ namespace Wul.Interpreter.Types
 
         public object ToObject()
         {
-            //TODO
-            return null;
+            IValue action() => Evaluate(Value.EmptyList, null).First();
+            return (Func<IValue>) action;
         }
 
         public MetaType MetaType { get; set; }

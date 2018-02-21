@@ -14,22 +14,22 @@ namespace Wul.Interpreter.MetaTypes
         private NetObjectMetaType()
         {
             //Equality
-            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
+            Equal.Method = NetFunction.FromSingle(IdentityEqual, Equal.Name);
 
             //Arithmetic
-            Add.Method = new NetFunction(DoAdd, Add.Name);
+            Add.Method = NetFunction.FromSingle(DoAdd, Add.Name);
 
             //List 
-            At.Method = new NetFunction(AtKey, At.Name);
-            Set.Method = new NetFunction(SetKey, Set.Name);
+            At.Method = NetFunction.FromSingle(AtKey, At.Name);
+            Set.Method = NetFunction.FromSingle(SetKey, Set.Name);
 
             //Other
-            AsString.Method = new NetFunction(ConvertToString, AsString.Name);
-            Type.Method = new NetFunction(IdentityType, Type.Name);
-            ApplyMacro.Method = new NetFunction(InvokeMethod, Invoke.Name);
+            AsString.Method = NetFunction.FromSingle(ConvertToString, AsString.Name);
+            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
+            ApplyMacro.Method = NetFunction.FromSingle(InvokeMethod, Invoke.Name);
         }
 
-        public IValue AtKey(List<IValue> arguments, Scope s)
+        private IValue AtKey(List<IValue> arguments, Scope s)
         {
             ListNode list = (ListNode) arguments[0];
             NetObject netObj = (NetObject) list.Children[1].Eval(s);
@@ -38,7 +38,7 @@ namespace Wul.Interpreter.MetaTypes
             return netObj.Get(index.Name);
         }
 
-        public IValue SetKey(List<IValue> arguments, Scope s)
+        private IValue SetKey(List<IValue> arguments, Scope s)
         {
             ListNode list = (ListNode)arguments[0];
             NetObject netObj = (NetObject)list.Children[1].Eval(s);
@@ -50,14 +50,14 @@ namespace Wul.Interpreter.MetaTypes
             return value;
         }
 
-        public IValue ConvertToString(List<IValue> arguments, Scope s)
+        private IValue ConvertToString(List<IValue> arguments, Scope s)
         {
             NetObject obj = (NetObject) arguments[0];
 
             return new UString(obj.AsString());
         }
 
-        public IValue InvokeMethod(List<IValue> arguments, Scope s)
+        private IValue InvokeMethod(List<IValue> arguments, Scope s)
         {
             NetObject netObj = (NetObject)arguments[0];
             ListNode listNode = (ListNode)arguments[1];
@@ -71,7 +71,7 @@ namespace Wul.Interpreter.MetaTypes
         }
 
         //Do we want this for all arithmetic methods?
-        public IValue DoAdd(List<IValue> arguments, Scope s)
+        private IValue DoAdd(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(a =>
             {

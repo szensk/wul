@@ -35,11 +35,25 @@ namespace Wul.Parser
 
     public class ProgramParser : SyntaxNodeParser
     {
+        private readonly string FileName;
+
+        public ProgramParser(string fileName = null)
+        {
+            FileName = fileName;
+        }
+
         private readonly ListParser listParser = new ListParser();
 
         public override SyntaxNode Parse(string token, SyntaxNode parent = null)
         {
+            return Parse(token, 1);
+        }
+
+        private SyntaxNode Parse(string token, int lineCount)
+        {
             string program = token.Trim();
+            //Maps from line # to last character of that line
+            Dictionary<int, int> lineMap = new Dictionary<int, int>();
 
             if (program == "")
             {
@@ -55,7 +69,12 @@ namespace Wul.Parser
 
             while (currentIndex < program.Length)
             {
-                if (program[currentIndex] == '(')
+                if (program[currentIndex] == '\n')
+                {
+                    lineMap.Add(lineCount, currentIndex);
+                    lineCount++;
+                }
+                else if (program[currentIndex] == '(')
                 {
                     openParenthesis++;
                 }
@@ -66,7 +85,16 @@ namespace Wul.Parser
                 else if (program[currentIndex] == ';')
                 {
                     int endIndex = program.IndexOf('\n', currentIndex);
-                    currentIndex = endIndex == -1 ? program.Length : endIndex + 1;
+                    if (endIndex != -1)
+                    {
+                        lineMap.Add(lineCount, currentIndex);
+                        lineCount++;
+                        currentIndex = endIndex + 1;
+                    }
+                    else
+                    {
+                        currentIndex = program.Length;
+                    }
                     continue;
                 }
 
@@ -79,14 +107,18 @@ namespace Wul.Parser
                 if (openParenthesis > 0 && openParenthesis == closeParenthesis)
                 {
                     string substring = program.Substring(startIndex, currentIndex - startIndex);
-                    ListNode expression = (ListNode) listParser.Parse(substring, currentProgram);
+                    ListNode expression = (ListNode) listParser.Parse(substring, lineCount, currentProgram);
                     if (expression != null) expressions.Add(expression);
                     startIndex = currentIndex;
                 }
             }
 
             if (startIndex < program.Length && openParenthesis > closeParenthesis)
-                throw new Exception("unfinished list");
+            {
+                int lineEnd;
+                if (!lineMap.TryGetValue(lineCount - 1, out lineEnd)) lineEnd = -1;
+                throw new ParseException(FileName, lineCount, 0, currentIndex - lineEnd - 1, "unfinished list");
+            }
 
             currentProgram.Expressions.AddRange(expressions);
             return currentProgram;

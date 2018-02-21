@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
@@ -26,7 +27,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.At.Invoke(new List<IValue>{ first, (Number) 0}, scope);
+            return first.MetaType.At.Invoke(new List<IValue>{ first, (Number) 0}, scope).First();
         }
 
         [NetFunction("last")]
@@ -34,9 +35,9 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            Number count = (Number) first.MetaType.Count.Invoke(list, scope);
+            Number count = (Number) first.MetaType.Count.Invoke(list, scope).First();
 
-            return first.MetaType.At.Invoke(new List<IValue> {first, (Number) (count.Value - 1)}, scope);
+            return first.MetaType.At.Invoke(new List<IValue> {first, (Number) (count.Value - 1)}, scope).First();
         }
 
         [NetFunction("rem")]
@@ -44,7 +45,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Remainder.Invoke(list, scope);
+            return first.MetaType.Remainder.Invoke(list, scope).First();
         }
 
         [MagicFunction("at")]
@@ -52,15 +53,14 @@ namespace Wul.StdLib
         {
             IValue first = list.Children[1].Eval(scope);
 
-            //TODO UnpackList
             if (first.Type == MapType.Instance || first is NetObject)
             {
-                return first.MetaType.At.Invoke(new List<IValue> {list}, scope);
+                return first.MetaType.At.Invoke(new List<IValue> {list}, scope).First();
             }
             else
             {
                 var evaluatedArguments = list.Children.Skip(1).Select(c => c.EvalOnce(scope)).ToList();
-                return first.MetaType.At.Invoke(evaluatedArguments, scope);
+                return first.MetaType.At.Invoke(evaluatedArguments, scope).First();
             }
         }
 
@@ -71,12 +71,12 @@ namespace Wul.StdLib
 
             if (first.Type == MapType.Instance)
             {
-                return first.MetaType.Set.Invoke(new List<IValue> { list }, scope);
+                return first.MetaType.Set.Invoke(new List<IValue> { list }, scope).First();
             }
             else
             {
                 var evaluatedArguments = list.Children.Skip(1).Select(c => c.EvalOnce(scope)).ToList();
-                return first.MetaType.Set.Invoke(evaluatedArguments, scope);
+                return first.MetaType.Set.Invoke(evaluatedArguments, scope).First();
             }
         }
 
@@ -85,7 +85,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            Number count = (Number) first.MetaType.Count.Invoke(list, scope);
+            Number count = (Number) first.MetaType.Count.Invoke(list, scope).First();
 
             return count == 0 ? Bool.True : Bool.False;
         }
@@ -96,7 +96,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Count.Invoke(list, scope);
+            return first.MetaType.Count.Invoke(list, scope).First();
         }
 
         [NetFunction("push")]
@@ -104,7 +104,7 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Push.Invoke(list, scope);
+            return first.MetaType.Push.Invoke(list, scope).First();
         }
 
         [NetFunction("pop")]
@@ -112,7 +112,30 @@ namespace Wul.StdLib
         {
             IValue first = list.First();
 
-            return first.MetaType.Pop.Invoke(list, scope);
+            return first.MetaType.Pop.Invoke(list, scope).First();
+        }
+
+        [NetFunction("map")]
+        internal static IValue Map(List<IValue> list, Scope scope)
+        {
+            var listToMap = list[0] as ListTable;
+            if (listToMap == null && list[0] is Interpreter.Types.Range r)
+            {
+                listToMap = r.AsList();
+            }
+            var callback = list[1];
+            var func = callback.MetaType.Invoke;
+
+            if (!func.IsDefined)
+            {
+                throw new Exception("Callback is not a function or invokeable");
+            }
+
+            var result = listToMap.AsList()
+                .Select(item => func.Invoke(Value.ListWith(callback, item), scope)
+                .First());
+
+            return new ListTable(result);
         }
     }
 }

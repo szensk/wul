@@ -21,15 +21,20 @@ namespace Wul.Interpreter
         public Scope Parent;
         private readonly Dictionary<string, Binding> BoundVariables;
 
-        public Scope(Scope parent = null)
+        public bool MacroScope { get; }
+        public List<string> Usings { get; private set; }
+
+        public Scope(Scope parent = null, bool macroScope = false)
         {
+            MacroScope = macroScope;
             Parent = parent;
             BoundVariables = new Dictionary<string, Binding>();
+            Usings = parent?.Usings.Select(s=>s).ToList() ?? new List<string>();
         }
 
-        public Scope EmptyChildScope()
+        public Scope EmptyChildScope(bool macroScope = false)
         {
-            return new Scope(this);
+            return new Scope(this, macroScope);
         }
 
         public IValue Get(string key)
@@ -102,7 +107,7 @@ namespace Wul.Interpreter
             var identifierNodes = body.IdentifierNodes();
             var referencedNames = identifierNodes.Select(i => i.Name).ToHashSet();
 
-            Scope closedScope = new Scope();
+            Scope closedScope = new Scope { Usings = Usings.ToList() };
 
             foreach (string name in referencedNames)
             {
@@ -119,7 +124,7 @@ namespace Wul.Interpreter
         //constructs a new closed scope, including unreferenced bindings
         public Scope CompletelyCloseScope()
         {
-            Scope closedScope = new Scope();
+            Scope closedScope = new Scope { Usings = Usings.ToList() };
 
             Scope currentScope = this;
             while (currentScope != null)
