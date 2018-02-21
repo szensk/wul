@@ -14,9 +14,11 @@ namespace Wul.Interpreter.MetaTypes
 
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
+
+            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
         }
 
-        public IValue InvokeMagicFunction(List<IValue> arguments, Scope s)
+        private IValue InvokeMagicFunction(List<IValue> arguments, Scope s)
         {
             IFunction function = (IFunction) arguments[0];
             ListNode listNode = (ListNode) arguments[1];
@@ -34,9 +36,11 @@ namespace Wul.Interpreter.MetaTypes
 
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
+
+            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
         }
 
-        public IValue ApplyMacroFunction(List<IValue> arguments, Scope s)
+        private IValue ApplyMacroFunction(List<IValue> arguments, Scope s)
         {
             IFunction function = (IFunction)arguments[0];
             ListNode listNode = (ListNode)arguments[1];
