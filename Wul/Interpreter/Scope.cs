@@ -20,18 +20,21 @@ namespace Wul.Interpreter
     {
         public Scope Parent;
         private readonly Dictionary<string, Binding> BoundVariables;
+
+        public bool MacroScope { get; }
         public List<string> Usings { get; private set; }
 
-        public Scope(Scope parent = null)
+        public Scope(Scope parent = null, bool macroScope = false)
         {
+            MacroScope = macroScope;
             Parent = parent;
             BoundVariables = new Dictionary<string, Binding>();
             Usings = parent?.Usings.Select(s=>s).ToList() ?? new List<string>();
         }
 
-        public Scope EmptyChildScope()
+        public Scope EmptyChildScope(bool macroScope = false)
         {
-            return new Scope(this);
+            return new Scope(this, macroScope);
         }
 
         public IValue Get(string key)

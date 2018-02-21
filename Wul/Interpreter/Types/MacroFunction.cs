@@ -6,11 +6,11 @@ using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
-    class MacroFunction : IFunction
+    sealed class MacroFunction : IFunction
     {
-        public ListNode Body;
+        private readonly ListNode Body;
 
-        public Scope ParentScope { get; }
+        private Scope ParentScope { get; }
 
         public MacroFunction(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
@@ -18,6 +18,7 @@ namespace Wul.Interpreter.Types
             Body = body;
             ArgumentNames = argumentNames;
             ParentScope = parentScope.CloseScope(body);
+            ParentScope.Parent = parentScope;
             MetaType = MagicFunctionMetaType.Instance;
         }
 
@@ -29,9 +30,9 @@ namespace Wul.Interpreter.Types
             throw new NotImplementedException();
         }
 
-        public virtual IValue Execute(ListNode list, Scope scope)
+        public IValue Execute(ListNode list, Scope scope)
         {
-            Scope currentScope = ParentScope.EmptyChildScope();
+            Scope currentScope = ParentScope.EmptyChildScope(macroScope: true);
 
             var arguments = list.Children.ToArray();
 

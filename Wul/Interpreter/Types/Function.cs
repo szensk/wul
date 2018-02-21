@@ -38,7 +38,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            ParentScope = parentScope.CloseScope(body);
+            ParentScope = parentScope.MacroScope ? parentScope : parentScope.CloseScope(body);
             MetaType = FunctionMetaType.Instance;
         }
 
