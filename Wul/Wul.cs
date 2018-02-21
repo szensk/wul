@@ -17,7 +17,7 @@ namespace Wul
         private const int ExitSuccess = 0;
         private const int ExitError = 1;
 
-        private static readonly ProgramParser Parser = new ProgramParser();
+        private static ProgramParser Parser;
 
         private static string Version => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
         
@@ -29,6 +29,7 @@ namespace Wul
 
         private static bool RunFile(string filePath)
         {
+            Parser = new ProgramParser(new FileInfo(filePath).Name);
             try
             {
                 WulInterpreter.Interpret(LoadFile(filePath));
@@ -46,6 +47,7 @@ namespace Wul
 
         private static bool RunString(string input, Scope scope = null)
         {
+            Parser = new ProgramParser(null);
             Scope currentScope = scope ?? Global.Scope.EmptyChildScope();
 
             try
@@ -62,6 +64,13 @@ namespace Wul
                     }
                 }
                 return true;
+            }
+            catch (ParseException pe)
+            {
+                string underline = pe.GetUnderline;
+                if (underline != null) Console.WriteLine(underline);
+                Console.WriteLine(pe.GetErrorMessage);
+                return false;
             }
             catch (Exception e)
             {

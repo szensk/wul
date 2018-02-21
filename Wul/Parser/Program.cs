@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Wul.Parser
 {
@@ -35,6 +36,13 @@ namespace Wul.Parser
 
     public class ProgramParser : SyntaxNodeParser
     {
+        private readonly string FileName;
+
+        public ProgramParser(string fileName)
+        {
+            FileName = fileName;
+        }
+
         private readonly ListParser listParser = new ListParser();
 
         public override SyntaxNode Parse(string token, SyntaxNode parent = null)
@@ -86,7 +94,10 @@ namespace Wul.Parser
             }
 
             if (startIndex < program.Length && openParenthesis > closeParenthesis)
-                throw new Exception("unfinished list");
+            {
+                int line = token.Substring(0, startIndex).Count(c => c == '\n');
+                throw new ParseException(FileName, line, startIndex, currentIndex, "unfinished list");
+            }
 
             currentProgram.Expressions.AddRange(expressions);
             return currentProgram;
