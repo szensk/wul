@@ -260,7 +260,15 @@ namespace Wul.StdLib
         [MultiNetFunction("return")]
         private static List<IValue> Return(List<IValue> list, Scope scope)
         {
-            return list;
+            switch (list.Count)
+            {
+                case 0:
+                    return Value.ListWith(Value.Nil);
+                case 1:
+                    return Value.ListWith(list.First());
+                default:
+                    return list;
+            }
         }
     }
 }
