@@ -5,7 +5,7 @@ using Wul.Parser;
 
 namespace Wul.Interpreter.Types
 {
-    class MagicFunction : IFunction
+    sealed class MagicFunction : IFunction
     {
         private readonly Func<ListNode, Scope, IValue> Body;
 
@@ -24,7 +24,7 @@ namespace Wul.Interpreter.Types
             throw new NotImplementedException();
         }
 
-        public virtual IValue Execute(ListNode list, Scope scope)
+        public IValue Execute(ListNode list, Scope scope)
         {
             return Body(list, scope);
         }

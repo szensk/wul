@@ -27,11 +27,11 @@ namespace Wul.Interpreter.Types
         public override MetaType DefaultMetaType => MagicFunctionMetaType.Instance;
     }
 
-    class Function : IFunction
+    sealed class Function : IFunction
     {
-        public ListNode Body;
+        private readonly ListNode Body;
 
-        public Scope ParentScope { get; }
+        private Scope ParentScope { get; }
 
         public Function(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
@@ -69,12 +69,21 @@ namespace Wul.Interpreter.Types
                     currentScope[argName] = argValue;
                 } 
             }
+            // If the function has no named parameters, then bind them to $0, $1...
+            if (ArgumentNames.Count == 0)
+            {
+                currentScope["$args"] = new ListTable(arguments);
+                for(int i = 0; i < arguments.Count; ++i)
+                {
+                    currentScope["$" + i] = arguments[i];
+                }
+            }
 
             IValue result = WulInterpreter.Interpret(Body, currentScope);
             return result;
         }
 
-        public virtual IValue Execute(ListNode list, Scope scope)
+        public IValue Execute(ListNode list, Scope scope)
         {
             throw new NotImplementedException();
         }
@@ -99,7 +108,7 @@ namespace Wul.Interpreter.Types
 
         public object ToObject()
         {
-            //TODO
+            //TODO Should return a Func<object...>
             return null;
         }
 
