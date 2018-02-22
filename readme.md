@@ -1,14 +1,14 @@
 wul
 ========
-A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. Written in C#, before I read about parsers and interpreters, it is a bit odd. While the simple syntax is borrowed from Lisp, it is not a proper lisp. Lua's metatables are the inspiration for wul's metatypes. 
+A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. Written in C#, before I read about parsers and interpreters, it is a bit odd. While the simple syntax is borrowed from Lisp, it isn't exactly lisp.  
 
 Types
 ======
-There are seven basic types: Bool, Number, String, List, Map, Range, Function. Strings come in two varieties, interpolated (e.g. `"hello {world}."`) and regular (e.g. `'this will appear exactly {as seen here}'`). There are also two types of functions. Regular functions operate as you expect but macro functions are passed unevaluated syntax nodes instead of value arguments and can return quoted syntax. These syntax nodes may be evaluated using the `eval` function. This makes it easy to implementing short circuit operators or control flow (see [unpack.wul](Examples/while.wul)).
+There are seven basic types: Bool, Number, String, List, Map, Range, Function. Strings come in two varieties, interpolated (e.g. `"hello {world}."`) and regular (e.g. `'this will appear exactly {as seen here}'`). There are also two types of functions. Regular functions operate as you expect but macro functions are passed unevaluated syntax nodes instead of value arguments and can return quoted syntax. These syntax nodes may be evaluated using the `eval` function. This makes it easy to implementing short circuit operators or control flow (see [while.wul](Examples/while.wul)).
 
 MetaTypes
 =========
-A metatype contains methods that define how a value interacts with existing functions. Most values, except the value nil, have a metatype. By default, values are constructed with their type's metatype. You can define new or override existing functions on a metatype at either the value or type level. For example, you can define the `invoke` metamethod on a map value. This allows that map instance to be used like a function. The map itself may be accessed in the variable `self`. Using these properties, it is possible construct an object-oriented programming system (see [unpack.wul](Examples/unpack.wul)). Furthermore, this makes recursive unnamed functions very simple: `(self arguments)`. 
+A metatype contains methods that define how a value interacts with existing functions. Most values, except the value nil, have a metatype. By default, values are constructed with their type's metatype. You can define new or override existing functions on a metatype at either the value or type level. For example, you can define the `invoke` metamethod on a map value. This allows that map instance to be used like a function. The map itself may be accessed in the variable `self` (see [invoke.wul](Examples/invoke.wul)). Using these properties, it is possible construct an object-oriented programming system (see [unpack.wul](Examples/unpack.wul)). Furthermore, this makes recursive unnamed functions very simple: `(self arguments)`. 
 
 .NET Interoperability
 =====================
