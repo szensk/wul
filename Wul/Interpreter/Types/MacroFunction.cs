@@ -24,6 +24,7 @@ namespace Wul.Interpreter.Types
         }
 
         public int Line { get; }
+        public string FileName => Body.File;
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 

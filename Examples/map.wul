@@ -1,0 +1,13 @@
+(defn map (func list) 
+	(if (empty? list) 
+		(then list) 
+		(else 
+			(.. 
+				((func (first list))) 
+				(map func (rem list))
+			)
+		)
+	)
+)
+
+(print (map (lambda (a) (+ a 1)) (list [1 5])))

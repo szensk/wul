@@ -192,6 +192,10 @@ namespace Wul.Interpreter
                     System.Diagnostics.Debug.WriteLine($"macro -> {node}");
                     value = Interpret(node, currentScope) ?? Value.EmptyList;
                 }
+                else
+                {
+                    value = Value.ListWith(firstValue);
+                }
             }
             else
             {
