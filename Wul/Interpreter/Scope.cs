@@ -21,6 +21,7 @@ namespace Wul.Interpreter
         public Scope Parent;
         private readonly Dictionary<string, Binding> BoundVariables;
 
+        public int Count => BoundVariables.Count;
         public bool MacroScope { get; }
         public List<string> Usings { get; private set; }
 

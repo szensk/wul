@@ -26,6 +26,10 @@ namespace Wul.Parser
                 {
                     identifierNodes.Add(identifierNode);
                 }
+                if (node is InterpolatedStringNode interpolatedString)
+                {
+                    identifierNodes.AddRange(interpolatedString.ReferencedNames);
+                }
                 if (node is ListNode listNode)
                 {
                     identifierNodes.AddRange(listNode.IdentifierNodes());

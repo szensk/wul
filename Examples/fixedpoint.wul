@@ -1,0 +1,21 @@
+(defn cos (n) (:: System.Math.Cos n))
+(defn abs (n) (:: System.Math.Abs n))
+
+(defn fixed-point (f n) 
+	(if (= n nil)
+		(then (fixed-point f 0))
+		(else 
+			(let val (f n)
+				(do 
+					(print "{(debug.name f)}({n}) = {val}")
+					(if (< (abs (- val n)) 0.001)
+						(then n)
+						(else (fixed-point f val))
+					)
+				)
+			)
+		)
+	)
+)
+
+(print (fixed-point cos))
