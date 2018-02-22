@@ -139,5 +139,35 @@ namespace Unit.Test
             Assert.AreEqual(1, node.Expressions.Count);
             Assert.AreEqual(4, node.Expressions.First().Children.Count);
         }
+
+        [TestMethod]
+        public void ProgramParser_CommentWithParenthesis()
+        {
+            //Arrange
+            const string program = "(defn cos (a) (identity a) \r\n;(that is it)\r\n)";
+            ProgramParser parser = new ProgramParser();
+
+            //Act
+            ProgramNode node = (ProgramNode)parser.Parse(program);
+
+            //Assert
+            Assert.AreEqual(1, node.Expressions.Count);
+            Assert.AreEqual(4, node.Expressions.First().Children.Count);
+        }
+
+        [TestMethod]
+        public void ProgramParser_LeadingCommentWithParenthesis()
+        {
+            //Arrange
+            const string program = "; test\r\n; (that is it)\r\n(print 'ok')";
+            ProgramParser parser = new ProgramParser();
+
+            //Act
+            ProgramNode node = (ProgramNode)parser.Parse(program);
+
+            //Assert
+            Assert.AreEqual(1, node.Expressions.Count);
+            Assert.AreEqual(2, node.Expressions.First().Children.Count);
+        }
     }
 }

@@ -117,7 +117,7 @@ namespace Wul.Parser
             return (identifer?.Name.EndsWith(':') ?? false) && !(identifer?.Name.StartsWith(':') ?? false);
         }
 
-        private string GetInnerString(string token)
+        public static string GetInnerString(string token)
         {
             if (token.Length < 2) return null;
 
@@ -128,6 +128,8 @@ namespace Wul.Parser
             {
                 int lineIndex = token.IndexOf('\n');
                 openIndex = token.IndexOf('(', lineIndex);
+                var nextToken = token.Substring(lineIndex + 1);
+                return GetInnerString(nextToken);
             }
             int lastCloseIndex = token.LastIndexOf(')');
 
