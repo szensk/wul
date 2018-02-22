@@ -6,7 +6,7 @@ using Wul.Parser;
 
 namespace Wul.Interpreter
 {
-    internal class Binding
+    public class Binding
     {
         public Binding(IValue value)
         {
@@ -19,9 +19,8 @@ namespace Wul.Interpreter
     public class Scope
     {
         public Scope Parent;
-        private readonly Dictionary<string, Binding> BoundVariables;
+        public Dictionary<string, Binding> BoundVariables { get; }
 
-        public int Count => BoundVariables.Count;
         public bool MacroScope { get; }
         public List<string> Usings { get; private set; }
 

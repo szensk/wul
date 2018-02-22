@@ -1,5 +1,4 @@
-(defn cos (n) (:: System.Math.Cos n))
-(defn abs (n) (:: System.Math.Abs n))
+(import Examples.math into math)
 
 (defn fixed-point (f n precision) 
 	(if (= n nil)
@@ -8,7 +7,7 @@
 			(let val (f n)
 				(do 
 					(print "{(debug.name f)}({n}) = {val}")
-					(if (< (abs (- val n)) (?? precision 0.001))
+					(if (< (math.abs (- val n)) (?? precision 0.001))
 						(then n)
 						(else (fixed-point f val precision))
 					)
@@ -18,4 +17,4 @@
 	)
 )
 
-(print (fixed-point cos precision: 0.1))
+(print (fixed-point math.cos precision: 0.1))

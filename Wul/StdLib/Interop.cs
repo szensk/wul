@@ -74,6 +74,7 @@ namespace Wul.StdLib
             {
                 string fullName = string.IsNullOrEmpty(use) ? name : use + "." + name;
                 int lastDot = fullName.LastIndexOf('.');
+                if (lastDot == -1) continue;
                 string className = fullName.Substring(0, lastDot);
                 string methodName = fullName.Substring(lastDot + 1);
 
