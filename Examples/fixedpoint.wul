@@ -1,4 +1,4 @@
-(import Examples.math into Math)
+(import math into Math)
 
 (defn fixed-point (f n precision) 
 	(if (= n nil)

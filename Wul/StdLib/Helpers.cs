@@ -43,6 +43,7 @@ namespace Wul.StdLib
             return (ProgramNode) parser.Parse(programText);
         }
 
+        // full file name
         public static ProgramNode ParseFile(string fileName)
         {
             ProgramParser parser = new ProgramParser(fileName);
@@ -50,6 +51,7 @@ namespace Wul.StdLib
             return Parse(contents, parser);
         }
 
+        // full file name
         public static List<IValue> LoadFile(string fileName, Scope scope)
         {
             ProgramNode program = ParseFile(fileName);

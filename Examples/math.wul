@@ -1,5 +1,6 @@
 ; math.wul
 ; std lib definitions 
+(import module)
 (using System.Math)
 
 (defn Cos (n) (:: Cos n))
@@ -15,4 +16,5 @@
 (defn Log (n) (:: Log n))
 (defn Log10 (n) (:: Log10 n))
 
+(print "calling method in module.wul: {(module.GetInternal)}")
 (print "loaded math.wul")

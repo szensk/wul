@@ -29,12 +29,14 @@ namespace Wul.StdLib
                 throw new Exception("wrong number of arguments for import");
             }
 
+            //Run the file in a new empty scope
+            Scope importScope = Global.Scope.EmptyChildScope();
             string fileName = fileNameIdentifier.Name.Replace('.', Path.DirectorySeparatorChar) + ".wul";
             string targetName = importIdentifier.Name;
+            
+            string cwd = list.File != null ? new FileInfo(list.File).DirectoryName : Directory.GetCurrentDirectory();
+            System.Diagnostics.Debug.WriteLine($"import relative to {(list.File != null ? "file" : "cwd")}: {cwd}");
 
-            Scope importScope = Global.Scope.EmptyChildScope();
-
-            string cwd = Directory.GetCurrentDirectory();
             string fullFileName = Path.Combine(cwd, fileName);
             var fileInfo = new FileInfo(fullFileName);
             if (fileInfo.Exists)

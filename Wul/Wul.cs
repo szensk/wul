@@ -29,7 +29,7 @@ namespace Wul
 
         private static bool RunFile(string filePath)
         {
-            Parser = new ProgramParser(new FileInfo(filePath).Name);
+            Parser = new ProgramParser(filePath);
             try
             {
                 WulInterpreter.Interpret(LoadFile(filePath));
