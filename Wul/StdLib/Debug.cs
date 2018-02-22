@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
@@ -51,6 +52,7 @@ namespace Wul.StdLib
             if (first is Function func)
             {
                 type = "Wul";
+                source = func.FileName;
             }
             else if (first is NetFunction net)
             {
@@ -63,9 +65,21 @@ namespace Wul.StdLib
             else if (first is MacroFunction macro)
             {
                 type = "Macro";
+                source = macro.FileName;
             }
 
             return new NetObject($"\tName: {name}\n\tType: {type}\n\tSource: {source}\n\tLine: {line}");
+        }
+
+        [NetFunction("debug.name")]
+        internal static IValue GetNameOfValue(List<IValue> list, Scope s)
+        {
+            var first = list[0];
+            if (first is IFunction func)
+            {
+                return new UString(func.Name);
+            }
+            return Value.Nil;
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Wul.Interpreter.Types
             Name = name;
             Body = body;
             ArgumentNames = argumentNames;
-            ParentScope = parentScope.MacroScope ? parentScope : parentScope.CloseScope(body);
+            ParentScope = parentScope.CloseScope(body);
             MetaType = FunctionMetaType.Instance;
         }
 
@@ -50,6 +50,7 @@ namespace Wul.Interpreter.Types
         }
 
         public int Line { get; }
+        public string FileName => Body.File;
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 

@@ -1,0 +1,20 @@
+; math.wul
+; std lib definitions 
+(import module)
+(using System.Math)
+
+(defn Cos (n) (:: Cos n))
+(defn Sin (n) (:: Sin n))
+(defn Tan (n) (:: Tan n))
+(defn Abs (n) (:: Abs n))
+(defn Sqrt (n) (:: Sqrt n))
+(defn Max (a b) (:: Max a b))
+(defn Min (a b) (:: Min a b))
+(defn Round (n) (:: Round n))
+(defn Floor (n) (:: Floor n))
+(defn Ceil (n) (:: Ceiling n))
+(defn Log (n) (:: Log n))
+(defn Log10 (n) (:: Log10 n))
+
+(print "calling method in module.wul: {(module.GetInternal)}")
+(print "loaded math.wul")

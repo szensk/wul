@@ -1,0 +1,14 @@
+; lambdas with no formal argument list have their arguments bound to $args
+; the elements are also bound to $0, $1 and so on
+
+(def countArgs (lambda (# $args)))
+
+(print (countArgs)) ;prints 0
+(print (countArgs 1 2 3)) ; prints 3
+(print (countArgs (unpack (list [0 99])))) ; prints 100
+
+(def add (-> (+ $0 $1))) 
+;equivalent to
+(def add2 (lambda (a b) (+ a b)))
+
+(print ( 5 6)) ; prints 11

@@ -13,8 +13,11 @@ namespace Wul.Parser
 
         public SyntaxNode Parent { get; }
 
-        protected SyntaxNode(SyntaxNode parent)
+        public string File { get; }
+
+        protected SyntaxNode(SyntaxNode parent, string file = null)
         {
+            File = file ?? parent?.File;
             Parent = parent;
         }
 

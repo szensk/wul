@@ -24,6 +24,7 @@ namespace Wul.Interpreter.Types
         }
 
         public int Line { get; }
+        public string FileName => Body.File;
         public string Name { get; }
         public List<string> ArgumentNames { get; }
 
@@ -34,7 +35,7 @@ namespace Wul.Interpreter.Types
 
         public List<IValue> Execute(ListNode list, Scope scope)
         {
-            Scope currentScope = ParentScope.EmptyChildScope(macroScope: true);
+            Scope currentScope = ParentScope.EmptyChildScope();
 
             var arguments = list.Children.ToArray();
 

@@ -26,6 +26,10 @@ namespace Wul.Parser
                 {
                     identifierNodes.Add(identifierNode);
                 }
+                if (node is InterpolatedStringNode interpolatedString)
+                {
+                    identifierNodes.AddRange(interpolatedString.ReferencedNames);
+                }
                 if (node is ListNode listNode)
                 {
                     identifierNodes.AddRange(listNode.IdentifierNodes());
@@ -110,10 +114,10 @@ namespace Wul.Parser
         private bool IsNamedParameter(SyntaxNode item)
         {
             var identifer = item as IdentifierNode;
-            return identifer?.Name.EndsWith(':') ?? false;
+            return (identifer?.Name.EndsWith(':') ?? false) && !(identifer?.Name.StartsWith(':') ?? false);
         }
 
-        private string GetInnerString(string token)
+        public static string GetInnerString(string token)
         {
             if (token.Length < 2) return null;
 
@@ -124,6 +128,8 @@ namespace Wul.Parser
             {
                 int lineIndex = token.IndexOf('\n');
                 openIndex = token.IndexOf('(', lineIndex);
+                var nextToken = token.Substring(lineIndex + 1);
+                return GetInnerString(nextToken);
             }
             int lastCloseIndex = token.LastIndexOf(')');
 

@@ -62,11 +62,11 @@ namespace Wul.StdLib
                     return new NetObject(o);
             }
         }
-        
+
+        //TODO load assemblies on demand
+        //TODO cache method resolution: stored at a scope level, must know the name and the argument types
         private static object InvokeNetFunction(Scope scope, string name, params IValue[] arguments)
         {
-            //TODO load assemblies on demand
-            //TODO no dots?
             var usings = new List<string> {""};
             usings.AddRange(scope.Usings);
 
@@ -74,6 +74,7 @@ namespace Wul.StdLib
             {
                 string fullName = string.IsNullOrEmpty(use) ? name : use + "." + name;
                 int lastDot = fullName.LastIndexOf('.');
+                if (lastDot == -1) continue;
                 string className = fullName.Substring(0, lastDot);
                 string methodName = fullName.Substring(lastDot + 1);
 

@@ -33,7 +33,7 @@ namespace Wul.Interpreter.MetaTypes
 
             if (left == null || right == null) return Bool.False;
 
-            return left == right ? Bool.True : Bool.False;
+            return Equals(left, right) ? Bool.True : Bool.False;
         }
 
         private IValue RangeIndex(List<IValue> arguments, Scope s)

@@ -6,7 +6,7 @@ using Wul.Parser;
 
 namespace Wul.Interpreter
 {
-    internal class Binding
+    public class Binding
     {
         public Binding(IValue value)
         {
@@ -19,22 +19,19 @@ namespace Wul.Interpreter
     public class Scope
     {
         public Scope Parent;
-        private readonly Dictionary<string, Binding> BoundVariables;
-
-        public bool MacroScope { get; }
+        public Dictionary<string, Binding> BoundVariables { get; }
         public List<string> Usings { get; private set; }
 
-        public Scope(Scope parent = null, bool macroScope = false)
+        public Scope(Scope parent = null)
         {
-            MacroScope = macroScope;
             Parent = parent;
             BoundVariables = new Dictionary<string, Binding>();
             Usings = parent?.Usings.Select(s=>s).ToList() ?? new List<string>();
         }
 
-        public Scope EmptyChildScope(bool macroScope = false)
+        public Scope EmptyChildScope()
         {
-            return new Scope(this, macroScope);
+            return new Scope(this);
         }
 
         public IValue Get(string key)

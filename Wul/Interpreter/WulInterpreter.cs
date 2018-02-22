@@ -181,8 +181,8 @@ namespace Wul.Interpreter
             else if (isMacroFunction)
             {
                 var function = firstValue.MetaType.ApplyMacro;
-                //TODO evaluate macro arguments first
 
+                //TODO Bug: Functions returned by a macro are executed in currentScope which is not the lexical scope!
                 firstValue = function.Invoke(new List<IValue>{ firstValue, list}, currentScope).FirstOrDefault();
                 //TODO how to avoid the ToSyntaxNode step?
                 //Problem is that ListNodes are evaluated to ListTable
@@ -191,6 +191,10 @@ namespace Wul.Interpreter
                 {
                     System.Diagnostics.Debug.WriteLine($"macro -> {node}");
                     value = Interpret(node, currentScope) ?? Value.EmptyList;
+                }
+                else
+                {
+                    value = Value.ListWith(firstValue);
                 }
             }
             else

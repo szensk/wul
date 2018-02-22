@@ -7,14 +7,14 @@ namespace Wul.Parser
     {
         public List<ListNode> Expressions { get; }
 
-        public ProgramNode(List<ListNode> expressions) : base(null)
+        public ProgramNode(List<ListNode> expressions, string file) : base(null, file)
         {
             Expressions = expressions;
         }
 
         public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
         {
-            return new ProgramNode(Expressions);
+            return new ProgramNode(Expressions, File);
         }
 
         public override string AsString()
@@ -57,7 +57,7 @@ namespace Wul.Parser
 
             if (program == "")
             {
-                return new ProgramNode(new List<ListNode>());
+                return new ProgramNode(new List<ListNode>(), FileName);
             }
 
             List<ListNode> expressions = new List<ListNode>();
@@ -65,7 +65,7 @@ namespace Wul.Parser
             int openParenthesis = 0;
             int closeParenthesis = 0;
             int startIndex = 0;
-            ProgramNode currentProgram = new ProgramNode(new List<ListNode>());
+            ProgramNode currentProgram = new ProgramNode(new List<ListNode>(), FileName);
 
             while (currentIndex < program.Length)
             {

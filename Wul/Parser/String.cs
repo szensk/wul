@@ -48,13 +48,31 @@ namespace Wul.Parser
 
         public override bool Interpolated => true;
 
+        public IEnumerable<IdentifierNode> ReferencedNames
+        {
+            get
+            {
+                return _chunks.Select(c => c.Interpolation)
+                    .Where(c => c != null)
+                    .SelectMany(c =>
+                    {
+                        if (c is IdentifierNode id) return new List<IdentifierNode> {id};
+                        if (c is ListNode ln) return ln.IdentifierNodes();
+                        return new List<IdentifierNode>();
+                    });
+            }
+        }
+
         public override string Value(Scope scope = null)
         {
             var strings = _chunks.Select(c =>
                 {
                     if (c.String != null) return c.String;
                     //TODO call tostring metamethod
-                    if (c.Interpolation != null) return WulInterpreter.Interpret(c.Interpolation, scope).First().AsString();
+                    if (c.Interpolation != null)
+                    {
+                        return WulInterpreter.Interpret(c.Interpolation, scope).First().AsString();
+                    }
                     return null;
                 })
                 .Where(s => s != null);
