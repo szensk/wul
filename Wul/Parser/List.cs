@@ -114,7 +114,7 @@ namespace Wul.Parser
         private bool IsNamedParameter(SyntaxNode item)
         {
             var identifer = item as IdentifierNode;
-            return identifer?.Name.EndsWith(':') ?? false;
+            return (identifer?.Name.EndsWith(':') ?? false) && !(identifer?.Name.StartsWith(':') ?? false);
         }
 
         private string GetInnerString(string token)
