@@ -39,11 +39,7 @@ namespace Wul.StdLib
             var fileInfo = new FileInfo(fullFileName);
             if (fileInfo.Exists)
             {
-                ProgramParser Parser = new ProgramParser(fullFileName);
-                string programText = File.ReadAllText(fileInfo.FullName);
-                ProgramNode programNode = (ProgramNode) Parser.Parse(programText);
-                var result = WulInterpreter.Interpret(programNode, importScope);
-
+                var result = Helpers.LoadFile(fileInfo.FullName, importScope);
                 foreach (var binding in importScope.BoundVariables)
                 {
                     // Only upper case definitions are exported

@@ -17,8 +17,6 @@
 	)
 )
 
-(defn cossin (x) (Math.Cos (Math.Sin x)))
-
 (print "fixed point of cos(x): {(fixed-point Math.Cos precision: 0.01)}")
 (print "fixed point of sin(x): {(fixed-point Math.Sin precision: 0.01)}")
-(print "fixed point of cos(sin(x)): {(fixed-point cossin precision: 0.01)}")
+(print "fixed point of cos(sin(x)): {(fixed-point (lambda (Math.Cos (Math.Sin $0))))}")

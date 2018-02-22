@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
@@ -35,5 +36,25 @@ namespace Wul.StdLib
             list.AddRange(values);
             return list;
         }
+
+        public static ProgramNode Parse(string programText, ProgramParser parser = null)
+        {
+            parser = parser ?? new ProgramParser();
+            return (ProgramNode) parser.Parse(programText);
+        }
+
+        public static ProgramNode ParseFile(string fileName)
+        {
+            ProgramParser parser = new ProgramParser(fileName);
+            string contents = File.ReadAllText(fileName);
+            return Parse(contents, parser);
+        }
+
+        public static List<IValue> LoadFile(string fileName, Scope scope)
+        {
+            ProgramNode program = ParseFile(fileName);
+            return WulInterpreter.Interpret(program, scope);
+        }
     }
 }
+
