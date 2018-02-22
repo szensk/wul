@@ -2,7 +2,6 @@
 ; std lib definitions 
 (using System.Math)
 
-(def internal 5)
 (defn Cos (n) (:: Cos n))
 (defn Sin (n) (:: Sin n))
 (defn Tan (n) (:: Tan n))

@@ -1,0 +1,8 @@
+;module.wul
+
+(def internal 5)
+
+(defn GetInternal () (identity internal))
+(defn SetInternal (n) (assign internal n))
+
+(print "loaded module.wul")
