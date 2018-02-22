@@ -15,7 +15,6 @@ namespace Wul.Interpreter.Types
         public override MetaType DefaultMetaType => RangeMetaType.Instance;
     }
 
-    //TODO hashcode, equals
     public class Range : IValue
     {
         private readonly double _start;
@@ -120,6 +119,24 @@ namespace Wul.Interpreter.Types
         public object ToObject()
         {
             throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var range = obj as Range;
+            return range != null &&
+                   _start == range._start &&
+                   EqualityComparer<double?>.Default.Equals(_end, range._end) &&
+                   EqualityComparer<double?>.Default.Equals(_increment, range._increment);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1157971746;
+            hashCode = hashCode * -1521134295 + _start.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<double?>.Default.GetHashCode(_end);
+            hashCode = hashCode * -1521134295 + EqualityComparer<double?>.Default.GetHashCode(_increment);
+            return hashCode;
         }
     }
 }

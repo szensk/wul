@@ -9,6 +9,7 @@ namespace Wul.StdLib
 {
     internal class Module
     {
+        //TODO add real namespaces
         [MagicFunction("import")]
         internal static IValue Import(ListNode list, Scope scope)
         {
