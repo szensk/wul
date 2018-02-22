@@ -46,7 +46,8 @@ namespace Wul.StdLib
 
                 foreach (var binding in importScope.BoundVariables)
                 {
-                    scope[targetName + "." + binding.Key] = binding.Value.Value;
+                    // Only upper case definitions are exported
+                    if (char.IsUpper(binding.Key[0])) scope[targetName + "." + binding.Key] = binding.Value.Value;
                 }
 
                 return result.First();

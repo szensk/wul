@@ -1,4 +1,4 @@
-(import Examples.math into math)
+(import Examples.math into Math)
 
 (defn fixed-point (f n precision) 
 	(if (= n nil)
@@ -7,7 +7,7 @@
 			(let val (f n)
 				(do 
 					(print "{(debug.name f)}({n}) = {val}")
-					(if (< (math.abs (- val n)) (?? precision 0.001))
+					(if (< (Math.Abs (- val n)) (?? precision 0.001))
 						(then n)
 						(else (fixed-point f val precision))
 					)
@@ -17,4 +17,8 @@
 	)
 )
 
-(print (fixed-point math.cos precision: 0.1))
+(defn cossin (x) (Math.Cos (Math.Sin x)))
+
+(print "fixed point of cos(x): {(fixed-point Math.Cos precision: 0.01)}")
+(print "fixed point of sin(x): {(fixed-point Math.Sin precision: 0.01)}")
+(print "fixed point of cos(sin(x)): {(fixed-point cossin precision: 0.01)}")
