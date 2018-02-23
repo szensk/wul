@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Wul.Interpreter.MetaTypes;
-using Wul.Parser;
+using Wul.Parser.Nodes;
 
 namespace Wul.Interpreter.Types
 {
@@ -42,6 +41,16 @@ namespace Wul.Interpreter.Types
             ArgumentNames = argumentNames;
             ParentScope = parentScope.CloseScope(body);
             MetaType = FunctionMetaType.Instance;
+        }
+
+        public Function(Function f, Scope newScope)
+        {
+            Line = f.Line;
+            Name = f.Name;
+            Body = f.Body;
+            ArgumentNames = f.ArgumentNames;
+            ParentScope = newScope;
+            MetaType = f.MetaType;
         }
 
         ~Function()

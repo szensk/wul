@@ -1,38 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Wul.Parser.Nodes;
 
-namespace Wul.Parser
+namespace Wul.Parser.Parsers
 {
-    public class RangeNode : SyntaxNode
-    {
-        public List<SyntaxNode> Children { get; }
-
-        public RangeNode(SyntaxNode parent, List<SyntaxNode> children) : base(parent)
-        {
-            Children = children;
-        }
-
-        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
-        {
-            return new RangeNode(parent, Children);
-        }
-
-        public override string AsString()
-        {
-            return $"Range[{Children.Count}]";
-        }
-
-        public override string ToString()
-        {
-            List<string> strings = new List<string>();
-            foreach (var child in Children)
-            {
-                strings.Add(child.ToString());
-            }
-            return "[" + string.Join(' ', strings) + "]";
-        }
-    }
-
     public class RangeParser : SyntaxNodeParser
     {
         private static readonly IdentifierParser identifierParser = new IdentifierParser();
@@ -80,7 +51,7 @@ namespace Wul.Parser
 
                 if (closeParentheses > openParentheses)
                 {
-                    throw new Exception("Mismatched brackets, have fun");
+                    throw currentRange.CreateParseException(0, currentIndex, "Mismatched brackets, have fun");
                 }
 
                 currentIndex++;

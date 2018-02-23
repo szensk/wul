@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wul.Parser;
+using Wul.Parser.Nodes;
+using Wul.Parser.Parsers;
 
 namespace Unit.Test
 {

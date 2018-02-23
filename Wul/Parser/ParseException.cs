@@ -17,7 +17,7 @@ namespace Wul.Parser
             EndCharacter = endIndex;
         }
 
-        public string GetUnderline => EndCharacter > 0 ? new string(' ', EndCharacter) + "^" : null;
+        public string GetUnderline => EndCharacter >= 0 ? new string(' ', EndCharacter) + "^" : null;
 
         public string GetErrorMessage 
         {

@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.MetaTypes;
-using Wul.Parser;
+using Wul.Parser.Nodes;
+using Wul.StdLib;
 
 namespace Wul.Interpreter.Types
 {
     public class MapType : WulType
     {
-        public MapType() : base("Map", typeof(MapTable))
+        private MapType() : base("Map", typeof(MapTable))
         {
         }
 
@@ -41,12 +42,29 @@ namespace Wul.Interpreter.Types
             MetaType = MapMetaType.Instance;
         }
 
+        public static MapTable FromObject(object o)
+        {
+            var t = o.GetType();
+            var result = new MapTable();
+            foreach (var fi in t.GetFields())
+            {
+                var val = fi.GetValue(o);
+                if (val is IValue ival) result.Add((UString) fi.Name, ival);
+            }
+            foreach (var pi in t.GetProperties())
+            {
+                var val = pi.GetValue(o);
+                if (val is IValue ival) result.Add((UString) pi.Name, ival);
+            }
+            return result;
+        }
+
         public IDictionary<IValue, IValue> AsDictionary()
         {
             return _map;
         }
 
-        public IValue Get(IValue key)
+        private IValue Get(IValue key)
         {
             _map.TryGetValue(key, out IValue val);
             return val ?? Value.Nil;
@@ -57,7 +75,7 @@ namespace Wul.Interpreter.Types
             _map.Add(key, value);
         }
 
-        protected void Remove(IValue key)
+        public void Remove(IValue key)
         {
             _map.Remove(key);
         }
@@ -102,7 +120,7 @@ namespace Wul.Interpreter.Types
 
         public string AsString()
         {
-            return "(" + string.Join(", ", _map.Select(s => $"{s.Key.AsString()}:{s.Value.AsString()}").ToList()) + ")";
+            return "(" + string.Join(", ", _map.Select(s => $"{Helpers.ToString(s.Key)}:{Helpers.ToString(s.Value)}").ToList()) + ")";
         }
 
         public object ToObject()

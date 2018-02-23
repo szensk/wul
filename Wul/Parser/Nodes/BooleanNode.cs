@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Wul.Parser
+﻿namespace Wul.Parser.Nodes
 {
     public class BooleanNode : SyntaxNode
     {
@@ -26,22 +24,6 @@ namespace Wul.Parser
         public override string ToString()
         {
             return $"{Value}";
-        }
-    }
-
-    public class BooleanParser : SyntaxNodeParser
-    {
-        public override SyntaxNode Parse(string token, SyntaxNode parent = null)
-        {
-            if (token.Any(char.IsUpper)) return null;
-            if (bool.TryParse(token, out bool value))
-            {
-                return new BooleanNode(parent, value);
-            }
-            else
-            {
-                return null;
-            }
         }
     }
 }

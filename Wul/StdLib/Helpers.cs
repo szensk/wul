@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
-using Wul.Parser;
+using Wul.Parser.Nodes;
+using Wul.Parser.Parsers;
 
 namespace Wul.StdLib
 {
@@ -56,6 +58,19 @@ namespace Wul.StdLib
         {
             ProgramNode program = ParseFile(fileName);
             return WulInterpreter.Interpret(program, scope);
+        }
+
+        public static UString ToUString(IValue value)
+        {
+            if (ReferenceEquals(value, Value.Nil)) return new UString("nil");
+            IValue val = value.MetaType.AsString.Invoke(Value.ListWith(value), null).First();
+            if (val is UString s) return s;
+            throw new Exception("AsString did not return a string");
+        }
+
+        public static string ToString(IValue value)
+        {
+            return ToUString(value).AsString();
         }
     }
 }

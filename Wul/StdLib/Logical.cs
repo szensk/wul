@@ -2,7 +2,7 @@
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
-using Wul.Parser;
+using Wul.Parser.Nodes;
 
 namespace Wul.StdLib
 {

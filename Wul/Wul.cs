@@ -7,6 +7,8 @@ using System.Reflection;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
+using Wul.Parser.Nodes;
+using Wul.Parser.Parsers;
 using Wul.StdLib;
 
 namespace Wul
@@ -61,7 +63,7 @@ namespace Wul
 
             try
             {
-                var programNode = (ProgramNode) Parser.Parse(input.Trim());
+                var programNode = (ProgramNode) Parser.Parse(input);
                 var result = WulInterpreter.Interpret(programNode, currentScope);
                 if (result != null && result.Any())
                 {

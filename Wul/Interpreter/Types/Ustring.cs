@@ -1,5 +1,5 @@
 using Wul.Interpreter.MetaTypes;
-using Wul.Parser;
+using Wul.Parser.Nodes;
 
 namespace Wul.Interpreter.Types
 {
@@ -21,6 +21,16 @@ namespace Wul.Interpreter.Types
         {
             Value = value;
             MetaType = StringMetaType.Instance;
+        }
+
+        public static explicit operator UString(string str)
+        {
+            return new UString(str);
+        }
+
+        public static explicit operator string(UString ustr)
+        {
+            return ustr.Value;
         }
 
         public override int GetHashCode()

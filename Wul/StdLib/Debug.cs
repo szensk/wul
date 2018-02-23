@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
@@ -68,7 +67,13 @@ namespace Wul.StdLib
                 source = macro.FileName;
             }
 
-            return new NetObject($"\tName: {name}\n\tType: {type}\n\tSource: {source}\n\tLine: {line}");
+            return MapTable.FromObject(new
+            {
+                Name = (UString) name,
+                Type = (UString) type,
+                Source = (UString) source,
+                Line = (Number) line
+            });
         }
 
         [NetFunction("debug.name")]

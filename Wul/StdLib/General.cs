@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
-using Wul.Parser;
+using Wul.Parser.Nodes;
 
 namespace Wul.StdLib
 {
@@ -36,6 +36,7 @@ namespace Wul.StdLib
             return value;
         }
 
+        //TODO allow multiple variables to be bound
         [MagicFunction("let")]
         internal static IValue Let(ListNode list, Scope scope)
         {
@@ -58,6 +59,7 @@ namespace Wul.StdLib
             return result;
         }
 
+        //TODO allow other multiple statements as the body (merge them into a do or something idk)
         [MagicFunction("defn")]
         internal static IValue DefineFunction(ListNode list, Scope scope)
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
-using Wul.Parser;
+using Wul.Parser.Nodes;
 
 namespace Wul.Interpreter
 {

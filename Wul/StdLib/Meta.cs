@@ -3,7 +3,7 @@ using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
-using Wul.Parser;
+using Wul.Parser.Nodes;
 
 namespace Wul.StdLib
 {
@@ -88,6 +88,7 @@ namespace Wul.StdLib
             return children[0].EvalOnce(scope);
         }
 
+        //TODO allow defines in the list
         [MagicFunction("defmacro")]
         internal static IValue DefineMagicFunction(ListNode list, Scope scope)
         {
@@ -106,6 +107,19 @@ namespace Wul.StdLib
             scope[name] = function;
 
             return function;
+        }
+
+        //Execute function with respect to scope of execution rather than definition
+        [MultiNetFunction("dynamic-apply")]
+        internal static List<IValue> DynamicApply(List<IValue> list, Scope scope)
+        {
+            //TODO support macros
+            var func = (Function)list[0];
+            var newFunc = new Function(func, scope);
+            var args = list.Count == 2
+                ? ((ListTable)list[1]).AsList()
+                : Value.EmptyList;
+            return newFunc.Evaluate(args, scope);
         }
     }
 }

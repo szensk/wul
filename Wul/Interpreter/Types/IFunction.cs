@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Wul.Parser;
+using Wul.Parser.Nodes;
 
 namespace Wul.Interpreter.Types
 {

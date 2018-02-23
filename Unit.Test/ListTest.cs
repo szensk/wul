@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wul.Parser;
+using Wul.Parser.Nodes;
+using Wul.Parser.Parsers;
 
 namespace Unit.Test
 {
@@ -103,6 +104,24 @@ namespace Unit.Test
             ListNode node = (ListNode) parser.Parse(list);
 
             Assert.IsTrue(node.Children[2] is ListNode);
+        }
+
+        [TestMethod]
+        public void List_IncludesGarbage()
+        {
+            ListParser parser = new ListParser();
+            string list = "(kdi i4ji 4k)";
+
+            ListNode node;
+            try
+            {
+                node = (ListNode) parser.Parse(list);
+            }
+            catch
+            {
+                return;
+            }
+            Assert.Fail("Should throw garbage exception");
         }
     }
 }

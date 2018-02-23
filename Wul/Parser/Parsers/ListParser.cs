@@ -1,65 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Wul.Parser.Nodes;
 
-namespace Wul.Parser
+namespace Wul.Parser.Parsers
 {
-    public class ListNode : SyntaxNode
-    {
-        public int Line { get; }
-        public bool NamedParameterList;
-        public List<SyntaxNode> Children { get; }
-
-        public ListNode(SyntaxNode parent, List<SyntaxNode> children, int? line = null) : base(parent)
-        {
-            Line = line ?? 0;
-            Children = children;
-        }
-
-        public List<IdentifierNode> IdentifierNodes()
-        {
-            List<IdentifierNode> identifierNodes = new List<IdentifierNode>();
-            foreach (SyntaxNode node in Children)
-            {
-                if (node is IdentifierNode identifierNode)
-                {
-                    identifierNodes.Add(identifierNode);
-                }
-                if (node is InterpolatedStringNode interpolatedString)
-                {
-                    identifierNodes.AddRange(interpolatedString.ReferencedNames);
-                }
-                if (node is ListNode listNode)
-                {
-                    identifierNodes.AddRange(listNode.IdentifierNodes());
-                }
-            }
-
-            return identifierNodes;
-        }
-
-        public override SyntaxNode ToSyntaxNode(SyntaxNode parent)
-        {
-            return new ListNode(parent, Children);
-        }
-
-        public override string AsString()
-        {
-            return $"List[{Children.Count}]";
-        }
-
-        public override string ToString()
-        {
-            List<string> strings = new List<string>();
-            foreach (var child in Children)
-            {
-                strings.Add(child.ToString());
-            }
-            return "(" + string.Join(' ', strings) + ")";
-        }
-    }
-
     public class ListParser : SyntaxNodeParser
     {
         private static readonly IdentifierParser identifierParser = new IdentifierParser();
@@ -117,7 +62,7 @@ namespace Wul.Parser
             return (identifer?.Name.EndsWith(':') ?? false) && !(identifer?.Name.StartsWith(':') ?? false);
         }
 
-        public static string GetInnerString(string token)
+        private static string GetInnerString(string token)
         {
             if (token.Length < 2) return null;
 
@@ -173,7 +118,7 @@ namespace Wul.Parser
 
                 if (closeParentheses > openParentheses)
                 {
-                    throw new Exception($"Mismatched parenthesis:\n\t{inner}");
+                    throw currentList.CreateParseException(lineCount, currentIndex, $"Mismatched parenthesis:\n\t{inner}");
                 }
 
                 currentIndex++;
@@ -213,8 +158,15 @@ namespace Wul.Parser
                         var innerString = GetInnerString(currentInner);
                         if (innerString == null)
                         {
-                            startIndex = currentIndex;
-                            currentInner = null;
+                            if (StartsComment(currentInner) || currentInner.Trim() == "")
+                            {
+                                startIndex = currentIndex;
+                                currentInner = null;
+                            }
+                            else
+                            {
+                                throw currentList.CreateParseException(lineCount, currentIndex, "garbage in list");
+                            }
                         }
                         else 
                         {
@@ -233,15 +185,15 @@ namespace Wul.Parser
                     }
                     else if (!string.IsNullOrWhiteSpace(currentInner) && StartsComment(currentInner))
                     {
-                        throw new Exception($"trash in list\n\t'{currentInner}'");
+                        throw currentList.CreateParseException(lineCount, currentIndex, $"trash in list\n\t'{currentInner}'");
                     }
 
                     startIndex = currentIndex + 1;
                 }
             }
 
-            if (startedString) throw new Exception("unfinished string in list");
-            if (startedRange) throw new Exception("unfinished range in list");
+            if (startedString) throw currentList.CreateParseException(lineCount, currentIndex, "unfinished string in list");
+            if (startedRange) throw currentList.CreateParseException(lineCount, currentIndex, "unfinished range in list");
 
             currentList.Children.AddRange(children);
             
