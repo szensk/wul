@@ -124,7 +124,7 @@ namespace Wul.Interpreter
         {
             currentScope = currentScope ?? Global.Scope;
 
-            if (list.Children.Count == 0) return Value.EmptyList;
+            if (list.Children.Count == 0) return Value.ListWith(ListTable.EmptyList);
 
             var first = list.Children.First();
             List<IValue> value = Value.EmptyList;

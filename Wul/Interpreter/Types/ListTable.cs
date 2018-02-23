@@ -7,7 +7,7 @@ namespace Wul.Interpreter.Types
 {
     public class ListType : WulType
     {
-        public ListType() : base("List", typeof(ListTable))
+        private ListType() : base("List", typeof(ListTable))
         {
         }
 
@@ -17,6 +17,7 @@ namespace Wul.Interpreter.Types
 
     public class ListTable : IValue
     {
+        public static readonly ListTable EmptyList = new ListTable();
         private readonly List<IValue> _list;
 
         public ListTable()
