@@ -1,0 +1,13 @@
+; assert.wul
+
+(defmacro assert (cond error) 
+	(`let `val cond 
+		(`if `val 
+			(`then `val) 
+			(`else (`do 
+				(`print error) 
+				(`exit))))))
+				
+(print (assert 1 'who cares')) ; prints 1
+(print (assert nil 'uh-oh'))   ; prints 'uh-oh' and exits
+(print (assert true 'who cares')) ; never ran
