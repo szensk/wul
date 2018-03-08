@@ -1,6 +1,6 @@
 wul
 ========
-A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. Written in C#, before I read about parsers and interpreters, it is a bit odd. While the simple syntax is borrowed from Lisp, it isn't exactly lisp.  
+A **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. Written in C#, before I read about parsers and interpreters, it is a bit odd. While the simple syntax is borrowed from Lisp, it isn't exactly lisp.  Notably, influenced by Lua, functions may return multiple values.
 
 Types
 ======
