@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 
@@ -85,6 +87,24 @@ namespace Wul.StdLib
                 return new UString(func.Name);
             }
             return Value.Nil;
+        }
+
+        [NetFunction("debug.scope")]
+        internal static IValue ScopeToMap(List<IValue> list, Scope s)
+        {
+            var first = list.FirstOrDefault();
+            if (first != null)
+            {
+                int level = (Number) first;
+                while (s.Parent != null && level > 0)
+                {
+                    level--;
+                    s = s.Parent;
+                }
+                if (level > 0) { throw new Exception("Invalid scope level: not enough parent scopes");}
+            }
+            var map = s.BoundVariables.ToDictionary(k => (IValue) new UString(k.Key), v => v.Value.Value);
+            return new MapTable(map);
         }
     }
 }
