@@ -72,6 +72,12 @@ namespace Wul.StdLib
         {
             return ToUString(value).AsString();
         }
+
+        public static IValue AssertNotNil(this IValue value)
+        {
+            if (ReferenceEquals(value, Value.Nil)) throw new Exception("nil not expected");
+            return value;
+        }
     }
 }
 
