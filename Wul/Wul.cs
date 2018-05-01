@@ -119,10 +119,11 @@ namespace Wul
                 Console.WriteLine($"wul interpreter {Version}");
                 Console.WriteLine("to leave type 'exit'");
 
-                while (input != "exit")
+                while (true)
                 {
                     input = Console.ReadLine();
                     System.Diagnostics.Debug.WriteLine(input);
+                    if (input == "exit") break;
                     RunString(input, replScope);
                 }
                 return ExitSuccess;
