@@ -19,6 +19,7 @@ namespace Wul.Interpreter.MetaTypes
             At.Method = NetFunction.FromSingle(AtKey, At.Name);
             Set.Method = NetFunction.FromSingle(SetKey, Set.Name);
             Count.Method = NetFunction.FromSingle(Length, Count.Name);
+            Contains.Method = NetFunction.FromSingle(MapContains, Contains.Name);
 
             //Other
             AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
@@ -80,6 +81,14 @@ namespace Wul.Interpreter.MetaTypes
             MapTable map = (MapTable)arguments.First();
 
             return map.Count;
+        }
+
+        private IValue MapContains(List<IValue> arguments, Scope s)
+        {
+            MapTable map = (MapTable)arguments[0];
+            IValue key = arguments[1];
+
+            return map.AsDictionary().ContainsKey(key) ? Bool.True : Bool.False;
         }
     }
 }

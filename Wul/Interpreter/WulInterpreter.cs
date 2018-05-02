@@ -103,6 +103,7 @@ namespace Wul.Interpreter
             string name = null;
             IValue namedValue = null;
             int positionalIndex = 0;
+            int namedIndex = 0;
             foreach (var child in list.Children.Skip(1))
             {
                 if (child is IdentifierNode id && id.Name.EndsWith(":"))
@@ -115,6 +116,7 @@ namespace Wul.Interpreter
                 }
                 else
                 {
+                    if (namedIndex > 0) throw new Exception("named parameters must come after positional parameters");
                     evaluatedArguments[positionalIndex] = Interpret(child, currentScope).First();
                     positionalIndex++;
                 }
@@ -124,7 +126,12 @@ namespace Wul.Interpreter
                     int index = function.ArgumentNames.IndexOf(name);
                     if (index != -1)
                     {
+                        if (!ReferenceEquals(evaluatedArguments[index], Value.Nil))
+                        {
+                            throw new Exception($"parameter {name} was already bound");
+                        }
                         evaluatedArguments[index] = namedValue;
+                        namedIndex++;
                     }
                     name = null;
                     namedValue = null;
