@@ -106,5 +106,16 @@ namespace Wul.StdLib
             var map = s.BoundVariables.ToDictionary(k => (IValue) new UString(k.Key), v => v.Value.Value);
             return new MapTable(map);
         }
+
+        [NetFunction("debug.trace")]
+        internal static IValue Traceback(List<IValue> list, Scope s)
+        {
+            //TODO add file and line numbers
+            foreach (var f in WulInterpreter.CallStack.Skip(1))
+            {
+                Console.WriteLine(f);
+            }
+            return Value.Nil;
+        }
     }
 }

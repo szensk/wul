@@ -9,6 +9,8 @@ namespace Wul.Interpreter
 {
     public class WulInterpreter
     {
+        public static Stack<string> CallStack = new Stack<string>();
+
         public static List<IValue> Interpret(ProgramNode program, Scope scope = null)
         {
             Scope currentScope = scope ?? Global.Scope.EmptyChildScope();
@@ -120,6 +122,18 @@ namespace Wul.Interpreter
             return evaluatedArguments;
         }
 
+        private static void PushToCallStack(IFunction function, IValue firstValue)
+        {
+            if (firstValue is IFunction ifunc)
+            {
+                CallStack.Push(ifunc.Name);
+            }
+            else
+            {
+                CallStack.Push(function.Name);
+            }
+        }
+
         private static List<IValue> Evaluate(ListNode list, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
@@ -166,6 +180,7 @@ namespace Wul.Interpreter
                 }
 
                 var function = firstValue.MetaType.Invoke.Method;
+                PushToCallStack(function, firstValue);
 
                 var finalList = new List<IValue> {firstValue};
                 finalList.AddRange(evalutedList);
@@ -176,11 +191,13 @@ namespace Wul.Interpreter
             {
                 //Magic functions are passed syntax nodes, not fully evaluated arguments
                 var function = firstValue.MetaType.InvokeMagic;
+                PushToCallStack(function.Method, firstValue);
                 value = function.Invoke(new List<IValue>{ firstValue, list}, currentScope);
             }
             else if (isMacroFunction)
             {
                 var function = firstValue.MetaType.ApplyMacro;
+                PushToCallStack(function.Method, firstValue);
 
                 //TODO Bug: Functions returned by a macro are executed in currentScope which is not the lexical scope!
                 firstValue = function.Invoke(new List<IValue>{ firstValue, list}, currentScope).FirstOrDefault();
@@ -210,6 +227,7 @@ namespace Wul.Interpreter
                 }
             }
             
+            CallStack.Clear();
             return value;
         }
     }
