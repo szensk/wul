@@ -123,9 +123,31 @@ namespace Wul.StdLib
             return first.MetaType.Contains.Invoke(list, scope).First();
         }
 
+        private static IValue MapMap(List<IValue> list, Scope scope)
+        {
+            var mapToMap = list[0] as MapTable;
+            var callback = list[1];
+            var func = callback.MetaType.Invoke;
+
+            IEnumerable<IValue> result;
+            if (!func.IsDefined)
+            {
+                result = mapToMap.AsDictionary().Values.Select(item => callback);
+            }
+            else
+            {
+                result = mapToMap.AsDictionary()
+                    .Select(item => func.Invoke(Value.ListWith(callback, item.Key, item.Value), scope).First());
+            }
+
+            return new ListTable(result);
+        }
+
         [NetFunction("map")]
         internal static IValue Map(List<IValue> list, Scope scope)
         {
+            if (list[0] is MapTable) return MapMap(list, scope);
+
             var listToMap = list[0] as ListTable;
             if (listToMap == null && list[0] is Interpreter.Types.Range r)
             {
@@ -142,8 +164,7 @@ namespace Wul.StdLib
             else
             {
                 result = listToMap.AsList()
-                    .Select(item => func.Invoke(Value.ListWith(callback, item), scope)
-                        .First());
+                    .Select(item => func.Invoke(Value.ListWith(callback, item), scope).First());
             }
 
             return new ListTable(result);
