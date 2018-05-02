@@ -279,5 +279,19 @@ namespace Wul.StdLib
                     return list;
             }
         }
+
+        private static Random random = new Random();
+        [NetFunction("rand")]
+        private static IValue Random(List<IValue> list, Scope scope)
+        {
+            switch (list.Count)
+            {
+                case 0:
+                    return (Number) random.NextDouble();
+                case 1:
+                    return (Number) random.Next((Number) list[0]);
+            }
+            return (Number) random.Next((Number) list[0], (Number) list[1]);
+        }
     }
 }
