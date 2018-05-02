@@ -134,14 +134,17 @@ namespace Wul.StdLib
             var callback = list[1];
             var func = callback.MetaType.Invoke;
 
+            IEnumerable<IValue> result;
             if (!func.IsDefined)
             {
-                throw new Exception("Callback is not a function or invokeable");
+                result = listToMap.AsList().Select(item => callback);
             }
-
-            var result = listToMap.AsList()
-                .Select(item => func.Invoke(Value.ListWith(callback, item), scope)
-                .First());
+            else
+            {
+                result = listToMap.AsList()
+                    .Select(item => func.Invoke(Value.ListWith(callback, item), scope)
+                        .First());
+            }
 
             return new ListTable(result);
         }

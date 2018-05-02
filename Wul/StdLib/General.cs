@@ -99,10 +99,17 @@ namespace Wul.StdLib
                 argNames = new List<string>();
             }
 
-            var body = (ListNode) children[children.Length == 2 ? 1 : 0];
-            var function = new Function(body, "unnamed function", argNames, scope);
+            var body = children[children.Length == 2 ? 1 : 0];
+            ListNode listbody = body as ListNode;
+            if (listbody == null)
+            {
+                listbody = new ListNode(list, new List<SyntaxNode>(), list.Line);
+                listbody.Children.Add(new IdentifierNode(listbody, "return"));               
+                listbody.Children.Add(body.ToSyntaxNode(listbody));
+                System.Diagnostics.Debug.WriteLine("shorthand -> expands to " + listbody);
+            }
 
-            return function;
+            return new Function(listbody, "unnamed function", argNames, scope);
         }
 
         [NetFunction("then")]

@@ -7,9 +7,21 @@ using Wul.StdLib;
 
 namespace Wul.Interpreter
 {
+    public class StackInformation
+    {
+        public string FileName;
+        public int Line;
+        public string FunctionName;
+
+        public override string ToString()
+        {
+            return $"{FileName ?? "Main"}[{Line}]:{FunctionName}";
+        }
+    }
+
     public class WulInterpreter
     {
-        public static Stack<string> CallStack = new Stack<string>();
+        public static readonly Stack<StackInformation> CallStack = new Stack<StackInformation>();
 
         public static List<IValue> Interpret(ProgramNode program, Scope scope = null)
         {
@@ -122,16 +134,16 @@ namespace Wul.Interpreter
             return evaluatedArguments;
         }
 
-        private static void PushToCallStack(IFunction function, IValue firstValue)
+        private static void PushToCallStack(IFunction function, IValue firstValue, int line)
         {
-            if (firstValue is IFunction ifunc)
+            if (firstValue is IFunction ifunc) function = ifunc;
+
+            CallStack.Push(new StackInformation
             {
-                CallStack.Push(ifunc.Name);
-            }
-            else
-            {
-                CallStack.Push(function.Name);
-            }
+                FileName = function.FileName,
+                FunctionName = function.Name,
+                Line = line
+            });
         }
 
         private static List<IValue> Evaluate(ListNode list, Scope currentScope = null)
@@ -180,7 +192,7 @@ namespace Wul.Interpreter
                 }
 
                 var function = firstValue.MetaType.Invoke.Method;
-                PushToCallStack(function, firstValue);
+                PushToCallStack(function, firstValue, list.Line);
 
                 var finalList = new List<IValue> {firstValue};
                 finalList.AddRange(evalutedList);
@@ -191,13 +203,13 @@ namespace Wul.Interpreter
             {
                 //Magic functions are passed syntax nodes, not fully evaluated arguments
                 var function = firstValue.MetaType.InvokeMagic;
-                PushToCallStack(function.Method, firstValue);
+                PushToCallStack(function.Method, firstValue, list.Line);
                 value = function.Invoke(new List<IValue>{ firstValue, list}, currentScope);
             }
             else if (isMacroFunction)
             {
                 var function = firstValue.MetaType.ApplyMacro;
-                PushToCallStack(function.Method, firstValue);
+                PushToCallStack(function.Method, firstValue, list.Line);
 
                 //TODO Bug: Functions returned by a macro are executed in currentScope which is not the lexical scope!
                 firstValue = function.Invoke(new List<IValue>{ firstValue, list}, currentScope).FirstOrDefault();

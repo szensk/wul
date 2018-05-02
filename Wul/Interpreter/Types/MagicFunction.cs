@@ -25,6 +25,7 @@ namespace Wul.Interpreter.Types
 
         public int Line { get; }
         public string Name { get; }
+        public string FileName => "Main";
         public List<string> ArgumentNames { get; }
 
         public List<IValue> Evaluate(List<IValue> arguments, Scope scope)

@@ -7,6 +7,7 @@ namespace Wul.Interpreter.Types
     {
         int Line { get; }
         string Name { get; }
+        string FileName { get; }
         List<string> ArgumentNames { get; }
         List<IValue> Evaluate(List<IValue> arguments, Scope scope);
         List<IValue> Execute(ListNode list, Scope scope);
