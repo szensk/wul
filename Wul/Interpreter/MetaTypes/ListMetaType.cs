@@ -23,6 +23,7 @@ namespace Wul.Interpreter.MetaTypes
 
             Push.Method = NetFunction.FromSingle(PushEnd, Push.Name);
             Pop.Method = NetFunction.FromSingle(PopEnd, Pop.Name);
+            Contains.Method = NetFunction.FromSingle(ListContains, Contains.Name);
             
             //Other
             AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
@@ -116,6 +117,15 @@ namespace Wul.Interpreter.MetaTypes
             IValue first = list.First();
             list.RemoveAt(0);
             return first;
+        }
+
+        private IValue ListContains(List<IValue> arguments, Scope s)
+        {
+            ListTable left = (ListTable)arguments[0];
+            IValue right = arguments[1];
+
+            var list = left.AsList();
+            return list.Contains(right) ? Bool.True : Bool.False;
         }
     }
 }

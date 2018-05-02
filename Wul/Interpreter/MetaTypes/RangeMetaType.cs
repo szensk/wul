@@ -18,6 +18,7 @@ namespace Wul.Interpreter.MetaTypes
             At.Method = NetFunction.FromSingle(AtIndex, At.Name);
             Remainder.Method = NetFunction.FromSingle(Remaining, Remainder.Name);
             Count.Method = NetFunction.FromSingle(Length, Count.Name);
+            Contains.Method = NetFunction.FromSingle(RangeContains, Contains.Name);
 
             Invoke.Method = NetFunction.FromSingle(RangeIndex, Invoke.Name);
 
@@ -89,6 +90,14 @@ namespace Wul.Interpreter.MetaTypes
             Range range = (Range) arguments[0];
 
             return range.Count;
+        }
+
+        private IValue RangeContains(List<IValue> arguments, Scope s)
+        {
+            Range left = (Range) arguments[0];
+            Number right = (Number) arguments[1];
+
+            return left.Contains(right) ? Bool.True : Bool.False;
         }
     }
 }

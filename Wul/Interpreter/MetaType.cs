@@ -35,6 +35,7 @@ namespace Wul.Interpreter
             Concat = new MetaMethod("..");
             Push = new MetaMethod("push");
             Pop = new MetaMethod("pop");
+            Contains = new MetaMethod("contains?");
 
             Invoke = new MetaMethod("invoke");
             InvokeMagic = new MetaMethod("@invoke");
@@ -77,6 +78,7 @@ namespace Wul.Interpreter
             clone.Concat = new MetaMethod(Concat);
             clone.Push = new MetaMethod(Push);
             clone.Pop = new MetaMethod(Pop);
+            clone.Contains = new MetaMethod(Contains);
 
             clone.Invoke = new MetaMethod(Invoke);
             clone.InvokeMagic = new MetaMethod(InvokeMagic);
@@ -97,7 +99,7 @@ namespace Wul.Interpreter
                 Not,
                 BitwiseNot, BitwiseAnd, BitwiseOr, BitwiseXor, LeftShift, RightShift,
                 Equal, Compare,
-                At, Set, Remainder, Count, Concat, Pop, Push,
+                At, Set, Remainder, Count, Concat, Pop, Push, Contains,
                 Invoke, InvokeMagic, ApplyMacro,
                 AsString, Type
             };
@@ -146,6 +148,7 @@ namespace Wul.Interpreter
         public MetaMethod Concat { get; private set; }
         public MetaMethod Push { get; private set; }
         public MetaMethod Pop { get; private set; }
+        public MetaMethod Contains { get; private set; }
 
         // Other
         public MetaMethod Invoke { get; private set; }

@@ -115,6 +115,14 @@ namespace Wul.StdLib
             return first.MetaType.Pop.Invoke(list, scope).First();
         }
 
+        [NetFunction("contains?")]
+        internal static IValue Contains(List<IValue> list, Scope scope)
+        {
+            IValue first = list.First();
+
+            return first.MetaType.Contains.Invoke(list, scope).First();
+        }
+
         [NetFunction("map")]
         internal static IValue Map(List<IValue> list, Scope scope)
         {
