@@ -48,25 +48,24 @@ namespace Wul.StdLib
             {
                 name = ifunc.Name;
                 line = ifunc.Line;
+                source = ifunc.FileName;
             }
 
-            if (first is Function func)
+            if (first is Function)
             {
                 type = "Wul";
-                source = func.FileName;
             }
-            else if (first is NetFunction net)
+            else if (first is NetFunction)
             {
                 type = "Net";
             }
-            else if (first is MagicFunction magic)
+            else if (first is MagicFunction)
             {
                 type = "LazyNet";
             }
-            else if (first is MacroFunction macro)
+            else if (first is MacroFunction)
             {
                 type = "Macro";
-                source = macro.FileName;
             }
 
             return MapTable.FromObject(new

@@ -1,23 +1,27 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Wul.StdLib
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    internal class MagicFunctionAttribute : Attribute
+    internal class MagicFunctionAttribute : Attribute, IWulFunction 
     {
-        public string Name { get; }
-
-        public MagicFunctionAttribute(string name)
+        public MagicFunctionAttribute(
+            string name,
+            [CallerFilePath] string file = "",
+            [CallerMemberName] string member = "",
+            [CallerLineNumber] int line = 0
+        )
         {
             Name = name;
+            FileName = file;
+            Member = member;
+            Line = line;
         }
-    }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    internal class MultipleMagicFunctionAttribute : MagicFunctionAttribute
-    {
-        public MultipleMagicFunctionAttribute(string name) : base(name)
-        {
-        }
+        public string Name { get; }
+        public string FileName { get; }
+        public string Member { get; }
+        public int Line { get; }
     }
 }

@@ -9,8 +9,9 @@ namespace Wul.Interpreter.Types
     {
         private readonly Func<List<IValue>, Scope, List<IValue>> Body;
 
-        public NetFunction(Func<List<IValue>, Scope, List<IValue>> body, string name, int line = 0)
+        public NetFunction(Func<List<IValue>, Scope, List<IValue>> body, string name, int line = 0, string fileName = null)
         {
+            FileName = fileName ?? "Main";
             Line = line;
             Name = name;
             ArgumentNames = null;
@@ -18,14 +19,14 @@ namespace Wul.Interpreter.Types
             MetaType = FunctionMetaType.Instance;
         }
 
-        public static NetFunction FromSingle(Func<List<IValue>, Scope, IValue> body, string name, int line = 0)
+        public static NetFunction FromSingle(Func<List<IValue>, Scope, IValue> body, string name, int line = 0, string fileName = null)
         {
-            return new NetFunction((list, scope) => Value.ListWith(body(list, scope)), name, line);
+            return new NetFunction((list, scope) => Value.ListWith(body(list, scope)), name, line, fileName);
         }
 
         public int Line { get; }
         public string Name { get; }
-        public string FileName => "Main";
+        public string FileName { get; }
         public List<string> ArgumentNames { get; }
 
         public List<IValue> Evaluate(List<IValue> arguments, Scope scope)

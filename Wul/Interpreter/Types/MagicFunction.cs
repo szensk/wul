@@ -9,8 +9,9 @@ namespace Wul.Interpreter.Types
     {
         private readonly Func<ListNode, Scope, List<IValue>> Body;
 
-        public MagicFunction(Func<ListNode, Scope, List<IValue>> body, string name, int line = 0)
+        public MagicFunction(Func<ListNode, Scope, List<IValue>> body, string name, int line = 0, string fileName = null)
         {
+            FileName = fileName ?? "Main";
             Line = line;
             Name = name;
             ArgumentNames = null;
@@ -18,14 +19,14 @@ namespace Wul.Interpreter.Types
             MetaType = MagicFunctionMetaType.Instance;
         }
 
-        public static MagicFunction FromSingle(Func<ListNode, Scope, IValue> body, string name, int line = 0)
+        public static MagicFunction FromSingle(Func<ListNode, Scope, IValue> body, string name, int line = 0, string fileName = null)
         {
-            return new MagicFunction((list, scope) => Value.ListWith(body(list, scope)), name, line);
+            return new MagicFunction((list, scope) => Value.ListWith(body(list, scope)), name, line, fileName);
         }
 
         public int Line { get; }
         public string Name { get; }
-        public string FileName => "Main";
+        public string FileName { get; }
         public List<string> ArgumentNames { get; }
 
         public List<IValue> Evaluate(List<IValue> arguments, Scope scope)

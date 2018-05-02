@@ -23,11 +23,17 @@ namespace Wul.StdLib
             public IEnumerable<MagicFunctionAttribute> MagicAttributes;
         }
 
+        private static string GetFileName(IWulFunction funcDesc)
+        {
+            return $"{System.IO.Path.GetFileName(funcDesc.FileName)} {funcDesc.Member}";
+        }
+
         private static void RegisterNetFunction(FunctionRegistration method)
         {
-            string defaultName = method.NetAttributes.First().Name;
+            var first = method.NetAttributes.First();
+            string defaultName = first.Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, IValue>));
-            NetFunction netFunction = NetFunction.FromSingle((Func<List<IValue>, Scope, IValue>)deleg, defaultName);
+            NetFunction netFunction = NetFunction.FromSingle((Func<List<IValue>, Scope, IValue>)deleg, defaultName, first.Line, GetFileName(first));
             foreach (var globalname in method.NetAttributes)
             {
                 Scope[globalname.Name] = netFunction;
@@ -36,10 +42,11 @@ namespace Wul.StdLib
 
         private static void RegisterMultiNetFunction(FunctionRegistration method)
         {
-            string defaultName = method.NetAttributes.First().Name;
+            var first = method.MultiNetAttributes.First();
+            string defaultName = first.Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, List<IValue>>));
-            NetFunction netFunction = new NetFunction((Func<List<IValue>, Scope, List <IValue>>)deleg, defaultName);
-            foreach (var globalname in method.NetAttributes)
+            NetFunction netFunction = new NetFunction((Func<List<IValue>, Scope, List <IValue>>)deleg, defaultName, first.Line, GetFileName(first));
+            foreach (var globalname in method.MultiNetAttributes)
             {
                 Scope[globalname.Name] = netFunction;
             }
@@ -47,9 +54,10 @@ namespace Wul.StdLib
 
         private static void RegisterMagicFunction(FunctionRegistration method)
         {
-            string defaultName = method.MagicAttributes.First().Name;
+            var first = method.MagicAttributes.First();
+            string defaultName = first.Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<ListNode, Scope, IValue>));
-            MagicFunction magicFunction = MagicFunction.FromSingle((Func<ListNode, Scope, IValue>)deleg, defaultName);
+            MagicFunction magicFunction = MagicFunction.FromSingle((Func<ListNode, Scope, IValue>)deleg, defaultName, first.Line, GetFileName(first));
             foreach (var globalname in method.MagicAttributes)
             {
                 Scope[globalname.Name] = magicFunction;
