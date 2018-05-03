@@ -91,12 +91,20 @@ namespace Wul
             }
         }
 
-        private static void PrintHelp()
+        private static int PrintVersion()
         {
-            Console.WriteLine("wul [file]");
-            Console.WriteLine($"worthless unnecessary language version {Version}");
+            Console.WriteLine($"v{Version}");
+            return ExitSuccess;
+        }
+
+        private static int PrintHelp()
+        {
+            Console.WriteLine("usage: wul [file]");
             Console.WriteLine("\t-e program to evaluate");
+            Console.WriteLine("\t-ep program to evaluate without outermost parenthesis");
             Console.WriteLine("\t-h help");
+            Console.WriteLine("\t-v version");
+            return ExitSuccess;
         }
 
         private static int Error(string message)
@@ -106,56 +114,59 @@ namespace Wul
             return ExitError;
         }
 
+        private static int ReadEvalPrintLoop()
+        {
+            string input = "";
+
+            Scope replScope = Global.Scope.EmptyChildScope();
+
+            Console.WriteLine($"wul interpreter {Version}");
+            Console.WriteLine("to leave type 'exit'");
+
+            while (true)
+            {
+                input = Console.ReadLine();
+                System.Diagnostics.Debug.WriteLine(input);
+                if (input == "exit" || input == "q") break;
+                RunString(input, replScope);
+            }
+            return ExitSuccess;
+        }
+
         private static int Main(string[] args)
         {
             Global.RegisterDefaultFunctions();
 
-            if (!args.Any())
+            switch (args.Length)
             {
-                string input = "";
+                case 0:
+                    return ReadEvalPrintLoop();
+                case 1:
+                    switch (args[0])
+                    {
+                        case "-h":
+                            return PrintHelp();
+                        case "-v":
+                            return PrintVersion();
+                    }
+                    if (args[0].StartsWith('-'))
+                    {
+                        return Error($"Unrecognized option {args[0]}");
+                    }
 
-                Scope replScope = Global.Scope.EmptyChildScope();
-
-                Console.WriteLine($"wul interpreter {Version}");
-                Console.WriteLine("to leave type 'exit'");
-
-                while (true)
-                {
-                    input = Console.ReadLine();
-                    System.Diagnostics.Debug.WriteLine(input);
-                    if (input == "exit" || input == "q") break;
-                    RunString(input, replScope);
-                }
-                return ExitSuccess;
-            }
-
-            if (args.Length == 1)
-            {
-                if (args[0] == "-h")
-                {
-                    PrintHelp();
-                    return ExitSuccess;
-                }
-                if (args[0].StartsWith('-'))
-                {
-                    return Error($"Unrecognized option {args[0]}");
-                }
-
-                string filePath = args[0];
-                if (File.Exists(filePath))
-                {
-                    return RunFile(filePath) ? ExitSuccess : ExitError;
-                }
-                return Error($"Unable to open file {filePath}");
-            }
-            if (args.Length == 2)
-            {
-                if (args[0] != "-e" && args[0] != "-ep")
-                {
-                    return Error($"Unrecognized or invalid option {args[0]}");
-                }
-                string input = args[0] == "-ep" ? $"({args[1]})" : args[1];
-                return RunString(input) ? ExitSuccess : ExitError;
+                    string filePath = args[0];
+                    if (File.Exists(filePath))
+                    {
+                        return RunFile(filePath) ? ExitSuccess : ExitError;
+                    }
+                    return Error($"Unable to open file {filePath}");
+                case 2:
+                    if (args[0] != "-e" && args[0] != "-ep")
+                    {
+                        return Error($"Unrecognized or invalid option {args[0]}");
+                    }
+                    string input = args[0] == "-ep" ? $"({args[1]})" : args[1];
+                    return RunString(input) ? ExitSuccess : ExitError;
             }
 
             PrintHelp();
