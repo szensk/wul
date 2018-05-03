@@ -12,10 +12,12 @@ namespace Wul.Interpreter
         public string FileName;
         public int Line;
         public string FunctionName;
+        public string CallingFile;
+        public int CallingLine;
 
         public override string ToString()
         {
-            return $"{FileName ?? "Main"}[{Line}]:{FunctionName}";
+            return $"{FileName} line {Line} {FunctionName} called {CallingFile ?? "Main"} line {CallingLine}";
         }
     }
 
@@ -141,7 +143,7 @@ namespace Wul.Interpreter
             return evaluatedArguments;
         }
 
-        private static void PushToCallStack(IFunction function, IValue firstValue, int line)
+        private static void PushToCallStack(ListNode list, IFunction function, IValue firstValue, int line)
         {
             if (firstValue is IFunction ifunc) function = ifunc;
 
@@ -149,7 +151,9 @@ namespace Wul.Interpreter
             {
                 FileName = function.FileName,
                 FunctionName = function.Name,
-                Line = line
+                Line = function.Line,
+                CallingFile = list.File,
+                CallingLine = line
             });
         }
 
@@ -199,7 +203,7 @@ namespace Wul.Interpreter
                 }
 
                 var function = firstValue.MetaType.Invoke.Method;
-                PushToCallStack(function, firstValue, list.Line);
+                PushToCallStack(list, function, firstValue, list.Line);
 
                 var finalList = new List<IValue> {firstValue};
                 finalList.AddRange(evalutedList);
@@ -210,13 +214,13 @@ namespace Wul.Interpreter
             {
                 //Magic functions are passed syntax nodes, not fully evaluated arguments
                 var function = firstValue.MetaType.InvokeMagic;
-                PushToCallStack(function.Method, firstValue, list.Line);
+                PushToCallStack(list, function.Method, firstValue, list.Line);
                 value = function.Invoke(new List<IValue>{ firstValue, list}, currentScope);
             }
             else if (isMacroFunction)
             {
                 var function = firstValue.MetaType.ApplyMacro;
-                PushToCallStack(function.Method, firstValue, list.Line);
+                PushToCallStack(list, function.Method, firstValue, list.Line);
 
                 //TODO Bug: Functions returned by a macro are executed in currentScope which is not the lexical scope!
                 firstValue = function.Invoke(new List<IValue>{ firstValue, list}, currentScope).FirstOrDefault();

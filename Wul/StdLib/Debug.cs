@@ -100,7 +100,6 @@ namespace Wul.StdLib
         [NetFunction("debug.trace")]
         internal static IValue Traceback(List<IValue> list, Scope s)
         {
-            //TODO add file and line numbers
             foreach (var f in WulInterpreter.CallStack.Skip(1))
             {
                 Console.WriteLine(f);
