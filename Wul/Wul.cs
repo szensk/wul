@@ -58,7 +58,7 @@ namespace Wul
 
         private static bool RunString(string input, Scope scope = null)
         {
-            Parser = new ProgramParser(null);
+            Parser = new ProgramParser("stdin");
             Scope currentScope = scope ?? Global.Scope.EmptyChildScope();
 
             try
