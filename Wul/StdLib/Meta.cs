@@ -97,10 +97,19 @@ namespace Wul.StdLib
             var nameIdentifier = (IdentifierNode)children[0];
             string name = nameIdentifier.Name;
 
-            var arguments = (ListNode)children[1];
-            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
+            ListNode arguments = null;
+            IEnumerable<string> argNames = null;
+            if (children.Length == 2)
+            {
+                arguments = new ListNode(list, new List<SyntaxNode>(), list.Line);
+            }
+            else
+            {
+                arguments = (ListNode)children[1];
+            }
+            argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
 
-            var body = (ListNode)children[2];
+            ListNode body = (ListNode)children[children.Length == 2 ? 1 : 2];
             scope[name] = Value.Nil;
             var function = new MacroFunction(body, name, argNames.ToList(), scope);
             function.MetaType = MacroMetaType.Instance;

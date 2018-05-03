@@ -57,6 +57,15 @@ namespace Wul.Interpreter.Types
                     currentScope[argName] = argValue;
                 }
             }
+            // If the function has no named parameters, then bind them to $0, $1...
+            if (ArgumentNames.Count == 0)
+            {
+                currentScope["$args"] = new ListNode(list, arguments.Skip(1).ToList());
+                for (int i = 1; i < arguments.Length; ++i)
+                {
+                    currentScope["$" + (i-1)] = arguments[i];
+                }
+            }
 
             return WulInterpreter.Interpret(Body, currentScope);
         }

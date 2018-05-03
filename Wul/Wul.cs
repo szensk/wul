@@ -123,7 +123,7 @@ namespace Wul
                 {
                     input = Console.ReadLine();
                     System.Diagnostics.Debug.WriteLine(input);
-                    if (input == "exit") break;
+                    if (input == "exit" || input == "q") break;
                     RunString(input, replScope);
                 }
                 return ExitSuccess;

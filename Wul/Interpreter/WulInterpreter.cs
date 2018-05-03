@@ -222,10 +222,9 @@ namespace Wul.Interpreter
                 var function = firstValue.MetaType.ApplyMacro;
                 PushToCallStack(list, function.Method, firstValue, list.Line);
 
-                //TODO Bug: Functions returned by a macro are executed in currentScope which is not the lexical scope!
                 firstValue = function.Invoke(new List<IValue>{ firstValue, list}, currentScope).FirstOrDefault();
-                //TODO how to avoid the ToSyntaxNode step?
-                //Problem is that ListNodes are evaluated to ListTable
+                
+                //TODO how to avoid the ToSyntaxNode step? ListNodes are evaluated to ListTable
                 SyntaxNode node = firstValue as SyntaxNode ?? firstValue.ToSyntaxNode(list.Parent);
                 if (node != null)
                 {
