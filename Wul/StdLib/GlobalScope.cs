@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Wul.Interpreter;
@@ -66,6 +67,8 @@ namespace Wul.StdLib
 
         public static void RegisterDefaultFunctions()
         {
+            Stopwatch sw = Stopwatch.StartNew();
+            
             //Types
             Scope["Bool"] = BoolType.Instance;
             Scope["Number"] = NumberType.Instance;
@@ -79,6 +82,7 @@ namespace Wul.StdLib
             //Bools
             Scope["true"] = Bool.True;
             Scope["false"] = Bool.False;
+            Scope["debug.callstack"] = Debug.Callstack;
 
             var types = Assembly.GetAssembly(typeof(Global)).GetTypes();
 
@@ -88,7 +92,7 @@ namespace Wul.StdLib
                     Method = m,
                     NetAttributes = m.GetCustomAttributes<NetFunctionAttribute>(),
                     MultiNetAttributes = m.GetCustomAttributes<MultiNetFunctionAttribute>(),
-                    MagicAttributes = m.GetCustomAttributes<MagicFunctionAttribute>()
+                    MagicAttributes = m.GetCustomAttributes<MagicFunctionAttribute>(),
                 })
                 .ToList();
 
@@ -109,6 +113,9 @@ namespace Wul.StdLib
             }
 
             FunctionMetaType.SetMetaMethods();
+
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine($"Registration: {sw.Elapsed.TotalSeconds}s");
         }
     }
 }

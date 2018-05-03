@@ -32,7 +32,7 @@ namespace Wul.Interpreter.Types
         {
             return b.Value;
         }
-
+        
         public WulType Type => BoolType.Instance;
 
         public SyntaxNode ToSyntaxNode(SyntaxNode parent)

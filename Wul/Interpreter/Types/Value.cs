@@ -25,6 +25,16 @@ namespace Wul.Interpreter.Types
         {
             return new List<IValue>(values);
         }
+
+        public static T Convert<T>(IValue val) where T : class, IValue
+        {
+            if (val.GetType().IsAssignableFrom(typeof(NetProperty<T>)))
+            {
+                return ((NetProperty<T>)val).Value;
+            }
+            if (val is T t) return t;
+            return null;
+        }
     }
 
     internal class Nill : Value

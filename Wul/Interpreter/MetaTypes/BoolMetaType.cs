@@ -17,16 +17,24 @@ namespace Wul.Interpreter.MetaTypes
             //TODO Bitwise
 
             //Equality
-            Equal.Method = NetFunction.FromSingle(IdentityEqual, Equal.Name);
+            Equal.Method = NetFunction.FromSingle(BoolEqual, Equal.Name);
 
             //String
             AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
             Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
         }
 
+        private Bool BoolEqual(List<IValue> arguments, Scope s)
+        {
+            var bools = arguments.Convert<Bool>().ToArray();
+            var first = bools[0];
+            var second = bools[1];
+            return first.Equals(second) ? Bool.True : Bool.False;
+        }
+
         public IValue DoNot(List<IValue> arguments, Scope s)
         {
-            var bools = arguments.Select(a => a as Bool).ToList();
+            var bools = arguments.Convert<Bool>();
 
             if (bools.Any(b => b == null))
             {
@@ -47,7 +55,7 @@ namespace Wul.Interpreter.MetaTypes
 
         public IValue DoAnd(List<IValue> arguments, Scope s)
         {
-            var bools = arguments.Select(a => a as Bool).ToList();
+            var bools = arguments.Convert<Bool>();
 
             if (bools.Any(b => b == null))
             {
@@ -59,7 +67,7 @@ namespace Wul.Interpreter.MetaTypes
 
         public IValue DoOr(List<IValue> arguments, Scope s)
         {
-            var bools = arguments.Select(a => a as Bool).ToList();
+            var bools = arguments.Convert<Bool>();
 
             if (bools.Any(b => b == null))
             {

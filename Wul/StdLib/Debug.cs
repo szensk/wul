@@ -8,6 +8,8 @@ namespace Wul.StdLib
 {
     class Debug
     {
+        internal static NetProperty<Bool> Callstack { get; } = Bool.True;
+
         [NetFunction("sentinel")]
         internal static IValue NewSentinel(List<IValue> list, Scope s)
         {

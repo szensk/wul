@@ -145,6 +145,7 @@ namespace Wul.Interpreter
 
         private static void PushToCallStack(ListNode list, IFunction function, IValue firstValue, int line)
         {
+            if (!(Bool)Debug.Callstack) return;
             if (firstValue is IFunction ifunc) function = ifunc;
 
             CallStack.Push(new StackInformation
