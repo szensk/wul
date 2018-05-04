@@ -6,7 +6,7 @@ using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
-    class Debug
+    internal class Debug
     {
         internal static NetProperty<Bool> Callstack { get; } = Bool.True;
 

@@ -170,5 +170,24 @@ namespace Unit.Test
             Assert.AreEqual(1, node.Expressions.Count);
             Assert.AreEqual(2, node.Expressions.First().Children.Count);
         }
+
+        [TestMethod]
+        public void ProgramParser_CommentWithStartingParenthesis()
+        {
+            //Arrange
+            const string program = "(defn test ()\r\n"
+                                  +"   ;(unpack\r\n"
+                                  +"        (?? 1 2)\r\n"
+                                  +"    ;)\r\n"
+                                  +")\r\n";
+            ProgramParser parser = new ProgramParser();
+
+            //Act
+            ProgramNode node = (ProgramNode)parser.Parse(program);
+
+            //Assert
+            Assert.AreEqual(1, node.Expressions.Count);
+            Assert.AreEqual(4, node.Expressions.First().Children.Count);
+        }
     }
 }

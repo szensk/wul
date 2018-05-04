@@ -118,9 +118,11 @@ namespace Wul.Interpreter.Types
             return $"Function[{Name}]";
         }
 
-        public object ToObject()
+        public object ToObject() => ToObject(null);
+
+        public object ToObject(List<IValue> list)
         {
-            IValue action() => Evaluate(Value.EmptyList, null).First();
+            IValue action() => Evaluate(list ?? Value.EmptyList, null).First();
             return (Func<IValue>) action;
         }
 

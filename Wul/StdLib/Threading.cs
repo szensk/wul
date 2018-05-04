@@ -30,15 +30,16 @@ namespace Wul.StdLib
         {
             var first = list[0];
             if (first is Function func)
-                return new NetObject(new Task<IValue>((Func<IValue>) func.ToObject()));
+            {
+                var args = list.Skip(1).ToList();
+                return new NetObject(new Task<IValue>((Func<IValue>) func.ToObject(args)));
+            }
             return Value.Nil;
         }
 
-        [NetFunction("await")]
-        internal static IValue Await(List<IValue> list, Scope scope)
+        private static IValue AwaitInternal(NetObject no)
         {
-            var first = list[0] as NetObject;
-            var taskObject = first.ToObject();
+            var taskObject = no.ToObject();
             if (taskObject is Task<IValue> taskResult)
             {
                 if (taskResult.Status == TaskStatus.Created) taskResult.Start();
@@ -51,10 +52,26 @@ namespace Wul.StdLib
                 task.Wait();
                 return Value.Nil;
             }
-            throw new Exception("Only tasks can be awaited");
+            throw new Exception("Only functions or taks can be used with await");
         }
 
-        //TODO Wait / WaitAll / WaitAny
+        [NetFunction("await")]
+        internal static IValue Await(List<IValue> list, Scope scope)
+        {
+            var first = list[0];
+            if (first is NetObject no)
+            {
+                return AwaitInternal(no);
+            }
+            else if (first is Function)
+            {
+                var task = NewTask(list, scope);
+                if (task == null) throw new Exception("Unable to create task");
+                return AwaitInternal((NetObject) task);
+            }
+            throw new Exception("Only functions or taks can be used with await");
+        }
+
         [NetFunction("waitall")]
         internal static IValue WaitAll(List<IValue> list, Scope scope)
         {
@@ -74,7 +91,6 @@ namespace Wul.StdLib
 
         //TODO WhenAll / WhenAny
 
-        //TODO Delay?
         [NetFunction("sleep")]
         internal static IValue Sleep(List<IValue> list, Scope scope)
         {
