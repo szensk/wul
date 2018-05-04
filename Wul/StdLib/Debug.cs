@@ -6,7 +6,7 @@ using Wul.Interpreter.Types;
 
 namespace Wul.StdLib
 {
-    class Debug
+    internal class Debug
     {
         [NetFunction("sentinel")]
         internal static IValue NewSentinel(List<IValue> list, Scope s)

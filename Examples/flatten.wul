@@ -1,0 +1,17 @@
+(defn do-flatten (l rl) 
+	(let f (first l)
+		(if (= nil f) 
+			(then rl)
+			(else 
+				(if (= (type f) List)
+					(then (do-flatten (rem l) (.. rl (do-flatten f ()))))
+					(else (do-flatten (rem l) (.. rl (f))))
+				)
+			)
+		)
+	)
+)
+
+(defn flatten (l) (do-flatten l ()))
+
+(print (flatten (1 2 (2 3) (3 (4 5)))))
