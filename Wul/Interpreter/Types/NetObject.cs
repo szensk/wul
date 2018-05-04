@@ -57,14 +57,18 @@ namespace Wul.Interpreter.Types
 
             if (field != null)
             {
-                return new NetObject(field.GetValue(Value));
+                var result = field.GetValue(Value);
+                if (result == null) return Types.Value.Nil;
+                return new NetObject(result);
             }
 
             PropertyInfo property = ValueType.GetProperty(name);
 
             if (property != null)
             {
-                return new NetObject(property.GetMethod.Invoke(Value, null));
+                var result = property.GetMethod.Invoke(Value, null);
+                if (result == null) return Types.Value.Nil;
+                return new NetObject(result);
             }
 
             throw new Exception($"{ValueType} has no field/property {name}");
@@ -102,7 +106,9 @@ namespace Wul.Interpreter.Types
 
             if (method != null)
             {
-                return new NetObject(method.Invoke(Value, values), method.ReturnType);
+                var result = method.Invoke(Value, values);
+                if (result == null) return Types.Value.Nil;
+                return new NetObject(result, method.ReturnType);
             }
 
             string argumentTypes = string.Join(", ", types.Select(t => t.Name));
