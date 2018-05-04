@@ -120,7 +120,7 @@ namespace Wul.Interpreter.Types
 
         public string AsString()
         {
-            return Value.ToString();
+            return Value == null ? "null" : Value.ToString();
         }
 
         public object ToObject()
