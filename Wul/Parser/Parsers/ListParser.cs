@@ -72,6 +72,7 @@ namespace Wul.Parser.Parsers
             if (commentIndex != -1 && commentIndex < openIndex)
             {
                 int lineIndex = token.IndexOf('\n');
+                if (lineIndex == -1) lineIndex = token.Length - 1;
                 openIndex = token.IndexOf('(', lineIndex);
                 var nextToken = token.Substring(lineIndex + 1);
                 return GetInnerString(nextToken);
