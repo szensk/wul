@@ -55,15 +55,14 @@ namespace Wul.Interpreter.Types
         {
             get
             {
-                if (_increment.HasValue && (_increment > 0 && _start < _end || _increment < 0 && _start > _end) || !_end.HasValue)
+                if (!_increment.HasValue) return null;
+                double inc = _increment ?? 0;
+                double nextStart = _start + inc;
+                if (_increment > 0 && nextStart <= _end || _increment < 0 && nextStart >= _end || !_end.HasValue)
                 {
-                    double inc = _increment ?? 0;
                     return new Range(_start + inc, _end, _increment);
                 }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
         }
 
@@ -84,13 +83,15 @@ namespace Wul.Interpreter.Types
                 {
                     return 1;
                 }
+                if (_increment == 0)
+                {
+                    return 1; //TODO should this be zero, one or infinite
+                }
                 if (!_end.HasValue)
                 {
-                    double result = _increment > 0 ? double.PositiveInfinity : double.NegativeInfinity;
-                    Number numberResult = result;
-                    return numberResult;
+                    return double.PositiveInfinity;
                 }
-                return (int)((_end - _start) / _increment) + 1;
+                return Math.Floor((_end.Value - _start) / _increment.Value + 1);
             }
         }
 
@@ -112,7 +113,8 @@ namespace Wul.Interpreter.Types
 
         public string AsString()
         {
-            return $"Range[{_start} {_end} by {_increment}]";
+            var end = _end ?? (_increment >= 0 ? Double.PositiveInfinity : Double.NegativeInfinity);
+            return $"Range[{_start} {end} by {_increment}]";
         }
 
         //Return an enumerator

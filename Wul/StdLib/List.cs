@@ -142,16 +142,35 @@ namespace Wul.StdLib
             return new ListTable(result);
         }
 
+        private static IValue MapRange(List<IValue> list, Scope scope)
+        {
+            var rangeToMap = list[0] as Interpreter.Types.Range;
+            var callback = list[1];
+            var func = callback.MetaType.Invoke;
+
+            List<IValue> result = new List<IValue>();
+
+            while (rangeToMap != null)
+            {
+                IValue cbresult = callback;
+                if (func.IsDefined)
+                {
+                    cbresult = func.Invoke(Value.ListWith(callback, rangeToMap.First), scope).First();
+                }
+                result.Add(cbresult);
+                rangeToMap = rangeToMap.Remainder;
+            }
+
+            return new ListTable(result);
+        }
+
         [NetFunction("map")]
         internal static IValue Map(List<IValue> list, Scope scope)
         {
             if (list[0] is MapTable) return MapMap(list, scope);
+            if (list[0] is Interpreter.Types.Range) return MapRange(list, scope);
 
             var listToMap = list[0] as ListTable;
-            if (listToMap == null && list[0] is Interpreter.Types.Range r)
-            {
-                listToMap = r.AsList();
-            }
             var callback = list[1];
             var func = callback.MetaType.Invoke;
 

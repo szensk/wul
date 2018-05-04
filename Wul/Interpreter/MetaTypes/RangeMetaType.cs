@@ -44,6 +44,7 @@ namespace Wul.Interpreter.MetaTypes
 
             if (range == null || target == null || !(target.MetaType?.At.IsDefined ?? false)) return Value.Nil;
 
+            //TODO lazily transform range to list of indices
             var indexes = range.AsList().AsList();
             if (indexes.Count == 1)
             {

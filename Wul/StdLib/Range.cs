@@ -25,7 +25,7 @@ namespace Wul.StdLib
 
             if (list.Count < 3)
             {
-                if (start.Value < end)
+                if (start.Value <= end || !end.HasValue)
                 {
                     increment = 1;
                 }

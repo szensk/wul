@@ -53,6 +53,7 @@ namespace Wul.Interpreter.MetaTypes
         {
             ListTable list = (ListTable) arguments.First();
             Number index = (Number) arguments.Skip(1).First();
+            if (index < 0) index = list.Count + index;
 
             return list[index];
         }
