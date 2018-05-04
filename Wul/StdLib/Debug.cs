@@ -106,5 +106,21 @@ namespace Wul.StdLib
             }
             return Value.Nil;
         }
+
+        [NetFunction("debug.upvals")]
+        internal static IValue Upvals(List<IValue> list, Scope s)
+        {
+            var first = list[0];
+            if (first is Function func)
+            {
+                var upvals = func.ParentScope.BoundVariables
+                    .ToDictionary(
+                        k => (IValue) new UString(k.Key), 
+                        v => v.Value.Value
+                    );
+                return new MapTable(upvals);
+            }
+            return Value.Nil;
+        }
     }
 }

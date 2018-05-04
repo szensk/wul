@@ -31,7 +31,7 @@ namespace Wul.Interpreter.Types
     {
         private readonly ListNode Body;
 
-        private Scope ParentScope { get; }
+        internal Scope ParentScope { get; }
 
         public Function(ListNode body, string name, List<string> argumentNames, Scope parentScope)
         {
