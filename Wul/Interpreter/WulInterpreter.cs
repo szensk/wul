@@ -157,6 +157,70 @@ namespace Wul.Interpreter
             });
         }
 
+        private enum WulFunctionType
+        {
+            Function,
+            Magic,
+            Macro,
+            NotAFunction
+        }
+
+        private static WulFunctionType GetFunctionType(IValue val)
+        {
+            if (val == null) return WulFunctionType.NotAFunction;
+            if (val.MetaType?.Invoke?.IsDefined ?? false)  return WulFunctionType.Function;
+            if (val.MetaType?.InvokeMagic?.IsDefined ?? false) return WulFunctionType.Magic;
+            if (val.MetaType?.ApplyMacro?.IsDefined ?? false) return WulFunctionType.Macro;
+            return WulFunctionType.NotAFunction;
+        }
+
+        private static List<IValue> EvaluateFunction(IValue firstValue, ListNode list, Scope currentScope)
+        {
+            List<IValue> evaluatedList;
+            if (list.NamedParameterList)
+            {
+                evaluatedList = GetEvaluatedArgumentsForNamedParameters((IFunction) firstValue, list, currentScope);
+            }
+            else
+            {
+                evaluatedList = list.Children
+                    .Skip(1)
+                    .SelectMany(node => Interpret(node, currentScope))
+                    .Where(v => v != null)
+                    .ToList();
+            }
+
+            var function = firstValue.MetaType.Invoke.Method;
+            PushToCallStack(list, function, firstValue, list.Line);
+
+            var finalList = new List<IValue> { firstValue };
+            finalList.AddRange(evaluatedList);
+
+            return function.Evaluate(finalList, currentScope);
+        }
+
+        private static List<IValue> EvaluateMagic(IValue firstValue, ListNode list, Scope currentScope)
+        {
+            var function = firstValue.MetaType.InvokeMagic;
+            PushToCallStack(list, function.Method, firstValue, list.Line);
+            return function.Invoke(new List<IValue> { firstValue, list }, currentScope);
+        }
+
+        private static List<IValue> EvaluateMacro(IValue firstValue, ListNode list, Scope currentScope)
+        {
+            var function = firstValue.MetaType.ApplyMacro;
+            PushToCallStack(list, function.Method, firstValue, list.Line);
+
+            firstValue = function.Invoke(new List<IValue> { firstValue, list }, currentScope).FirstOrDefault();
+
+            //TODO how to avoid the ToSyntaxNode step? ListNodes are evaluated to ListTable
+            SyntaxNode node = firstValue as SyntaxNode ?? firstValue.ToSyntaxNode(list.Parent);
+
+            if (node == null) return Value.ListWith(firstValue);
+            System.Diagnostics.Debug.WriteLine($"macro -> {node}");
+            return Interpret(node, currentScope) ?? Value.EmptyList;
+        }
+
         private static List<IValue> Evaluate(ListNode list, Scope currentScope = null)
         {
             currentScope = currentScope ?? Global.Scope;
@@ -166,87 +230,50 @@ namespace Wul.Interpreter
             var first = list.Children.First();
             List<IValue> value = Value.EmptyList;
 
+            value = Interpret(first, currentScope);
             //TODO Really this is an recursive call to Interpret
-            if (first is IdentifierNode)
-            {
-                IdentifierNode identifier = first as IdentifierNode;
-                string key = identifier.Name;
-                value = Value.ListWith(currentScope[key]);
-            } 
-            else if (first is ListNode)
-            {
-                value = Evaluate((ListNode) first, currentScope);
-            }
-            else if (first is RangeNode)
-            {
-                value = Evaluate((RangeNode) first, currentScope);
-            }
+            //if (first is IdentifierNode)
+            //{
+            //    IdentifierNode identifier = first as IdentifierNode;
+            //    string key = identifier.Name;
+            //    value = Value.ListWith(currentScope[key]);
+            //} 
+            //else if (first is ListNode)
+            //{
+            //    value = Evaluate((ListNode) first, currentScope);
+            //}
+            //else if (first is RangeNode)
+            //{
+            //    value = Evaluate((RangeNode) first, currentScope);
+            //}
 
             var firstValue = value.FirstOrDefault();
-            bool isFunction = firstValue?.MetaType?.Invoke?.IsDefined ?? false;
-            bool isMagicFunction = firstValue?.MetaType?.InvokeMagic?.IsDefined ?? false;
-            bool isMacroFunction = firstValue?.MetaType?.ApplyMacro?.IsDefined ?? false;
-            if (isFunction)
+            var funcType = GetFunctionType(firstValue);
+            switch (funcType)
             {
-                List<IValue> evalutedList;
-                if (list.NamedParameterList)
-                {
-                    evalutedList = GetEvaluatedArgumentsForNamedParameters((IFunction) firstValue, list, currentScope);
-                }
-                else
-                {
-                    evalutedList = list.Children
-                        .Skip(1)
-                        .SelectMany(node => Interpret(node, currentScope))
-                        .Where(v => v != null)
-                        .ToList();
-                }
+                case WulFunctionType.Function:
+                    value = EvaluateFunction(firstValue, list, currentScope);
+                    break;
+                case WulFunctionType.Magic:
+                    value = EvaluateMagic(firstValue, list, currentScope);
+                    break;
+                case WulFunctionType.Macro:
+                    value = EvaluateMacro(firstValue, list, currentScope);
+                    break;
+                default:
+                    //Evaluate the remainder of the list
+                    List<IValue> remaining = new List<IValue>(list.Children.Count)
+                    {
+                        value.First()
+                    };
 
-                var function = firstValue.MetaType.Invoke.Method;
-                PushToCallStack(list, function, firstValue, list.Line);
+                    foreach (var node in list.Children.Skip(1))
+                    {
+                        remaining.Add(Interpret(node, currentScope).First());
+                    }
 
-                var finalList = new List<IValue> {firstValue};
-                finalList.AddRange(evalutedList);
-
-                value = function.Evaluate(finalList, currentScope);
-            }
-            else if (isMagicFunction)
-            {
-                //Magic functions are passed syntax nodes, not fully evaluated arguments
-                var function = firstValue.MetaType.InvokeMagic;
-                PushToCallStack(list, function.Method, firstValue, list.Line);
-                value = function.Invoke(new List<IValue>{ firstValue, list}, currentScope);
-            }
-            else if (isMacroFunction)
-            {
-                var function = firstValue.MetaType.ApplyMacro;
-                PushToCallStack(list, function.Method, firstValue, list.Line);
-
-                firstValue = function.Invoke(new List<IValue>{ firstValue, list}, currentScope).FirstOrDefault();
-                
-                //TODO how to avoid the ToSyntaxNode step? ListNodes are evaluated to ListTable
-                SyntaxNode node = firstValue as SyntaxNode ?? firstValue.ToSyntaxNode(list.Parent);
-                if (node != null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"macro -> {node}");
-                    value = Interpret(node, currentScope) ?? Value.EmptyList;
-                }
-                else
-                {
-                    value = Value.ListWith(firstValue);
-                }
-            }
-            else
-            {
-                //Evaluate a list
-                var remaining = list.Children
-                    .Select(node => Interpret(node, currentScope).First())
-                    .ToList();
-
-                if (remaining.Count > 0)
-                {
-                    value = Value.ListWith(new ListTable(remaining));
-                }
+                    if (remaining.Count > 0) value = Value.ListWith(new ListTable(remaining));
+                    break;
             }
             
             CallStack.Clear();
