@@ -60,11 +60,11 @@ namespace Wul.StdLib
             return WulInterpreter.Interpret(program, scope);
         }
 
-        public static UString ToUString(IValue value)
+        public static WulString ToUString(IValue value)
         {
-            if (ReferenceEquals(value, Value.Nil)) return new UString("nil");
+            if (ReferenceEquals(value, Value.Nil)) return new WulString("nil");
             IValue val = value.MetaType.AsString.Invoke(Value.ListWith(value), null).First();
-            if (val is UString s) return s;
+            if (val is WulString s) return s;
             throw new Exception("AsString did not return a string");
         }
 

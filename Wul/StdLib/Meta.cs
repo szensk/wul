@@ -53,7 +53,7 @@ namespace Wul.StdLib
         {
             IValue first = list.Children[1].EvalOnce(scope);
             SyntaxNode node = first.ToSyntaxNode(list.Parent);
-            return new UString(node.ToString());
+            return new WulString(node.ToString());
         }
 
         [MagicFunction("syntax")]

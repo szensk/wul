@@ -5,7 +5,7 @@ namespace Wul.Interpreter.Types
 {
     public class StringType : WulType
     {
-        public StringType() : base("String", typeof(UString))
+        public StringType() : base("String", typeof(WulString))
         {
         }
 
@@ -13,22 +13,22 @@ namespace Wul.Interpreter.Types
         public override MetaType DefaultMetaType => StringMetaType.Instance;
     }
 
-    public class UString : IValue
+    public class WulString : IValue
     {
         public MetaType MetaType { get; set; }
 
-        public UString(string value)
+        public WulString(string value)
         {
             Value = value;
             MetaType = StringMetaType.Instance;
         }
 
-        public static explicit operator UString(string str)
+        public static explicit operator WulString(string str)
         {
-            return new UString(str);
+            return new WulString(str);
         }
 
-        public static explicit operator string(UString ustr)
+        public static explicit operator string(WulString ustr)
         {
             return ustr.Value;
         }
@@ -42,7 +42,7 @@ namespace Wul.Interpreter.Types
         {
             if (ReferenceEquals(this, obj)) return true;
             if (ReferenceEquals(null, obj)) return false;
-            UString other = obj as UString;
+            WulString other = obj as WulString;
             return other != null && Value.Equals(other.Value);
         }
 

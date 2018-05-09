@@ -7,8 +7,8 @@ namespace Wul.StdLib
 {
     internal class String
     {
-        [NetFunction("..")]
         [NetFunction("concat")]
+        [NetFunction("..")]
         internal static IValue Concat(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
@@ -26,26 +26,26 @@ namespace Wul.StdLib
         [NetFunction("substring")]
         internal static IValue Substring(List<IValue> list, Scope scope)
         {
-            string value = ((UString) list[0]).Value;
+            string value = ((WulString) list[0]).Value;
             Number start = list[1] as Number;
             Number length = list.Skip(2).FirstOrDefault() as Number;
 
             var result = length != null ? value.Substring(start, length) : value.Substring(start);
-            return new UString(result);
+            return new WulString(result);
         }
 
         [NetFunction("lower")]
         internal static IValue Lower(List<IValue> list, Scope scope)
         {
-            string value = ((UString) list[0]).Value;
-            return new UString(value.ToLower());
+            string value = ((WulString) list[0]).Value;
+            return new WulString(value.ToLower());
         }
 
         [NetFunction("upper")]
         internal static IValue Upper(List<IValue> list, Scope scope)
         {
-            string value = ((UString) list[0]).Value;
-            return new UString(value.ToUpper());
+            string value = ((WulString) list[0]).Value;
+            return new WulString(value.ToUpper());
         }
     }
 }

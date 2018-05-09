@@ -27,52 +27,52 @@ namespace Wul.Interpreter.MetaTypes
 
         private IValue AreEqual(List<IValue> arguments, Scope s)
         {
-            var strings = arguments.Select(a => a as UString).ToArray();
-            UString first = strings[0];
-            UString second = strings[1];
+            var strings = arguments.Select(a => a as WulString).ToArray();
+            WulString first = strings[0];
+            WulString second = strings[1];
             return first.Value.Equals(second.Value) ? Bool.True : Bool.False;
         }
 
         private IValue Comparison(List<IValue> arguments, Scope s)
         {
-            var strings = arguments.Select(a => a as UString).ToArray();
-            UString first = strings[0];
-            UString second = strings[1];
+            var strings = arguments.Select(a => a as WulString).ToArray();
+            WulString first = strings[0];
+            WulString second = strings[1];
             return (Number) string.CompareOrdinal(first.Value, second.Value);
         }
 
         private IValue JoinStrings(List<IValue> argumetns, Scope s)
         {
-            var strings = argumetns.OfType<UString>().Select(x => x.Value).ToList();
+            var strings = argumetns.OfType<WulString>().Select(x => x.Value).ToList();
             if (!strings.Any())
             {
                 return Value.Nil;
             }
-            return new UString(string.Join("", strings));
+            return new WulString(string.Join("", strings));
         }
 
         private IValue Remaining(List<IValue> arguments, Scope s)
         {
-            var first = (UString)arguments[0];
+            var first = (WulString)arguments[0];
             if (first.Value.Length == 0)
             {
                 return Value.Nil;
             }
 
-            return new UString(first.Value.Substring(1));
+            return new WulString(first.Value.Substring(1));
         }
 
         private IValue CharacterAtIndex(List<IValue> arguments, Scope s)
         {
-            UString str = (UString)arguments.First();
+            WulString str = (WulString)arguments.First();
             Number index = (Number)arguments.Skip(1).First();
 
-            return new UString(str.Value[index].ToString());
+            return new WulString(str.Value[index].ToString());
         }
 
         private IValue Length(List<IValue> arguments, Scope s)
         {
-            UString first = (UString)arguments[0];
+            WulString first = (WulString)arguments[0];
 
             return (Number) first.Value.Length;
         }

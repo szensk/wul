@@ -57,29 +57,29 @@ namespace Wul.StdLib
         }
 
         [NetFunction("bin")]
-        internal static UString ToBinary(List<IValue> arguments, Scope s)
+        internal static WulString ToBinary(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 1) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
 
             if (first == null) throw new Exception("Argument not a number");
             var binaryString = Convert.ToString(first, 2);
-            return new UString(binaryString);
+            return new WulString(binaryString);
         }
 
         [NetFunction("hex")]
-        internal static UString ToHexadecimal(List<IValue> arguments, Scope s)
+        internal static WulString ToHexadecimal(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 1) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
 
             if (first == null) throw new Exception("Argument not a number");
             var binaryString = Convert.ToString(first, 16);
-            return new UString(binaryString);
+            return new WulString(binaryString);
         }
 
         [NetFunction("base")]
-        internal static UString ToBase(List<IValue> arguments, Scope s)
+        internal static WulString ToBase(List<IValue> arguments, Scope s)
         {
             if (arguments.Count < 2) throw new Exception("Invalid number of arguments &");
             Number first = arguments[0] as Number;
@@ -88,7 +88,7 @@ namespace Wul.StdLib
             if (first == null || second == null) throw new Exception("Argument not a number");
 
             var binaryString = Convert.ToString(first, second);
-            return new UString(binaryString);
+            return new WulString(binaryString);
         }
     }
 }

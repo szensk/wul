@@ -49,12 +49,12 @@ namespace Wul.Interpreter.Types
             foreach (var fi in t.GetFields())
             {
                 var val = fi.GetValue(o);
-                if (val is IValue ival) result.Add((UString) fi.Name, ival);
+                if (val is IValue ival) result.Add((WulString) fi.Name, ival);
             }
             foreach (var pi in t.GetProperties())
             {
                 var val = pi.GetValue(o);
-                if (val is IValue ival) result.Add((UString) pi.Name, ival);
+                if (val is IValue ival) result.Add((WulString) pi.Name, ival);
             }
             return result;
         }

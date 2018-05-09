@@ -54,7 +54,7 @@ namespace Wul.Interpreter.MetaTypes
         {
             NetObject obj = (NetObject) arguments[0];
 
-            return new UString(obj.AsString());
+            return new WulString(obj.AsString());
         }
 
         private IValue InvokeMethod(List<IValue> arguments, Scope s)

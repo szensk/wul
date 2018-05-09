@@ -47,7 +47,7 @@ namespace Wul.StdLib
             switch (o)
             {
                 case string s:
-                    return new UString(s);
+                    return new WulString(s);
                 case bool b:
                     return b ? Bool.True : Bool.False;
                 case double d:

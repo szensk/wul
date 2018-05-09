@@ -97,7 +97,7 @@ namespace Unit.Test
 
             InterpolatedStringNode node = (InterpolatedStringNode)parser.Parse(token);
 
-            Scope scope = new Scope {["world"] = new UString("world")};
+            Scope scope = new Scope {["world"] = new WulString("world")};
 
             Assert.AreEqual(expected, node.Value(scope));
         }

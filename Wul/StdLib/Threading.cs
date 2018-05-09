@@ -13,10 +13,6 @@ namespace Wul.StdLib
         private static Task NetObjectToTask(NetObject no)
         {
             var taskObject = no.ToObject();
-            //if (taskObject is Task<IValue> taskResult)
-            //{
-            //    return taskResult;
-            //}
             if (taskObject is Task task)
             {
                 return task;
@@ -24,9 +20,8 @@ namespace Wul.StdLib
             return null;
         }
 
-        //TODO new Task
         [NetFunction("task")]
-        internal static IValue NewTask(List<IValue> list, Scope scope)
+        private static IValue NewTask(List<IValue> list, Scope scope)
         {
             var first = list[0];
             if (first is Function func)

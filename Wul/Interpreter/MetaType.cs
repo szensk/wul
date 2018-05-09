@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Wul.Interpreter.Types;
 
@@ -167,7 +168,7 @@ namespace Wul.Interpreter
         protected static IValue IdentityString(List<IValue> arguments, Scope s)
         {
             IValue first = arguments.First();
-            return new UString(first.AsString());
+            return new WulString(first.AsString());
         }
 
         protected static IValue IdentityType(List<IValue> arguments, Scope s)

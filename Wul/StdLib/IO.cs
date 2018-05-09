@@ -17,7 +17,7 @@ namespace Wul.StdLib
                 string stringValue;
                 if (value.MetaType?.AsString?.IsDefined ?? false)
                 {
-                    UString ustring = (UString) value.MetaType.AsString.Invoke(new List<IValue> {value}, scope).First();
+                    WulString ustring = (WulString) value.MetaType.AsString.Invoke(new List<IValue> {value}, scope).First();
                     stringValue = ustring.Value;
                 }
                 else

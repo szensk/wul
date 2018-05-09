@@ -90,7 +90,7 @@ namespace Wul.Interpreter
 
         private static List<IValue> Evaluate(StringNode str, Scope currentScope = null)
         {
-            return Value.ListWith(new UString(str.Value(currentScope)));
+            return Value.ListWith(new WulString(str.Value(currentScope)));
         }
 
         private static List<IValue> GetEvaluatedArgumentsForNamedParameters(IFunction function, ListNode list, Scope currentScope)

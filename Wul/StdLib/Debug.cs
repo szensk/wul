@@ -61,9 +61,9 @@ namespace Wul.StdLib
 
             return MapTable.FromObject(new
             {
-                Name = (UString) name,
-                Type = (UString) type,
-                Source = (UString) source,
+                Name = (WulString) name,
+                Type = (WulString) type,
+                Source = (WulString) source,
                 Line = (Number) line
             });
         }
@@ -74,7 +74,7 @@ namespace Wul.StdLib
             var first = list[0];
             if (first is IFunction func)
             {
-                return new UString(func.Name);
+                return new WulString(func.Name);
             }
             return Value.Nil;
         }
@@ -93,7 +93,7 @@ namespace Wul.StdLib
                 }
                 if (level > 0) { throw new Exception("Invalid scope level: not enough parent scopes");}
             }
-            var map = s.BoundVariables.ToDictionary(k => (IValue) new UString(k.Key), v => v.Value.Value);
+            var map = s.BoundVariables.ToDictionary(k => (IValue) new WulString(k.Key), v => v.Value.Value);
             return new MapTable(map);
         }
 
@@ -115,7 +115,7 @@ namespace Wul.StdLib
             {
                 var upvals = func.ParentScope.BoundVariables
                     .ToDictionary(
-                        k => (IValue) new UString(k.Key), 
+                        k => (IValue) new WulString(k.Key), 
                         v => v.Value.Value
                     );
                 return new MapTable(upvals);

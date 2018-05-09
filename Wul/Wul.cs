@@ -70,7 +70,7 @@ namespace Wul
                     foreach (var item in result)
                     {
                         if (ReferenceEquals(item, Value.Nil) && result.Count == 1) continue;
-                        var args = new List<IValue> {item is UString ? new UString($"'{item.AsString()}'") : item};
+                        var args = new List<IValue> {item is WulString ? new WulString($"'{item.AsString()}'") : item};
                         IO.Print(args, Global.Scope);
                     }
                 }
