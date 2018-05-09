@@ -1,6 +1,6 @@
 wul
 ========
-Another **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. The simple syntax is borrowed from Lisp but the language isn't exactly a lisp.  Notably, influenced by Lua, functions may return multiple values and values have a metatype which define their interaction with standard operators. Function parity is flexible. If given to few values, it is equivalent to passing nil to all the remaining arguments. If given to many values, they are ignored but accessible via the ... list. Named parameters are also supported (e.g. `(add y: 6 x: 5)` and `(add 5 6)` are equivalent).
+Another **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. The simple syntax is borrowed from Lisp but the language isn't exactly a lisp.  Notably, influenced by Lua, functions may return multiple values and values have a metatype which define their interaction with standard operators. Function parity is flexible. Given too few values, it is equivalent to passing nil to all the remaining arguments. Given too many values, they become accessible via a list named `...`. Named parameters are also supported (e.g. `(add y: 6 x: 5)` and `(add 5 6)` are equivalent).
 
 Types
 ======
