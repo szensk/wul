@@ -10,9 +10,9 @@ namespace Wul.Interpreter.MetaTypes
 
         private TypeMetaType()
         {
-            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
-            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
-            Type.Method = NetFunction.FromSingle(NoType, Type.Name);
+            Equal.Method = new NetFunction(AreEqual, Equal.Name);
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(NoType, Type.Name);
         }
 
         private IValue AreEqual(List<IValue> arguments, Scope s)

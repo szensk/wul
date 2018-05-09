@@ -13,17 +13,17 @@ namespace Wul.Interpreter.MetaTypes
         private MapMetaType()
         {
             //Equality
-            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
+            Equal.Method = new NetFunction(AreEqual, Equal.Name);
 
             //List
-            At.Method = NetFunction.FromSingle(AtKey, At.Name);
-            Set.Method = NetFunction.FromSingle(SetKey, Set.Name);
-            Count.Method = NetFunction.FromSingle(Length, Count.Name);
-            Contains.Method = NetFunction.FromSingle(MapContains, Contains.Name);
+            At.Method = new NetFunction(AtKey, At.Name);
+            Set.Method = new NetFunction(SetKey, Set.Name);
+            Count.Method = new NetFunction(Length, Count.Name);
+            Contains.Method = new NetFunction(MapContains, Contains.Name);
 
             //Other
-            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
-            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
         }
 
         private IValue AtKey(List<IValue> arguments, Scope s)

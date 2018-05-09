@@ -33,7 +33,7 @@ namespace Wul.StdLib
             var first = method.NetAttributes.First();
             string defaultName = first.Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, IValue>));
-            NetFunction netFunction = NetFunction.FromSingle((Func<List<IValue>, Scope, IValue>)deleg, defaultName, first.Line, GetFileName(first));
+            NetFunction netFunction = new NetFunction((Func<List<IValue>, Scope, IValue>)deleg, defaultName, first.Line, GetFileName(first));
             foreach (var globalname in method.NetAttributes)
             {
                 Scope[globalname.Name] = netFunction;
@@ -45,7 +45,7 @@ namespace Wul.StdLib
             var first = method.MultiNetAttributes.First();
             string defaultName = first.Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, List<IValue>>));
-            NetFunction netFunction = new NetFunction((Func<List<IValue>, Scope, List <IValue>>)deleg, defaultName, first.Line, GetFileName(first));
+            NetFunction netFunction = new MultiNetFunction((Func<List<IValue>, Scope, List <IValue>>)deleg, defaultName, first.Line, GetFileName(first));
             foreach (var globalname in method.MultiNetAttributes)
             {
                 Scope[globalname.Name] = netFunction;

@@ -10,12 +10,12 @@ namespace Wul.Interpreter.MetaTypes
 
         private MacroMetaType()
         {
-            ApplyMacro.Method = new NetFunction(ApplyMacroFunction, ApplyMacro.Name);
+            ApplyMacro.Method = new MultiNetFunction(ApplyMacroFunction, ApplyMacro.Name);
 
-            AsString.Method = NetFunction.FromSingle(MetaType.IdentityString, AsString.Name);
-            Type.Method = NetFunction.FromSingle(MetaType.IdentityType, Type.Name);
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
 
-            Equal.Method = NetFunction.FromSingle(MetaType.IdentityEqual, Equal.Name);
+            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
         }
 
         private List<IValue> ApplyMacroFunction(List<IValue> arguments, Scope s)

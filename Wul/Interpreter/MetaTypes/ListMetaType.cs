@@ -12,22 +12,22 @@ namespace Wul.Interpreter.MetaTypes
         private ListMetaType()
         {
             //Equality
-            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
+            Equal.Method = new NetFunction(AreEqual, Equal.Name);
 
             //List
-            At.Method = NetFunction.FromSingle(AtIndex, At.Name);
-            Set.Method = NetFunction.FromSingle(SetIndex, Set.Name);
-            Remainder.Method = NetFunction.FromSingle(Remaining, Remainder.Name);
-            Count.Method = NetFunction.FromSingle(Length, Count.Name);
-            Concat.Method = NetFunction.FromSingle(JoinLists, Concat.Name);
+            At.Method = new NetFunction(AtIndex, At.Name);
+            Set.Method = new NetFunction(SetIndex, Set.Name);
+            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
+            Count.Method = new NetFunction(Length, Count.Name);
+            Concat.Method = new NetFunction(JoinLists, Concat.Name);
 
-            Push.Method = NetFunction.FromSingle(PushEnd, Push.Name);
-            Pop.Method = NetFunction.FromSingle(PopEnd, Pop.Name);
-            Contains.Method = NetFunction.FromSingle(ListContains, Contains.Name);
+            Push.Method = new NetFunction(PushEnd, Push.Name);
+            Pop.Method = new NetFunction(PopEnd, Pop.Name);
+            Contains.Method = new NetFunction(ListContains, Contains.Name);
             
             //Other
-            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
-            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
         }
 
         private IValue Length(List<IValue> arguments, Scope s)

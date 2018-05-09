@@ -12,19 +12,19 @@ namespace Wul.Interpreter.MetaTypes
         private RangeMetaType()
         {
             //Equality
-            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
+            Equal.Method = new NetFunction(AreEqual, Equal.Name);
 
             //List
-            At.Method = NetFunction.FromSingle(AtIndex, At.Name);
-            Remainder.Method = NetFunction.FromSingle(Remaining, Remainder.Name);
-            Count.Method = NetFunction.FromSingle(Length, Count.Name);
-            Contains.Method = NetFunction.FromSingle(RangeContains, Contains.Name);
+            At.Method = new NetFunction(AtIndex, At.Name);
+            Remainder.Method = new NetFunction(Remaining, Remainder.Name);
+            Count.Method = new NetFunction(Length, Count.Name);
+            Contains.Method = new NetFunction(RangeContains, Contains.Name);
 
-            Invoke.Method = NetFunction.FromSingle(RangeIndex, Invoke.Name);
+            Invoke.Method = new NetFunction(RangeIndex, Invoke.Name);
 
             //Other
-            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
-            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
         }
 
         private IValue AreEqual(List<IValue> arguments, Scope s)

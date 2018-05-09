@@ -10,12 +10,12 @@ namespace Wul.Interpreter.MetaTypes
 
         private MagicFunctionMetaType()
         {
-            InvokeMagic.Method = new NetFunction(InvokeMagicFunction, ApplyMacro.Name);
+            InvokeMagic.Method = new MultiNetFunction(InvokeMagicFunction, ApplyMacro.Name);
 
-            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
-            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
 
-            Equal.Method = NetFunction.FromSingle(IdentityEqual, Equal.Name);
+            Equal.Method = new NetFunction(IdentityEqual, Equal.Name);
         }
 
         private List<IValue> InvokeMagicFunction(List<IValue> arguments, Scope s)

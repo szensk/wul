@@ -12,29 +12,29 @@ namespace Wul.Interpreter.MetaTypes
         private NumberMetaType()
         {
             //Arithmetic
-            Add.Method = NetFunction.FromSingle(DoAdd, Add.Name);
-            Subtract.Method = NetFunction.FromSingle(DoSubtract, Subtract.Name);
-            Multiply.Method = NetFunction.FromSingle(DoMultiply, Multiply.Name);
-            Divide.Method = NetFunction.FromSingle(DoDivide, Divide.Name);
-            Modulus.Method = NetFunction.FromSingle(DoModulus, Modulus.Name);
-            Power.Method = NetFunction.FromSingle(DoPower, Power.Name);
-            IntegerDivide.Method = NetFunction.FromSingle(DoIntegerDivide, IntegerDivide.Name);
+            Add.Method = new NetFunction(DoAdd, Add.Name);
+            Subtract.Method = new NetFunction(DoSubtract, Subtract.Name);
+            Multiply.Method = new NetFunction(DoMultiply, Multiply.Name);
+            Divide.Method = new NetFunction(DoDivide, Divide.Name);
+            Modulus.Method = new NetFunction(DoModulus, Modulus.Name);
+            Power.Method = new NetFunction(DoPower, Power.Name);
+            IntegerDivide.Method = new NetFunction(DoIntegerDivide, IntegerDivide.Name);
 
             //Bitwise
-            BitwiseNot.Method = NetFunction.FromSingle(NumberBitwiseNot, BitwiseNot.Name);
-            BitwiseAnd.Method = NetFunction.FromSingle(NumberBitwiseAnd, BitwiseAnd.Name);
-            BitwiseOr.Method = NetFunction.FromSingle(NumberBitwiseOr, BitwiseOr.Name);
-            BitwiseXor.Method = NetFunction.FromSingle(NumberBitwiseXor, BitwiseXor.Name);
-            LeftShift.Method = NetFunction.FromSingle(NumberLeftShift, LeftShift.Name);
-            RightShift.Method = NetFunction.FromSingle(NumberRightShift, RightShift.Name);
+            BitwiseNot.Method = new NetFunction(NumberBitwiseNot, BitwiseNot.Name);
+            BitwiseAnd.Method = new NetFunction(NumberBitwiseAnd, BitwiseAnd.Name);
+            BitwiseOr.Method = new NetFunction(NumberBitwiseOr, BitwiseOr.Name);
+            BitwiseXor.Method = new NetFunction(NumberBitwiseXor, BitwiseXor.Name);
+            LeftShift.Method = new NetFunction(NumberLeftShift, LeftShift.Name);
+            RightShift.Method = new NetFunction(NumberRightShift, RightShift.Name);
 
             //Comparison
-            Equal.Method = NetFunction.FromSingle(AreEqual, Equal.Name);
-            Compare.Method = NetFunction.FromSingle(Comparison, Compare.Name);
+            Equal.Method = new NetFunction(AreEqual, Equal.Name);
+            Compare.Method = new NetFunction(Comparison, Compare.Name);
 
             //Other
-            AsString.Method = NetFunction.FromSingle(IdentityString, AsString.Name);
-            Type.Method = NetFunction.FromSingle(IdentityType, Type.Name);
+            AsString.Method = new NetFunction(IdentityString, AsString.Name);
+            Type.Method = new NetFunction(IdentityType, Type.Name);
         }
 
         private IValue DoAdd(List<IValue> arguments, Scope s)

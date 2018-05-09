@@ -231,21 +231,6 @@ namespace Wul.Interpreter
             List<IValue> value = Value.EmptyList;
 
             value = Interpret(first, currentScope);
-            //TODO Really this is an recursive call to Interpret
-            //if (first is IdentifierNode)
-            //{
-            //    IdentifierNode identifier = first as IdentifierNode;
-            //    string key = identifier.Name;
-            //    value = Value.ListWith(currentScope[key]);
-            //} 
-            //else if (first is ListNode)
-            //{
-            //    value = Evaluate((ListNode) first, currentScope);
-            //}
-            //else if (first is RangeNode)
-            //{
-            //    value = Evaluate((RangeNode) first, currentScope);
-            //}
 
             var firstValue = value.FirstOrDefault();
             var funcType = GetFunctionType(firstValue);

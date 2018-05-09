@@ -14,12 +14,12 @@ namespace Wul.Interpreter.MetaTypes
 
         public static void SetMetaMethods()
         {
-            Instance.Invoke.Method = new NetFunction(InvokeFunction, Instance.Invoke.Name);
+            Instance.Invoke.Method = new MultiNetFunction(InvokeFunction, Instance.Invoke.Name);
 
-            Instance.AsString.Method = NetFunction.FromSingle(IdentityString, Instance.AsString.Name);
-            Instance.Type.Method = NetFunction.FromSingle(IdentityType, Instance.Type.Name);
+            Instance.AsString.Method = new NetFunction(IdentityString, Instance.AsString.Name);
+            Instance.Type.Method = new NetFunction(IdentityType, Instance.Type.Name);
 
-            Instance.Equal.Method = NetFunction.FromSingle(IdentityEqual, Instance.Equal.Name);
+            Instance.Equal.Method = new NetFunction(IdentityEqual, Instance.Equal.Name);
         }
 
         private static List<IValue> InvokeFunction(List<IValue> arguments, Scope s)

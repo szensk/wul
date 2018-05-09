@@ -5,23 +5,23 @@ using Wul.Parser.Nodes;
 
 namespace Wul.Interpreter.Types
 {
-    sealed class NetFunction : IFunction
+    internal class NetFunction : IFunction
     {
-        private readonly Func<List<IValue>, Scope, List<IValue>> Body;
+        private readonly Func<List<IValue>, Scope, IValue> Body;
 
-        public NetFunction(Func<List<IValue>, Scope, List<IValue>> body, string name, int line = 0, string fileName = null)
+        protected NetFunction(string name, int line, string fileName)
         {
             FileName = fileName ?? "Main";
             Line = line;
             Name = name;
             ArgumentNames = null;
-            Body = body;
             MetaType = FunctionMetaType.Instance;
         }
 
-        public static NetFunction FromSingle(Func<List<IValue>, Scope, IValue> body, string name, int line = 0, string fileName = null)
+        public NetFunction(Func<List<IValue>, Scope, IValue> body, string name, int line = 0, string fileName = null)
+            : this (name, line, fileName)
         {
-            return new NetFunction((list, scope) => Value.ListWith(body(list, scope)), name, line, fileName);
+            Body = body;
         }
 
         public int Line { get; }
@@ -29,9 +29,9 @@ namespace Wul.Interpreter.Types
         public string FileName { get; }
         public List<string> ArgumentNames { get; }
 
-        public List<IValue> Evaluate(List<IValue> arguments, Scope scope)
+        public virtual List<IValue> Evaluate(List<IValue> arguments, Scope scope)
         {
-            return Body(arguments, scope);
+            return Value.ListWith(Body(arguments, scope));
         }
 
         public List<IValue> Execute(ListNode list, Scope scope)
@@ -58,5 +58,21 @@ namespace Wul.Interpreter.Types
         }
 
         public MetaType MetaType { get; set; }
+    }
+
+    internal class MultiNetFunction : NetFunction
+    {
+        private readonly Func<List<IValue>, Scope, List<IValue>> Body;
+
+        public MultiNetFunction(Func<List<IValue>, Scope, List<IValue>> body, string name, int line = 0, string fileName = null)
+            : base(name, line, fileName)
+        {
+            Body = body;
+        }
+
+        public override List<IValue> Evaluate(List<IValue> arguments, Scope scope)
+        {
+            return Body(arguments, scope);
+        }
     }
 }
