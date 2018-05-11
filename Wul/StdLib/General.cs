@@ -280,7 +280,7 @@ namespace Wul.StdLib
             }
         }
 
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
         [NetFunction("rand")]
         private static IValue Random(List<IValue> list, Scope scope)
         {
@@ -293,5 +293,8 @@ namespace Wul.StdLib
             }
             return (Number) random.Next((Number) list[0], (Number) list[1]);
         }
+
+        //TODO Scope should be able to hold WeakReference<IValue> and Lazy<IValue>
+        //[NetFunction("weakref")]
     }
 }
