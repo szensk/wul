@@ -1,0 +1,13 @@
+; multiple return values
+; destructuring let
+; error and pcal
+
+(defn badfunc (fail)
+	(if fail 
+		(then (error "some error"))
+		(else (return 5 25)) ;return x and xsquared
+	)
+)
+
+(let (err x xsquared) (pcall badfunc true) (print err x xsquared))  ; prints False, some error, nil
+(let (err x xsquared) (pcall badfunc false) (print err x xsquared)) ; prints True, 5, 25

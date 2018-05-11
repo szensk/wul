@@ -44,13 +44,13 @@ namespace Wul.StdLib
             }
             catch (ValueException ve)
             {
-                var results = Value.ListWith(Value.Nil);
+                var results = Value.ListWith(Bool.False);
                 results.Add(ve.Value);
                 return results;
             } 
             catch (Exception e)
             {
-                var results = Value.ListWith(Value.Nil);
+                var results = Value.ListWith(Bool.False);
                 results.Add(new WulString(e.Message));
                 return results;
             }

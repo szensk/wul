@@ -137,22 +137,22 @@ namespace Wul.StdLib
             return new Function(listbody, "unnamed function", argNames, scope);
         }
 
-        [NetFunction("then")]
-        [NetFunction("else")]
-        internal static IValue Then(List<IValue> list, Scope scope)
-        {
-            if (list.Count == 1)
-            {
-                return list.First();
-            }
-            else
-            {
-                return new ListTable(list.ToArray());
-            }
-        }
+        //[NetFunction("then")]
+        //[NetFunction("else")]
+        //internal static IValue Then(List<IValue> list, Scope scope)
+        //{
+        //    if (list.Count == 1)
+        //    {
+        //        return list.First();
+        //    }
+        //    else
+        //    {
+        //        return new ListTable(list.ToArray());
+        //    }
+        //}
 
-        [MagicFunction("if")]
-        internal static IValue If(ListNode list, Scope scope)
+        [MultiMagicFunction("if")]
+        internal static List<IValue> If(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
 
@@ -161,18 +161,18 @@ namespace Wul.StdLib
 
             var listChildren = children.OfType<ListNode>();
 
-            IValue returnValue = Value.Nil;
+            List<IValue> returnValue = Value.ListWith(Value.Nil);
             if (!ReferenceEquals(result, Value.Nil) && !ReferenceEquals(result, Bool.False))
             {
                 var thenBlock =
                     listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "then");
-                if (thenBlock != null) returnValue = thenBlock.EvalOnce(scope);
+                if (thenBlock != null) returnValue = thenBlock.EvalManyOnce(scope);
             }
             else
             {
                 var elseBlock =
                     listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "else");
-                if (elseBlock != null) returnValue = elseBlock.EvalOnce(scope);
+                if (elseBlock != null) returnValue = elseBlock.EvalManyOnce(scope);
             }
 
             return returnValue;
@@ -291,6 +291,8 @@ namespace Wul.StdLib
             return result;
         }
 
+        [MultiNetFunction("then")]
+        [MultiNetFunction("else")]
         [MultiNetFunction("return")]
         private static List<IValue> Return(List<IValue> list, Scope scope)
         {
@@ -303,20 +305,6 @@ namespace Wul.StdLib
                 default:
                     return list;
             }
-        }
-
-        private static readonly Random random = new Random();
-        [NetFunction("rand")]
-        private static IValue Random(List<IValue> list, Scope scope)
-        {
-            switch (list.Count)
-            {
-                case 0:
-                    return (Number) random.NextDouble();
-                case 1:
-                    return (Number) random.Next((Number) list[0]);
-            }
-            return (Number) random.Next((Number) list[0], (Number) list[1]);
         }
 
         //TODO Scope should be able to hold WeakReference<IValue> and Lazy<IValue>

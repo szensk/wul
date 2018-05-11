@@ -5,23 +5,23 @@ using Wul.Parser.Nodes;
 
 namespace Wul.Interpreter.Types
 {
-    sealed class MagicFunction : IFunction
+    internal class MagicFunction : IFunction
     {
-        private readonly Func<ListNode, Scope, List<IValue>> Body;
+        private readonly Func<ListNode, Scope, IValue> Body;
 
-        public MagicFunction(Func<ListNode, Scope, List<IValue>> body, string name, int line = 0, string fileName = null)
+        protected MagicFunction(string name, int line, string fileName)
         {
             FileName = fileName ?? "Main";
             Line = line;
             Name = name;
             ArgumentNames = null;
-            Body = body;
             MetaType = MagicFunctionMetaType.Instance;
         }
 
-        public static MagicFunction FromSingle(Func<ListNode, Scope, IValue> body, string name, int line = 0, string fileName = null)
+        public MagicFunction(Func<ListNode, Scope, IValue> body, string name, int line = 0, string fileName = null)
+            : this (name, line, fileName)
         {
-            return new MagicFunction((list, scope) => Value.ListWith(body(list, scope)), name, line, fileName);
+            Body = body;
         }
 
         public int Line { get; }
@@ -34,9 +34,9 @@ namespace Wul.Interpreter.Types
             throw new NotImplementedException();
         }
 
-        public List<IValue> Execute(ListNode list, Scope scope)
+        public virtual List<IValue> Execute(ListNode list, Scope scope)
         {
-            return Body(list, scope);
+            return Value.ListWith(Body(list, scope));
         }
 
         public WulType Type => MagicFunctionType.Instance;
@@ -58,5 +58,21 @@ namespace Wul.Interpreter.Types
         }
 
         public MetaType MetaType { get; set; }
+    }
+
+    internal class MultiMagicFunction : MagicFunction
+    {
+        private readonly Func<ListNode, Scope, List<IValue>> Body;
+
+        public MultiMagicFunction(Func<ListNode, Scope, List<IValue>> body, string name, int line = 0, string fileName = null)
+            : base(name, line, fileName)
+        {
+            Body = body;
+        }
+
+        public override List<IValue> Execute(ListNode list, Scope scope)
+        {
+            return Body(list, scope);
+        }
     }
 }

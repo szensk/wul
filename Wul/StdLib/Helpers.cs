@@ -31,6 +31,11 @@ namespace Wul.StdLib
             return result;
         }
 
+        public static List<IValue> EvalManyOnce(this SyntaxNode node, Scope scope)
+        {
+            return WulInterpreter.Interpret(node, scope);
+        }
+
         public static IValue EvalOnce(this SyntaxNode node, Scope scope)
         {
             return WulInterpreter.Interpret(node, scope).FirstOrDefault() ?? Value.Nil;
@@ -70,7 +75,7 @@ namespace Wul.StdLib
             return WulInterpreter.Interpret(program, scope);
         }
 
-        public static WulString ToUString(IValue value)
+        public static WulString ToWulString(IValue value)
         {
             if (ReferenceEquals(value, Value.Nil)) return new WulString("nil");
             IValue val = value.MetaType.AsString.Invoke(Value.ListWith(value), null).First();
@@ -80,7 +85,7 @@ namespace Wul.StdLib
 
         public static string ToString(IValue value)
         {
-            return ToUString(value).AsString();
+            return ToWulString(value).AsString();
         }
 
         public static IValue AssertNotNil(this IValue value)

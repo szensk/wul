@@ -20,7 +20,7 @@ namespace Wul.StdLib
         internal static IValue Stringify(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
-            return Helpers.ToUString(first);
+            return Helpers.ToWulString(first);
         }
 
         [NetFunction("substring")]

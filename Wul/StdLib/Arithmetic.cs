@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
@@ -91,6 +92,20 @@ namespace Wul.StdLib
             {
                 return Value.Nil;
             }
+        }
+
+        private static readonly Random random = new Random();
+        [NetFunction("rand")]
+        private static IValue Random(List<IValue> list, Scope scope)
+        {
+            switch (list.Count)
+            {
+                case 0:
+                    return (Number)random.NextDouble();
+                case 1:
+                    return (Number)random.Next((Number)list[0]);
+            }
+            return (Number)random.Next((Number)list[0], (Number)list[1]);
         }
     }
 }

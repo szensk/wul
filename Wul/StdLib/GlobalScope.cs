@@ -21,6 +21,7 @@ namespace Wul.StdLib
             public IEnumerable<NetFunctionAttribute> NetAttributes;
             public IEnumerable<MultiNetFunctionAttribute> MultiNetAttributes;
             public IEnumerable<MagicFunctionAttribute> MagicAttributes;
+            public IEnumerable<MultiMagicFunctionAttribute> MultiMagicAttributes;
         }
 
         private static string GetFileName(IWulFunction funcDesc)
@@ -28,6 +29,7 @@ namespace Wul.StdLib
             return $"{System.IO.Path.GetFileName(funcDesc.FileName)} {funcDesc.Member}";
         }
 
+        //TODO replace with a generic method
         private static void RegisterNetFunction(FunctionRegistration method)
         {
             var first = method.NetAttributes.First();
@@ -57,8 +59,20 @@ namespace Wul.StdLib
             var first = method.MagicAttributes.First();
             string defaultName = first.Name;
             var deleg = method.Method.CreateDelegate(typeof(Func<ListNode, Scope, IValue>));
-            MagicFunction magicFunction = MagicFunction.FromSingle((Func<ListNode, Scope, IValue>)deleg, defaultName, first.Line, GetFileName(first));
+            MagicFunction magicFunction = new MagicFunction((Func<ListNode, Scope, IValue>)deleg, defaultName, first.Line, GetFileName(first));
             foreach (var globalname in method.MagicAttributes)
+            {
+                Scope[globalname.Name] = magicFunction;
+            }
+        }
+
+        private static void RegisterMultiMagicFunction(FunctionRegistration method)
+        {
+            var first = method.MultiMagicAttributes.First();
+            string defaultName = first.Name;
+            var deleg = method.Method.CreateDelegate(typeof(Func<ListNode, Scope, List<IValue>>));
+            MagicFunction magicFunction = new MultiMagicFunction((Func<ListNode, Scope, List<IValue>>)deleg, defaultName, first.Line, GetFileName(first));
+            foreach (var globalname in method.MultiMagicAttributes)
             {
                 Scope[globalname.Name] = magicFunction;
             }
@@ -88,7 +102,8 @@ namespace Wul.StdLib
                     Method = m,
                     NetAttributes = m.GetCustomAttributes<NetFunctionAttribute>(),
                     MultiNetAttributes = m.GetCustomAttributes<MultiNetFunctionAttribute>(),
-                    MagicAttributes = m.GetCustomAttributes<MagicFunctionAttribute>()
+                    MagicAttributes = m.GetCustomAttributes<MagicFunctionAttribute>(),
+                    MultiMagicAttributes = m.GetCustomAttributes<MultiMagicFunctionAttribute>()
                 })
                 .ToList();
 
@@ -97,6 +112,10 @@ namespace Wul.StdLib
                 if (method.MultiNetAttributes.Any())
                 {
                     RegisterMultiNetFunction(method);
+                }
+                else if (method.MultiMagicAttributes.Any())
+                {
+                    RegisterMultiMagicFunction(method);
                 }
                 else if (method.MagicAttributes.Any())
                 {
