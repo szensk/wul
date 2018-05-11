@@ -28,6 +28,7 @@ namespace Wul.Interpreter.MetaTypes
             //Other
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
+            Invoke.Method = new NetFunction(IdentityList, Invoke.Name);
         }
 
         private IValue Length(List<IValue> arguments, Scope s)

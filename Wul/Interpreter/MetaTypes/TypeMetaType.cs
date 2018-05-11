@@ -13,6 +13,7 @@ namespace Wul.Interpreter.MetaTypes
             Equal.Method = new NetFunction(AreEqual, Equal.Name);
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(NoType, Type.Name);
+            Invoke.Method = new NetFunction(IdentityList, Invoke.Name);
         }
 
         private IValue AreEqual(List<IValue> arguments, Scope s)

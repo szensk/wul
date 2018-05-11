@@ -43,8 +43,6 @@ namespace Wul.Interpreter
             AsString = new MetaMethod("string");
             Type = new MetaMethod("type");
 
-            Invoke.Method = new NetFunction(IdentityList, Invoke.Name);
-
             InitializeDictionary();
         }
 
