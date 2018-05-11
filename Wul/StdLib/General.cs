@@ -36,27 +36,52 @@ namespace Wul.StdLib
             return value;
         }
 
-        //TODO allow multiple variables to be bound
-        [MagicFunction("let")]
-        internal static IValue Let(ListNode list, Scope scope)
+        private static void RegisterNameInScope(Scope parentScope, Scope inScope, IdentifierNode nameName, IValue value)
         {
-            var children = list.Children.Skip(1).ToArray();
-            var nameIdentifier = (IdentifierNode) children[0];
-            string name = nameIdentifier.Name;
-            var value = children[1].EvalOnce(scope);
+            string name = nameName.Name;
+            inScope[name] = value;
+        }
 
-            //Do we want a closure or an empty child scope?
-            Scope currentScope = scope.EmptyChildScope();
-            currentScope[name] = value;
-
-            var childrenToEval = children.Skip(2);
+        private static IValue EvalRemainder(Scope scope, IEnumerable<SyntaxNode> childrenToEval)
+        {
             IValue result = Value.Nil;
             foreach (var child in childrenToEval)
             {
-                //TODO Should probably be eval once
-                result = child.Eval(currentScope);
+                result = child.Eval(scope);
             }
             return result;
+        }
+
+        [MagicFunction("let")]
+        internal static IValue Let(ListNode list, Scope scope)
+        {
+            Scope currentScope = scope.EmptyChildScope();
+
+            var children = list.Children.Skip(1).ToArray();
+            if (children[0] is IdentifierNode nameIdentifier)
+            {
+                RegisterNameInScope(scope, currentScope, nameIdentifier, children[1].EvalOnce(scope));
+                return EvalRemainder(currentScope, children.Skip(2));
+            }
+            else if (children[0] is ListNode namesNode)
+            {
+                //Destructuring form e.g.
+                //(let (x y) (5 6) (print x y) (print y x))
+                var values = children[1].EvalMany(scope);
+                if (values.Count == 1 && values[0] is ListTable lt)
+                {
+                    values = lt.AsList();
+                }
+                for (int i = 0; i < namesNode.Children.Count; i++)
+                {
+                    var nameNode = (IdentifierNode) namesNode.Children[i];
+                    var value = i < values.Count ? values[i] : Value.Nil;
+                    RegisterNameInScope(scope, currentScope, nameNode, value);
+                }
+
+                return EvalRemainder(currentScope, children.Skip(2));
+            }
+            throw new Exception("unknown form of let, identifier or list expected");
         }
 
         //TODO allow other multiple statements as the body (merge them into a do or something idk)

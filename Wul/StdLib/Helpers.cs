@@ -21,6 +21,16 @@ namespace Wul.StdLib
             return result;
         }
 
+        public static List<IValue> EvalMany(this SyntaxNode node, Scope scope)
+        {
+            List<IValue> result = WulInterpreter.Interpret(node, scope) ?? new List<IValue>();
+            while (result.FirstOrDefault() is SyntaxNode)
+            {
+                result = WulInterpreter.Interpret(result.FirstOrDefault() as SyntaxNode, scope);
+            }
+            return result;
+        }
+
         public static IValue EvalOnce(this SyntaxNode node, Scope scope)
         {
             return WulInterpreter.Interpret(node, scope).FirstOrDefault() ?? Value.Nil;
