@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Wul.Interpreter.Types;
 
@@ -43,6 +42,8 @@ namespace Wul.Interpreter
             ApplyMacro = new MetaMethod("apply");
             AsString = new MetaMethod("string");
             Type = new MetaMethod("type");
+
+            Invoke.Method = new NetFunction(IdentityList, Invoke.Name);
 
             InitializeDictionary();
         }
@@ -175,6 +176,11 @@ namespace Wul.Interpreter
         {
             IValue first = arguments.First();
             return (IValue) first.Type ?? Value.Nil;
+        }
+
+        protected static IValue IdentityList(List<IValue> arguments, Scope s)
+        {
+            return new ListTable(arguments);
         }
     }
 }

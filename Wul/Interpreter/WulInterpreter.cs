@@ -247,19 +247,7 @@ namespace Wul.Interpreter
                     value = EvaluateMacro(firstValue, list, currentScope);
                     break;
                 default:
-                    //Evaluate the remainder of the list
-                    List<IValue> remaining = new List<IValue>(list.Children.Count)
-                    {
-                        value.First()
-                    };
-
-                    foreach (var node in list.Children.Skip(1))
-                    {
-                        remaining.Add(Interpret(node, currentScope).First());
-                    }
-
-                    if (remaining.Count > 0) value = Value.ListWith(new ListTable(remaining));
-                    break;
+                    throw new Exception($"{first} is not a function");
             }
             
             CallStack.Clear();
