@@ -100,7 +100,7 @@ namespace Wul.StdLib
         [NetFunction("debug.trace")]
         internal static IValue Traceback(List<IValue> list, Scope s)
         {
-            foreach (var f in WulInterpreter.CallStack.Skip(1))
+            foreach (var f in WulInterpreter.CallStack.Skip(s == null ? 0 : 1))
             {
                 Console.WriteLine(f);
             }

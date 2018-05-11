@@ -50,6 +50,8 @@ namespace Wul
                 Console.WriteLine($"Error: {e.Message}");
 #if DEBUG
                 Console.WriteLine(e.StackTrace);
+                //TODO fix up traceback line numbers
+                //StdLib.Debug.Traceback(Value.EmptyList, null);
 #endif
                 return false;
             }

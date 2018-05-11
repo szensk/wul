@@ -89,6 +89,7 @@ namespace Wul.StdLib
             Scope["Function"] = FunctionType.Instance;
             Scope["SyntaxNode"] = SyntaxNodeType.Instance;
             Scope["Range"] = RangeType.Instance;
+            FunctionMetaType.SetMetaMethods();
 
             //Bools
             Scope["true"] = Bool.True;
@@ -126,8 +127,6 @@ namespace Wul.StdLib
                     RegisterNetFunction(method);
                 }
             }
-
-            FunctionMetaType.SetMetaMethods();
         }
     }
 }
