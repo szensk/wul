@@ -1,6 +1,6 @@
 wul
 ========
-Another **w**orthless **u**nnecessary **l**anguage developed as a learning exercise. The simple syntax is borrowed from Lisp but the language isn't exactly a lisp.  Notably, influenced by Lua, functions may return multiple values and values have a metatype which define their interaction with standard operators. Function parity is flexible. Too few values is equivalent to passing nil to all the remaining arguments. Arguments not included as a formal parameter of the function become accessible via a list named `$args`. Variable arguments are supported with `...`. Named parameters are also supported: `(add y: 6 x: 5)` and `(add 5 6)` are equivalent.
+**W**ul is another **u**nnecessary **l**anguage developed as a learning exercise. The simple syntax is borrowed from Lisp but the language isn't exactly a lisp. It is influenced by Lua: function parity is flexible, functions often return multiple values rather than lists and a value's metatype defines its behavior with standard operators (akin to Lua's metatables). Too few arguments is equivalent to passing nil to all the remaining arguments. Extra arguments not specified as a formal parameter of the function become accessible via a list named `$args`. Variable arguments are supported with `...`. Named parameters are also supported: `(add y: 6 x: 5)` and `(add 5 6)` are equivalent.
 
 Types
 ======
@@ -8,7 +8,7 @@ There are seven basic types: Bool, Number, String, List, Map, Range, Function. S
 
 MetaTypes
 =========
-A metatype contains methods that define how a value interacts with existing functions. All values, except the value nil, have a metatype. By default, values are constructed with their type's metatype. You can define new or override existing functions on a metatype at either the value or type level. For example, you can define the `invoke` metamethod on a map value. This allows that map instance to be used like a function. The map itself may be accessed in metamethods as the variable `self` (see [invoke.wul](Examples/invoke.wul) and [unpack.wul](Examples/unpack.wul)). Furthermore, an unnamed function may be accessed as the variable self and called recursively (e.g. invoking `(lambda (arg) (self arg))` results an infinite loop).
+A metatype contains methods that define how a value interacts with existing functions. All values, except the value nil, have a metatype. By default, values are constructed with their type's metatype. You can define new or override existing functions on a metatype at either the value or type level. Since all simple values have a default invoke metamethod that builds lists, it is not necessary to use the `list` method to construct a list. `(1 2 3)` will suffice. As an example of user metamethods, you can define the `invoke` metamethod on a map value. The map itself may be used like a function and accessed in metamethods as the variable `self` (see [invoke.wul](Examples/invoke.wul) and [unpack.wul](Examples/unpack.wul)). Furthermore, an unnamed function may be accessed as the variable self and called recursively (e.g. invoking `(lambda (arg) (self arg))` results an infinite loop).
 
 .NET Interoperability
 =====================
@@ -38,8 +38,8 @@ Examples
 ```
 
 ```lisp
-; functions may return multiple values with the return function
-(defn n-and-its-square (n) (return n (* n n)))
+; functions may return multiple values
+(defn n-and-its-square (n) (values n (* n n)))
 (print (n-and-its-square 5)) ; prints 5, 25 
 (+ (n-and-its-square 7)) ; returns 56
 ```
