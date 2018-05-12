@@ -1,6 +1,6 @@
 ; multiple return values
 ; destructuring let
-; error and pcal
+; error and pcall
 
 (defn badfunc (fail)
 	(if fail 
