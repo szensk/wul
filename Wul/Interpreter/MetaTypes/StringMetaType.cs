@@ -41,9 +41,9 @@ namespace Wul.Interpreter.MetaTypes
             return (Number) string.CompareOrdinal(first.Value, second.Value);
         }
 
-        private IValue JoinStrings(List<IValue> argumetns, Scope s)
+        private IValue JoinStrings(List<IValue> arguments, Scope s)
         {
-            var strings = argumetns.OfType<WulString>().Select(x => x.Value).ToList();
+            var strings = arguments.Cast<WulString>().Select(x => x.Value).ToList();
             if (!strings.Any())
             {
                 return Value.Nil;

@@ -124,5 +124,12 @@ namespace Wul.StdLib
                 : Value.EmptyList;
             return newFunc.Evaluate(args, scope);
         }
+
+        [NetFunction("identifier")]
+        internal static IValue StringToIdentifier(List<IValue> list, Scope scope)
+        {
+            var str = (WulString) list[0];
+            return new IdentifierNode(null, str.Value);
+        }
     }
 }

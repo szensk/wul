@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser.Nodes;
@@ -124,19 +125,25 @@ namespace Wul.StdLib
 
         private static IValue MapMap(List<IValue> list, Scope scope)
         {
-            var mapToMap = list[0] as MapTable;
+            var mapToMap = (MapTable) list[0];
             var callback = list[1];
             var func = callback.MetaType.Invoke;
+            var macro = callback.MetaType.ApplyMacro;
 
             IEnumerable<IValue> result;
-            if (!func.IsDefined)
-            {
-                result = mapToMap.AsDictionary().Values.Select(item => callback);
-            }
-            else
+            if (func.IsDefined)
             {
                 result = mapToMap.AsDictionary()
                     .Select(item => func.Invoke(Value.ListWith(callback, item.Key, item.Value), scope).First());
+            }
+            else if (macro.IsDefined)
+            {
+                result = mapToMap.AsDictionary()
+                    .Select(item => ApplyMacro(callback, scope, item.Key, item.Value));
+            }
+            else
+            {
+                result = mapToMap.AsDictionary().Values.Select(item => callback);
             }
 
             return new ListTable(result);
@@ -147,6 +154,7 @@ namespace Wul.StdLib
             var rangeToMap = list[0] as Interpreter.Types.Range;
             var callback = list[1];
             var func = callback.MetaType.Invoke;
+            var macro = callback.MetaType.ApplyMacro;
 
             List<IValue> result = new List<IValue>();
 
@@ -156,12 +164,32 @@ namespace Wul.StdLib
                 if (func.IsDefined)
                 {
                     cbresult = func.Invoke(Value.ListWith(callback, rangeToMap.First), scope).First();
+                } else if (macro.IsDefined)
+                {
+                    cbresult = ApplyMacro(callback, scope, rangeToMap.First);
                 }
                 result.Add(cbresult);
                 rangeToMap = rangeToMap.Remainder;
             }
 
             return new ListTable(result);
+        }
+
+        private static IValue ApplyMacro(IValue callback, Scope scope, params IValue[] arguments)
+        {
+            var macro = callback.MetaType.ApplyMacro;
+
+            var listNode = new ListNode(null, new List<SyntaxNode>());
+            listNode.Children.Add(new IdentifierNode(listNode, "null"));
+            foreach (var item in arguments)
+            {
+                var argumentNode = item.ToSyntaxNode(listNode);
+                listNode.Children.Add(argumentNode);
+            }
+
+            var expandedMacro = (ListTable) macro.Invoke(Value.ListWith(callback, listNode), scope).First();
+            var macroNode = expandedMacro.ToSyntaxNode(null);
+            return macroNode.Eval(scope);
         }
 
         [NetFunction("map")]
@@ -173,16 +201,22 @@ namespace Wul.StdLib
             var listToMap = (ListTable) list[0];
             var callback = list[1];
             var func = callback.MetaType.Invoke;
+            var macro = callback.MetaType.ApplyMacro;
 
             IEnumerable<IValue> result;
-            if (!func.IsDefined)
-            {
-                result = listToMap.AsList().Select(item => callback);
-            }
-            else
+            if (func.IsDefined)
             {
                 result = listToMap.AsList()
                     .Select(item => func.Invoke(Value.ListWith(callback, item), scope).First());
+            }
+            else if (macro.IsDefined)
+            {
+                result = listToMap.AsList()
+                    .Select(item => ApplyMacro(callback, scope, item));
+            }
+            else
+            {
+                result = listToMap.AsList().Select(item => callback);
             }
 
             return new ListTable(result);

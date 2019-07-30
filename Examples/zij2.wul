@@ -1,0 +1,58 @@
+; zij2.wul
+; Tiny Z machine
+
+(def Z 0) ; ZERO value at address
+(def I 1) ; INC  increment value at address
+(def J 2) ; JMP  jump to instruction if value at address 1 = value at address 2
+
+(def memory (3 4 0 0))
+
+(def program 
+ ((Z 2) 
+  (Z 3)
+  (I 2)
+  (J 2 0 2)
+  (I 2)
+  (I 3)
+  (J 3 1 4)
+  (Z 3))
+)
+
+(defmacro mk-get-x (x) (`lambda (`code `location) (`at (`at `code `location) x)))
+
+(defn inc (a) (+ a 1))
+(def get-opcode (mk-get-x 0))
+(def operand1 (mk-get-x 1))
+(def operand2 (mk-get-x 2))
+(def get-bt (mk-get-x 3))
+
+(defn simulate (code location)
+  (if (>= location (# code))
+    (then memory)
+    (else 
+      (let opcode (get-opcode code location)
+        (let operand (operand1 code location)
+          (??
+            (if (= Z opcode) 
+              (then (simulate code (inc location) (set memory operand 0)))
+            )
+            (if (= I opcode)
+              (then (simulate code (inc location) (set memory operand (inc (at memory operand)))))
+            )
+            (if (= J opcode)
+              (then 
+                (if (= (at memory operand) (at memory (operand2 code location)))
+                  (then (simulate code (inc location)))         ; branch not taken
+                  (else (simulate code (get-bt code location))) ; branch taken
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
+
+(print "Program code size: {(# program)}")
+(print (simulate program 0))
