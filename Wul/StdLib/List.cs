@@ -170,7 +170,7 @@ namespace Wul.StdLib
             if (list[0] is MapTable) return MapMap(list, scope);
             if (list[0] is Interpreter.Types.Range) return MapRange(list, scope);
 
-            var listToMap = list[0] as ListTable;
+            var listToMap = (ListTable) list[0];
             var callback = list[1];
             var func = callback.MetaType.Invoke;
 

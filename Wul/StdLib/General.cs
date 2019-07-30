@@ -93,12 +93,25 @@ namespace Wul.StdLib
             var nameIdentifier = (IdentifierNode) children[0];
             string name = nameIdentifier.Name;
 
-            var arguments = (ListNode) children[1];
-            var argNames = arguments.Children.OfType<IdentifierNode>().Select(a => a.Name);
+            int bodyIndex = 2;
+            List<string> argNames;
+            if (children.Length == 3)
+            {
+                var arguments = (ListNode) children[1];
+                argNames = arguments.Children
+                    .OfType<IdentifierNode>()
+                    .Select(a => a.Name)
+                    .ToList();
+            }
+            else
+            {
+                argNames = new List<string>();
+                bodyIndex = 1;
+            }
 
-            var body = (ListNode) children[2];
+            var body = (ListNode) children[bodyIndex];
             scope[name] = Value.Nil;
-            var function = new Function(body, name, argNames.ToList(), scope);
+            var function = new Function(body, name, argNames, scope);
             scope[name] = function;
 
             return function;

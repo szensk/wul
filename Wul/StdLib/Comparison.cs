@@ -22,6 +22,18 @@ namespace Wul.StdLib
             }
         }
 
+        [NetFunction("is")]
+        internal static IValue IsInstance(List<IValue> list, Scope scope)
+        {
+            IValue first = list[0];
+            foreach (IValue val in list.Skip(1))
+            {
+                // ReSharper disable once PossibleUnintendedReferenceComparison
+                if (val != first) return Bool.False;
+            }
+            return Bool.True;
+        }
+
         [NetFunction("<")]
         internal static IValue LessThan(List<IValue> list, Scope scope)
         {

@@ -11,6 +11,9 @@ namespace Wul.Interpreter.MetaTypes
 
         private RangeMetaType()
         {
+            //Arithmetic
+            Multiply.Method = new NetFunction(MultiplyRange, Multiply.Name);
+
             //Equality
             Equal.Method = new NetFunction(AreEqual, Equal.Name);
 
@@ -25,6 +28,18 @@ namespace Wul.Interpreter.MetaTypes
             //Other
             AsString.Method = new NetFunction(IdentityString, AsString.Name);
             Type.Method = new NetFunction(IdentityType, Type.Name);
+        }
+
+        private IValue MultiplyRange(List<IValue> arguments, Scope s)
+        {
+            Range r = (Range) arguments[0];
+
+            double result = 1;
+            foreach (var number in r.AsList().AsList().Cast<Number>())
+            {
+                result *= number;
+            }
+            return (Number) result;
         }
 
         private IValue AreEqual(List<IValue> arguments, Scope s)

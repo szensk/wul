@@ -66,5 +66,18 @@ namespace Wul.StdLib
             return map;
         }
 
+        [NetFunction("keys")]
+        internal static IValue Keys(List<IValue> list, Scope scope)
+        {
+            var mapList = (MapTable) list[0];
+            return new ListTable(mapList.AsDictionary().Keys);
+        }
+
+        [NetFunction("values")]
+        internal static IValue Values(List<IValue> list, Scope scope)
+        {
+            var mapList = (MapTable) list[0];
+            return new ListTable(mapList.AsDictionary().Values);
+        }
     }
 }
