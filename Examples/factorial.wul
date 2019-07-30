@@ -5,4 +5,8 @@
 	)
 )
 
+;implicit argument
+(defn factorial (* [1 $0]))
+
 (print "10! is {(fact 10)}.")
+(print "10! is {(factorial 10)}.")

@@ -1,0 +1,19 @@
+(defn reduce-internal (list func carry) 
+  (if (or (= list null) (empty? list))
+	(then carry)
+	(else 
+	  (reduce-internal (rem list) func (func carry (first list)))
+	)
+  )
+)
+
+(defn reduce (list func)
+  (if (empty? list) 
+	(then null)
+	(else 
+	  (reduce-internal (rem list) func (first list))
+	)
+  )
+)
+
+(print (reduce [1 4] +)) ; prints 10
