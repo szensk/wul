@@ -29,12 +29,12 @@ namespace Wul
             return (ProgramNode) Parser.Parse(programText);
         }
 
-        private static bool RunFile(string filePath)
+        private static bool RunFile(string filePath, Scope scope = null)
         {
             Parser = new ProgramParser(new FileInfo(filePath).FullName);
             try
             {
-                WulInterpreter.Interpret(LoadFile(filePath));
+                WulInterpreter.Interpret(LoadFile(filePath), scope);
             }
             catch (ParseException pe)
             {
@@ -104,6 +104,7 @@ namespace Wul
             Console.WriteLine("usage: wul [file]");
             Console.WriteLine("\t-e program to evaluate");
             Console.WriteLine("\t-ep program to evaluate without outermost parenthesis");
+            Console.WriteLine("\t-i drop into interactive mode after evaluating file");
             Console.WriteLine("\t-h help");
             Console.WriteLine("\t-v version");
             return ExitSuccess;
@@ -116,12 +117,17 @@ namespace Wul
             return ExitError;
         }
 
-        private static int ReadEvalPrintLoop()
+        private static int ReadEvalPrintLoop(string file = null)
         {
-            string input = "";
-
             Scope replScope = Global.Scope.EmptyChildScope();
 
+            if (!string.IsNullOrWhiteSpace(file))
+            {
+                RunFile(file, replScope);
+            }
+
+            string input = "";
+            
             Console.WriteLine($"wul interpreter {Version}");
             Console.WriteLine("to leave type 'exit'");
 
@@ -144,6 +150,7 @@ namespace Wul
                 case 0:
                     return ReadEvalPrintLoop();
                 case 1:
+                {
                     switch (args[0])
                     {
                         case "-h":
@@ -151,6 +158,7 @@ namespace Wul
                         case "-v":
                             return PrintVersion();
                     }
+
                     if (args[0].StartsWith('-'))
                     {
                         return Error($"Unrecognized option {args[0]}");
@@ -161,14 +169,25 @@ namespace Wul
                     {
                         return RunFile(filePath) ? ExitSuccess : ExitError;
                     }
+
                     return Error($"Unable to open file {filePath}");
+                }
                 case 2:
-                    if (args[0] != "-e" && args[0] != "-ep")
+                {
+                    if (args[0] == "-e" && args[0] == "-ep")
                     {
-                        return Error($"Unrecognized or invalid option {args[0]}");
+                        string input = args[0] == "-ep" ? $"({args[1]})" : args[1];
+                        return RunString(input) ? ExitSuccess : ExitError;
                     }
-                    string input = args[0] == "-ep" ? $"({args[1]})" : args[1];
-                    return RunString(input) ? ExitSuccess : ExitError;
+
+                    if (args.Any(a => a == "-i"))
+                    {
+                        string filePath = args.First(a => a != "-i");
+                        return ReadEvalPrintLoop(filePath);
+                    }
+
+                    return Error($"Unrecognized or invalid option {args[0]}");
+                }
             }
 
             PrintHelp();
