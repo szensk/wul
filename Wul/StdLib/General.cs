@@ -150,20 +150,6 @@ namespace Wul.StdLib
             return new Function(listbody, "unnamed function", argNames, scope);
         }
 
-        //[NetFunction("then")]
-        //[NetFunction("else")]
-        //internal static IValue Then(List<IValue> list, Scope scope)
-        //{
-        //    if (list.Count == 1)
-        //    {
-        //        return list.First();
-        //    }
-        //    else
-        //    {
-        //        return new ListTable(list.ToArray());
-        //    }
-        //}
-
         [MultiMagicFunction("if")]
         internal static List<IValue> If(ListNode list, Scope scope)
         {

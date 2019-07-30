@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
@@ -16,11 +17,20 @@ namespace Wul.StdLib
             return first.MetaType.Concat.Invoke(list, scope).First();
         }
 
-        [NetFunction("string")]
-        internal static IValue Stringify(List<IValue> list, Scope scope)
+        [MultiNetFunction("string")]
+        internal static List<IValue> Stringify(List<IValue> list, Scope scope)
         {
-            IValue first = list.First();
-            return Helpers.ToWulString(first);
+            if (list.Count == 1)
+            {
+                IValue first = list.First();
+                return Value.ListWith(Helpers.ToWulString(first));
+            }
+            else if (list.Count > 1)
+            {
+                var results = list.Select(Helpers.ToWulString).Cast<IValue>();
+                return Value.ListWith(results.ToArray());
+            }
+            throw new Exception("no arguments supplied to string");
         }
 
         [NetFunction("substring")]
