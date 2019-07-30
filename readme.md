@@ -39,7 +39,7 @@ Examples
 
 ```lisp
 ; functions may return multiple values
-(defn n-and-its-square (n) (values n (* n n)))
+(defn n-and-its-square (n) (return n (* n n)))
 (print (n-and-its-square 5)) ; prints 5, 25 
 (+ (n-and-its-square 7)) ; returns 56
 ```
