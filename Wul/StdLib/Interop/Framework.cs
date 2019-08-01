@@ -81,10 +81,9 @@ namespace Wul.StdLib.Interop
             return new NetObject(o);
         }
 
-        //TODO load assemblies on demand
-        //TODO cache method resolution: stored at a scope level, must know the name and the argument types
-        private static object InvokeNetFunction(Scope scope, string name, params IValue[] arguments)
+        private static MethodInfo FindMethodWithTypes(Scope scope, string name, params Type[] argTypes)
         {
+            MethodInfo methodInfo = null;
             var usings = new List<string> {""};
             usings.AddRange(scope.Usings);
 
@@ -97,23 +96,15 @@ namespace Wul.StdLib.Interop
                 string methodName = fullName.Substring(lastDot + 1);
 
                 var types = AllTypes[className];
-                var objectArguments = arguments.Select(a => a.ToObject()).ToArray();
-                Type[] argTypes = objectArguments.Select(a => a.GetType()).ToArray();
                 
                 foreach (var type in types)
                 {
-                    MethodInfo methodInfo = null;
                     try
                     {
                         methodInfo = type.GetMethod(methodName, argTypes);
                         if (methodInfo == null)
                         {
-                            objectArguments = arguments.Select(a =>
-                            {
-                                if (a is Number n) return (int) n.Value;
-                                return a.ToObject();
-                            }).ToArray();
-                            methodInfo = type.GetMethod(methodName, objectArguments.Select(a => a.GetType()).ToArray());
+                            methodInfo = type.GetMethod(methodName, argTypes);
                         }
                     }
                     catch
@@ -133,16 +124,30 @@ namespace Wul.StdLib.Interop
 
                     if (propertyInfo != null)
                     {
-                        methodInfo = arguments.Length > 0 ? propertyInfo.SetMethod : propertyInfo.GetMethod;
-                    }
-
-                    if (methodInfo != null)
-                    {
-                        return methodInfo.Invoke(null, objectArguments);
+                        methodInfo = argTypes.Length > 0 ? propertyInfo.SetMethod : propertyInfo.GetMethod;
                     }
                 }
             }
-            throw new MethodNotFoundException($"Method {name} not found");
+            
+            return methodInfo;
+        }
+
+        //TODO load assemblies on demand
+        //TODO cache method resolution: stored at a scope level, must know the name and the argument types
+        private static object InvokeNetFunction(Scope scope, string name, params IValue[] arguments)
+        {
+            var objectArguments = arguments.Select(a => a.ToObject()).ToArray();
+            Type[] argTypes = objectArguments.Select(a => a.GetType()).ToArray();
+
+            var methodInfo = FindMethodWithTypes(scope, name, argTypes);
+            if (methodInfo != null)
+            {
+                return methodInfo.Invoke(null, objectArguments);
+            }
+            else
+            {
+                throw new MethodNotFoundException($"Method {name} not found");
+            }
         }
 
         private static object NewObject(string className, params object[] arguments)
@@ -199,6 +204,54 @@ namespace Wul.StdLib.Interop
             }
 
             return result == null ? (IValue) Value.Nil : new NetObject(result);
+        }
+
+        private static Func<List<IValue>, Scope, IValue> CreateNetFunction(MethodInfo methodInfo)
+        {
+            IValue Local(List<IValue> list, Scope s)
+            {
+                object result = methodInfo.Invoke(null, list.Select(l => l.ToObject()).ToArray());
+                return ConvertToIValue(result);
+            }
+
+            return Local;
+        }
+
+        //(::defn Math.Max System.Math.Max System.Decimal System.Decimal)
+        [MagicFunction("::defn")]
+        internal static IValue ImportFunction(ListNode list, Scope scope)
+        {
+            int children = list.Children.Count - 1;
+
+            if (children < 1)
+            {
+                throw new ArgumentException("Too few parameters");
+            }
+
+            var args = list.Children.Skip(1).ToArray();
+            var nameIdentifier = (IdentifierNode) args[0];
+            string name = nameIdentifier.Name;
+
+            var methodIdentifier = (IdentifierNode) args[1];
+            string methodName = methodIdentifier.Name;
+
+            var argTypes = new Type[children > 2 ? children - 2 : 0];
+
+            int startIndex = 2;
+            for (int i = startIndex; i < children; i++)
+            {
+                var typeIdentifier = (IdentifierNode) args[i];
+                var types = AllTypes[typeIdentifier.Name];
+                var type = types.First();
+                argTypes[i - startIndex] = type;
+            }
+
+            var method = FindMethodWithTypes(scope, methodName, argTypes);
+            scope[name] = Value.Nil;
+            var function = new NetFunction(CreateNetFunction(method), methodName);
+            scope[name] = function;
+
+            return function;
         }
 
         [NetFunction("convert")]

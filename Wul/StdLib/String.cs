@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
+using Wul.Parser.Nodes;
 using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
@@ -30,6 +31,25 @@ namespace Wul.StdLib
             else if (list.Count > 1)
             {
                 var results = list.Select(Helpers.ToWulString).Cast<IValue>();
+                return Value.ListWith(results.ToArray());
+            }
+            throw new Exception("no arguments supplied to string");
+        }
+
+        //TODO very similar to dump
+        [MultiMagicFunction("@string")]
+        internal static List<IValue> MetaStringify(ListNode list, Scope scope)
+        {
+            var children = list.Children.Skip(1).ToArray();
+            if (children.Length == 1)
+            {
+                IValue first = children.First();
+                var str = new WulString(first.ToString());
+                return Value.ListWith(str);
+            }
+            else if (children.Length > 1)
+            {
+                var results = children.Select(c => new WulString(c.ToString())).Cast<IValue>();
                 return Value.ListWith(results.ToArray());
             }
             throw new Exception("no arguments supplied to string");
