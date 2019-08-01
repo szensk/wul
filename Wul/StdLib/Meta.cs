@@ -4,10 +4,12 @@ using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
 using Wul.Parser.Nodes;
+using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
 {
-    class Meta
+    [StdLib]
+    internal class Meta
     {
         [MagicFunction("set-metamethod")]
         internal static IValue SetMetamethod(ListNode list, Scope scope)

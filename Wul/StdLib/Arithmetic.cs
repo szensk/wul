@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
+using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
 {
+    [StdLib]
     internal class Arithmetic
     {
         [NetFunction("inc")]

@@ -5,10 +5,12 @@ using System.Reflection;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser.Nodes;
+using Wul.StdLib.Attribute;
 
-namespace Wul.StdLib
+namespace Wul.StdLib.Interop
 {
-    class Interop
+    [StdLib]
+    internal class Framework
     {
         private static ILookup<string, Type> _allTypes;
 
@@ -32,6 +34,11 @@ namespace Wul.StdLib
                 .SelectMany(a => a.GetTypes()).ToLookup(key => key.FullName);
         }
 
+        private static void LoadConverters()
+        {
+
+        }
+
         private class MethodNotFoundException : Exception
         {
             public MethodNotFoundException(string message) : base(message)
@@ -42,7 +49,7 @@ namespace Wul.StdLib
 
         //TODO Is there a better way?
         //TODO IEnumerables to Lists
-        private static IValue ConvertToIValue(object o)
+        public static IValue ConvertToIValue(object o)
         {
             switch (o)
             {
@@ -156,7 +163,7 @@ namespace Wul.StdLib
             return ConvertToIValue(result);
         }
 
-        [MagicFunction("new-object")]
+        [MagicFunction("::new")]
         internal static IValue NewObject(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();

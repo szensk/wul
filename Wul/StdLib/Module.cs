@@ -4,9 +4,11 @@ using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser.Nodes;
+using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
 {
+    [StdLib]
     internal class Module
     {
         //TODO add real namespaces

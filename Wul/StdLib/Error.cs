@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
+using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
 {
@@ -16,6 +17,7 @@ namespace Wul.StdLib
         }
     }
 
+    [StdLib]
     public class Error
     {
         [NetFunction("error")]

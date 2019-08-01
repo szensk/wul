@@ -6,6 +6,7 @@ using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
 using Wul.Parser.Nodes;
+using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
 {
@@ -97,7 +98,9 @@ namespace Wul.StdLib
 
             var types = Assembly.GetAssembly(typeof(Global)).GetTypes();
 
-            var namedMethods = types.SelectMany(t => t.GetRuntimeMethods())
+            var namedMethods = types
+                .Where(t => t.GetCustomAttribute<StdLibAttribute>() != null)
+                .SelectMany(t => t.GetRuntimeMethods())
                 .Select(m => new FunctionRegistration
                 {
                     Method = m,

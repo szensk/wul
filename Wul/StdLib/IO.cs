@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
+using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
 {
-    // ReSharper disable once InconsistentNaming
+    [StdLib]
     internal class IO
     {
         [NetFunction("print")]

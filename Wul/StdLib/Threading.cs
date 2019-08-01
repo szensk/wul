@@ -5,10 +5,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
+using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
 {
-    class Threading
+    [StdLib]
+    internal class Threading
     {
         private static Task NetObjectToTask(NetObject no)
         {

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
+using Wul.StdLib.Attribute;
 
 namespace Wul.StdLib
 {
-    class Range
+    [StdLib]
+    internal class Range
     {
         [NetFunction("range")]
         internal static IValue RangeFromArguments(List<IValue> list, Scope scope)

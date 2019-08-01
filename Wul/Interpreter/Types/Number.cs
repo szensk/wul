@@ -84,6 +84,7 @@ namespace Wul.Interpreter.Types
             return obj is Number other && Math.Abs(Value - other.Value) < OneHundredEpsilon;
         }
 
+        public bool IsInteger => Math.Abs(Value % 1) <= OneHundredEpsilon;
 
         public WulType Type => NumberType.Instance;
 
