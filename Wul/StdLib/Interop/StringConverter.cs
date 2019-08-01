@@ -2,15 +2,15 @@
 
 namespace Wul.StdLib.Interop
 {
-    class StringConverter : IValueConverter<string>
+    class StringConverter : ValueConverter<string>
     {
-        public IValue ConvertToIValue(string original)
+        public override IValue ConvertToIValue(string original)
         {
             if (original == null) return Value.Nil;
             return new WulString(original);
         }
 
-        public string ConvertFromIValue(IValue original)
+        public override string ConvertFromIValue(IValue original)
         {
             if (original == Value.Nil) return null;
             return original.AsString();

@@ -2,14 +2,32 @@
 
 namespace Wul.StdLib.Interop
 {
-    interface IValueConverter<TNetValue, TWulValue>
+    interface IValueConverter<TNetValue>
     {
-        TWulValue ConvertToIValue(TNetValue original);
-        TNetValue ConvertFromIValue(TWulValue original);
+        IValue ConvertToIValue(TNetValue original);
+        TNetValue ConvertFromIValue(IValue original);
     }
 
-    interface IValueConverter<TNetValue> : IValueConverter<TNetValue, IValue>
+    interface IValueConverter
     {
+        IValue ConvertToIValue(object original);
+        object ConvertFromIValue(IValue original);
+    }
 
+    abstract class ValueConverter<TNetValue> : IValueConverter<TNetValue>, IValueConverter
+    {
+        public abstract IValue ConvertToIValue(TNetValue original);
+
+        public abstract TNetValue ConvertFromIValue(IValue original);
+
+        public IValue ConvertToIValue(object original)
+        {
+            return ConvertToIValue((TNetValue) original);
+        }
+
+        object IValueConverter.ConvertFromIValue(IValue original)
+        {
+            return ConvertFromIValue(original);
+        }
     }
 }

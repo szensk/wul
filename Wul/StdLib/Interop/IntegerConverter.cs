@@ -3,14 +3,14 @@ using Wul.Interpreter.Types;
 
 namespace Wul.StdLib.Interop
 {
-    class IntegerConverter : IValueConverter<int>
+    class IntegerConverter : ValueConverter<long>
     {
-        public IValue ConvertToIValue(int original)
+        public override IValue ConvertToIValue(long original)
         {
             return (Number) original;
         }
 
-        public int ConvertFromIValue(IValue original)
+        public override long ConvertFromIValue(IValue original)
         {
             if (original == Value.Nil) throw new Exception("Unable to convert null to int");
             if (original is Number n && n.IsInteger)

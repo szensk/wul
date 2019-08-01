@@ -12,7 +12,7 @@ A metatype contains methods that define how a value interacts with existing func
 
 .NET Interoperability
 =====================
-The `::` function invokes static .NET methods (e.g. `(:: System.IO.Directory.SetCurrentDirectory 'someDirectory')`). The `new-object` function constructs new .NET objects. These objects can be bound to name or stored in a list for later use. Fields and properties of an object can be accessed with `(at obj PropertyName)` and set with `(set obj PropertyName 5)`. Methods on objects may be invoked by using the value like a function, for example `(obj Join 'argument1')`.
+The `::` function invokes static .NET methods (e.g. `(:: System.IO.Directory.SetCurrentDirectory 'someDirectory')`). The `::new` function constructs new .NET objects. These objects can be bound to name or stored in a list for later use. Fields and properties of an object can be accessed with `(at obj PropertyName)` and set with `(set obj PropertyName 5)`. Methods on objects may be invoked by using the value like a function, for example `(obj Join 'argument1')`.
 
 Examples
 =======

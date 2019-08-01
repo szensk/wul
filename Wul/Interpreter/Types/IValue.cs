@@ -1,10 +1,10 @@
-﻿using Wul.Parser.Nodes;
+﻿using System;
+using Wul.Parser.Nodes;
 
 namespace Wul.Interpreter.Types
 {
     public interface IValue
     {    
-        //Meta-type
         MetaType MetaType { get; set; }
 
         WulType Type { get; }

@@ -34,9 +34,26 @@ namespace Wul.StdLib.Interop
                 .SelectMany(a => a.GetTypes()).ToLookup(key => key.FullName);
         }
 
-        private static void LoadConverters()
-        {
+        private static Dictionary<Type, IValueConverter> Converters;
 
+        private static void LoadConvertersIfNeeded()
+        {
+            if (Converters != null) return;
+
+            Converters = new Dictionary<Type, IValueConverter>();
+            
+            var types = Assembly.GetAssembly(typeof(Global)).GetTypes();
+            var converterType = typeof(IValueConverter);
+            var converters = types.Where(t => !t.IsAbstract && converterType.IsAssignableFrom(t));
+
+            //Create a single instance of all converters
+            foreach (var converter in converters)
+            {
+                var b = converter.BaseType;
+                var netType = b.GenericTypeArguments.First();
+                var instance = (IValueConverter) Activator.CreateInstance(converter);
+                Converters[netType] = instance;
+            }
         }
 
         private class MethodNotFoundException : Exception
@@ -47,27 +64,21 @@ namespace Wul.StdLib.Interop
             }
         }
 
-        //TODO Is there a better way?
-        //TODO IEnumerables to Lists
         public static IValue ConvertToIValue(object o)
         {
-            switch (o)
+            if (o == null) return Value.Nil;
+
+            LoadConvertersIfNeeded();
+            var type = o.GetType();
+            foreach (var converter in Converters)
             {
-                case string s:
-                    return new WulString(s);
-                case bool b:
-                    return b ? Bool.True : Bool.False;
-                case double d:
-                    return (Number)d;
-                case int i:
-                    return (Number)i;
-                case int[] ia:
-                    return new ListTable(ia.Select(n => (Number)n));
-                case null:
-                    return Value.Nil;
-                default:
-                    return new NetObject(o);
+                if (converter.Key.IsAssignableFrom(type))
+                {
+                    return converter.Value.ConvertToIValue(o);
+                }
             }
+            
+            return new NetObject(o);
         }
 
         //TODO load assemblies on demand
@@ -88,7 +99,7 @@ namespace Wul.StdLib.Interop
                 var types = AllTypes[className];
                 var objectArguments = arguments.Select(a => a.ToObject()).ToArray();
                 Type[] argTypes = objectArguments.Select(a => a.GetType()).ToArray();
-
+                
                 foreach (var type in types)
                 {
                     MethodInfo methodInfo = null;
@@ -137,7 +148,11 @@ namespace Wul.StdLib.Interop
         private static object NewObject(string className, params object[] arguments)
         {
             var types = AllTypes[className];
-            var type = types.First();
+            var type = types.FirstOrDefault();
+            if (type == null)
+            {
+                throw new Exception($"Cannot find type {className}");
+            }
             return Activator.CreateInstance(type, arguments);
         }
 

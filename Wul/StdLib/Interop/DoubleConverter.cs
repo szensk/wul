@@ -3,14 +3,14 @@ using Wul.Interpreter.Types;
 
 namespace Wul.StdLib.Interop
 {
-    class DoubleConverter : IValueConverter<double>
+    class DoubleConverter : ValueConverter<double>
     {
-        public IValue ConvertToIValue(double original)
+        public override IValue ConvertToIValue(double original)
         {
             return (Number) original;
         }
 
-        public double ConvertFromIValue(IValue original)
+        public override double ConvertFromIValue(IValue original)
         {
             if (original == Value.Nil) throw new Exception("Unable to convert null to double");
             if (original is Number n)
