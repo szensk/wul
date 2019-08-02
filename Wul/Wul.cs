@@ -117,8 +117,11 @@ namespace Wul
             return ExitError;
         }
 
-        private static int ReadEvalPrintLoop(string file = null)
+        private static int ReadEvalPrintLoop(string file = null, string runString = null)
         {
+            Console.WriteLine($"wul interpreter {Version}");
+            Console.WriteLine("to leave type 'exit'");
+
             Scope replScope = Global.Scope.EmptyChildScope();
 
             if (!string.IsNullOrWhiteSpace(file))
@@ -126,14 +129,14 @@ namespace Wul
                 RunFile(file, replScope);
             }
 
-            string input = "";
-            
-            Console.WriteLine($"wul interpreter {Version}");
-            Console.WriteLine("to leave type 'exit'");
+            if (!string.IsNullOrWhiteSpace(runString))
+            {
+                RunString(runString, replScope);
+            }
 
             while (true)
             {
-                input = Console.ReadLine();
+                string input = Console.ReadLine();
                 System.Diagnostics.Debug.WriteLine(input);
                 if (input == "exit" || input == "q") break;
                 RunString(input, replScope);
@@ -141,57 +144,119 @@ namespace Wul
             return ExitSuccess;
         }
 
+        private class StartUpArguments
+        {
+            public static implicit operator StartUpArguments(int returnCode)
+            {
+                return new StartUpArguments
+                {
+                    ReturnCode = returnCode
+                };
+            }
+
+            public int? ReturnCode { get; set; }
+            public string FileName { get; set; }
+            public string Script { get; set; }
+            public bool REPL { get; set; }
+        }
+
+        private static StartUpArguments ParseArguments(string[] args)
+        {
+            bool dropToInterpreter = false;
+            int evalArgument = -1;
+            bool addParentheses = false;
+            string fileName = null;
+            string script = null;
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                string arg = args[i];
+
+                switch (arg)
+                {
+                    case "-h":
+                    case "--help":
+                        return PrintHelp();
+                    case "-v":
+                    case "--version":
+                        return PrintVersion();
+                    case "-i":
+                        dropToInterpreter = true;
+                        break;
+                    case "-ep":
+                    case "-e":
+                        if (i + 1 < args.Length)
+                        {
+                            evalArgument = ++i;
+                        }
+                        else
+                        {
+                            return Error("No script specified");
+                        }
+                        addParentheses = arg == "-ep";
+                        break;
+                    default:
+                        if (arg.StartsWith('-'))
+                        {
+                            return Error($"Unrecognized option {arg}");
+                        }
+                        else
+                        {
+                            fileName = arg;
+                        }
+                        break;
+                }
+            }
+            
+            if (evalArgument >= 0)
+            {
+                script = args[evalArgument];
+                script = addParentheses ? $"({script})" : script;
+            }
+
+            if (string.IsNullOrWhiteSpace(script) && string.IsNullOrWhiteSpace(fileName))
+            {
+                dropToInterpreter = true;
+            }
+
+            return new StartUpArguments
+            {
+                REPL = dropToInterpreter,
+                FileName = fileName,
+                Script = script
+            };
+        }
+
         private static int Main(string[] args)
         {
             Global.RegisterDefaultFunctions();
 
-            switch (args.Length)
+            var arguments = ParseArguments(args);
+            if (arguments.ReturnCode.HasValue) return arguments.ReturnCode.Value;
+            if (arguments.REPL)
             {
-                case 0:
-                    return ReadEvalPrintLoop();
-                case 1:
-                {
-                    switch (args[0])
-                    {
-                        case "-h":
-                            return PrintHelp();
-                        case "-v":
-                            return PrintVersion();
-                    }
-
-                    if (args[0].StartsWith('-'))
-                    {
-                        return Error($"Unrecognized option {args[0]}");
-                    }
-
-                    string filePath = args[0];
-                    if (File.Exists(filePath))
-                    {
-                        return RunFile(filePath) ? ExitSuccess : ExitError;
-                    }
-
-                    return Error($"Unable to open file {filePath}");
-                }
-                case 2:
-                {
-                    if (args[0] == "-e" && args[0] == "-ep")
-                    {
-                        string input = args[0] == "-ep" ? $"({args[1]})" : args[1];
-                        return RunString(input) ? ExitSuccess : ExitError;
-                    }
-
-                    if (args.Any(a => a == "-i"))
-                    {
-                        string filePath = args.First(a => a != "-i");
-                        return ReadEvalPrintLoop(filePath);
-                    }
-
-                    return Error($"Unrecognized or invalid option {args[0]}");
-                }
+                return ReadEvalPrintLoop(arguments.FileName, arguments.Script);
             }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(arguments.FileName))
+                {
+                    if (!RunFile(arguments.FileName))
+                    {
+                        return ExitError;
+                    }
+                }
 
-            PrintHelp();
-            return ExitSuccess;
+                if (!string.IsNullOrWhiteSpace(arguments.Script))
+                {
+                    if (!RunString(arguments.Script))
+                    {
+                        return ExitError;
+                    }
+                }
+
+                return ExitSuccess;
+            }
         }
     }
 }
