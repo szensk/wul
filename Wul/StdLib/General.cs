@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser.Nodes;
@@ -21,27 +22,27 @@ namespace Wul.StdLib
         [MagicFunction("def")]
         internal static IValue Define(ListNode list, Scope scope)
         {
-            var children = list.Children.Skip(1).ToArray();
-            var nameIdentifier = (IdentifierNode) children[0];
-            string name = nameIdentifier.Name;
-            var value = children[1].EvalOnce(scope);
+            return RegisterNameValues(list, scope);
+        }
 
+        [MagicFunction("let")]
+        internal static IValue Let(ListNode list, Scope scope)
+        {
+            Scope currentScope = scope.EmptyChildScope();
+            return RegisterNameValues(list, currentScope);
+        }
+
+        private static void RegisterNameInScope(Scope inScope, IdentifierNode nameName, IValue value)
+        {
+            string name = nameName.Name;
             if (ReferenceEquals(value, Value.Nil))
             {
-                scope.Remove(name);
+                inScope.Remove(name);
             }
             else
             {
-                scope[name] = value;
+                inScope[name] = value;
             }
-
-            return value;
-        }
-
-        private static void RegisterNameInScope(Scope parentScope, Scope inScope, IdentifierNode nameName, IValue value)
-        {
-            string name = nameName.Name;
-            inScope[name] = value;
         }
 
         private static IValue EvalRemainder(Scope scope, IEnumerable<SyntaxNode> childrenToEval)
@@ -54,16 +55,15 @@ namespace Wul.StdLib
             return result;
         }
 
-        [MagicFunction("let")]
-        internal static IValue Let(ListNode list, Scope scope)
+        private static IValue RegisterNameValues(ListNode list, Scope scope)
         {
-            Scope currentScope = scope.EmptyChildScope();
-
+            var name = ((IdentifierNode) list.Children.First()).Name;
             var children = list.Children.Skip(1).ToArray();
             if (children[0] is IdentifierNode nameIdentifier)
             {
-                RegisterNameInScope(scope, currentScope, nameIdentifier, children[1].EvalOnce(scope));
-                return EvalRemainder(currentScope, children.Skip(2));
+                var value = children[1].EvalOnce(scope);
+                RegisterNameInScope(scope, nameIdentifier, value);
+                return EvalRemainder(scope, children.Skip(2));
             }
             else if (children[0] is ListNode namesNode)
             {
@@ -78,14 +78,14 @@ namespace Wul.StdLib
                 {
                     var nameNode = (IdentifierNode) namesNode.Children[i];
                     var value = i < values.Count ? values[i] : Value.Nil;
-                    RegisterNameInScope(scope, currentScope, nameNode, value);
+                    RegisterNameInScope(scope, nameNode, value);
                 }
 
-                return EvalRemainder(currentScope, children.Skip(2));
+                return EvalRemainder(scope, children.Skip(2));
             }
-            throw new Exception("unknown form of let, identifier or list expected");
+            throw new Exception($"unknown form of {name}, identifier or list expected");
         }
-
+        
         //TODO allow other multiple statements as the body (merge them into a do or something idk)
         [MagicFunction("defn")]
         internal static IValue DefineFunction(ListNode list, Scope scope)
