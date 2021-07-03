@@ -2,10 +2,8 @@
 
 namespace Wul.Parser.Nodes
 {
-    public class RangeNode : SyntaxNode
+    public class RangeNode : ParentSyntaxNode
     {
-        public List<SyntaxNode> Children { get; }
-
         public RangeNode(SyntaxNode parent, List<SyntaxNode> children) : base(parent)
         {
             Children = children;

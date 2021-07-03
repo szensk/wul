@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.Types;
+using Range = Wul.Interpreter.Types.Range;
 
 namespace Wul.Interpreter.MetaTypes
 {
