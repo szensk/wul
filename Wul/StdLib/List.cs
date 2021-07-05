@@ -54,10 +54,17 @@ namespace Wul.StdLib
         internal static IValue Reverse(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
-            var len = (Number) Length(list, scope);
-            var range = new Interpreter.Types.Range(len - 1, 0, -1);
-            var args = new List<IValue> { range, first };
-            return range.MetaType.Invoke.Invoke(args, scope).First();
+            if (first is Interpreter.Types.Range r)
+            {
+                return r.Reverse;
+            }
+            else
+            {
+                var len = (Number)Length(list, scope);
+                var range = new Interpreter.Types.Range(len - 1, 0, -1);
+                var args = new List<IValue> { range, first };
+                return range.MetaType.Invoke.Invoke(args, scope).First();
+            }
         }
 
         [MagicFunction("at")]
