@@ -60,21 +60,28 @@ namespace Wul.Interpreter.MetaTypes
 
             if (range == null || target == null || !(target.MetaType?.At.IsDefined ?? false)) return Value.Nil;
 
-            //TODO lazily transform range to list of indices
-            var indexes = range.AsList().AsList();
-            if (indexes.Count == 1)
+            if (target is Range r)
             {
-                return target.MetaType.At.Invoke(new List<IValue>{target, indexes[0]}, s).First();
+                return r.Reverse;
             }
+            else
+            {
+                //TODO lazily transform range to list of indices
+                var indexes = range.AsList().AsList();
+                if (indexes.Count == 1)
+                {
+                    return target.MetaType.At.Invoke(new List<IValue> { target, indexes[0] }, s).First();
+                }
 
-            List<IValue> values = new List<IValue>(indexes.Count);
-            List<IValue> atArguments = new List<IValue>(2) { target, null};
-            foreach (var index in indexes)
-            {
-                atArguments[1] = index;
-                values.Add(target.MetaType.At.Invoke(atArguments, s).First());
+                List<IValue> values = new List<IValue>(indexes.Count);
+                List<IValue> atArguments = new List<IValue>(2) { target, null };
+                foreach (var index in indexes)
+                {
+                    atArguments[1] = index;
+                    values.Add(target.MetaType.At.Invoke(atArguments, s).First());
+                }
+                return new ListTable(values);
             }
-            return new ListTable(values);
         }
 
         private IValue AtIndex(List<IValue> arguments, Scope s)

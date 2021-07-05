@@ -14,14 +14,14 @@ using Wul.StdLib;
 namespace Wul
 {
     //WUL: Worthless Unnecessary Language
-    static class Wul
+    internal static class Wul
     {
         private const int ExitSuccess = 0;
         private const int ExitError = 1;
 
         private static ProgramParser Parser;
 
-        private static string Version => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+        public static string Version => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
         
         private static ProgramNode LoadFile(string filePath)
         {

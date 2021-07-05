@@ -51,6 +51,8 @@ namespace Wul.Interpreter.Types
 
         public Number First => _start;
 
+        public Range Reverse => new Range(_end ?? double.PositiveInfinity, _start, _increment == null ? null : -_increment);
+
         public Range Remainder
         {
             get

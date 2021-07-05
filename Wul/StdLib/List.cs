@@ -49,6 +49,17 @@ namespace Wul.StdLib
             return first.MetaType.Remainder.Invoke(list, scope).First();
         }
 
+        // Reverse remainder 
+        [NetFunction("reverse")]
+        internal static IValue Reverse(List<IValue> list, Scope scope)
+        {
+            IValue first = list.First();
+            var len = (Number) Length(list, scope);
+            var range = new Interpreter.Types.Range(len - 1, 0, -1);
+            var args = new List<IValue> { range, first };
+            return range.MetaType.Invoke.Invoke(args, scope).First();
+        }
+
         [MagicFunction("at")]
         internal static IValue AtIndex(ListNode list, Scope scope)
         {

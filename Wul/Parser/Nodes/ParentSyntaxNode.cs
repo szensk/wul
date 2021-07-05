@@ -23,13 +23,9 @@ namespace Wul.Parser.Nodes
                 {
                     identifierNodes.AddRange(interpolatedString.ReferencedNames);
                 }
-                if (node is ListNode listNode)
+                if (node is ParentSyntaxNode parentNode)
                 {
-                    identifierNodes.AddRange(listNode.IdentifierNodes());
-                }
-                if (node is RangeNode rangeNode)
-                {
-                    identifierNodes.AddRange(rangeNode.IdentifierNodes());
+                    identifierNodes.AddRange(parentNode.IdentifierNodes());
                 }
             }
 

@@ -13,30 +13,29 @@ namespace Wul.Parser.Nodes
         {
             get
             {
-                return Enumerable.Select(_chunks, c => c.Interpolation)
-                    .Where<SyntaxNode>(c => c != null)
-                    .SelectMany(c =>
-                    {
-                        if (c is IdentifierNode id) return new List<IdentifierNode> {id};
-                        if (c is ListNode ln) return ln.IdentifierNodes();
-                        return new List<IdentifierNode>();
-                    });
+                var referencedNames = new List<IdentifierNode>();
+                foreach (var chunk in _chunks)
+                {
+                    var interp = chunk.Interpolation;
+                    if (interp == null) continue;
+                    if (interp is IdentifierNode id) referencedNames.Add(id);
+                    if (interp is ParentSyntaxNode pn) referencedNames.AddRange(pn.IdentifierNodes());
+                }
+                return referencedNames;
             }
         }
 
         public override string Value(Scope scope = null)
         {
-            var strings = Enumerable.Select(_chunks, c =>
+            var strings = new List<string>();
+            foreach (var chunk in _chunks)
+            {
+                if (chunk.String != null) strings.Add(chunk.String);
+                else if (chunk.Interpolation != null)
                 {
-                    if (c.String != null) return c.String;
-                    //TODO call tostring metamethod
-                    if (c.Interpolation != null)
-                    {
-                        return WulInterpreter.Interpret((SyntaxNode) c.Interpolation, scope).First().AsString();
-                    }
-                    return null;
-                })
-                .Where<string>(s => s != null);
+                    strings.Add(WulInterpreter.Interpret(chunk.Interpolation, scope).First().AsString());
+                }
+            }
             return string.Join("", strings);
         }
 

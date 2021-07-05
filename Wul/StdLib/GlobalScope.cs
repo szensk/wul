@@ -96,6 +96,9 @@ namespace Wul.StdLib
             Scope["true"] = Bool.True;
             Scope["false"] = Bool.False;
 
+            //Version
+            Scope["wul.version"] = (WulString) Wul.Version;
+
             var types = Assembly.GetAssembly(typeof(Global)).GetTypes();
 
             var namedMethods = types
