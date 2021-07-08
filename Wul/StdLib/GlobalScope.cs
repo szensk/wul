@@ -35,8 +35,19 @@ namespace Wul.StdLib
         {
             var first = method.NetAttributes.First();
             string defaultName = first.Name;
-            var deleg = method.Method.CreateDelegate(typeof(Func<List<IValue>, Scope, IValue>));
-            NetFunction netFunction = new NetFunction((Func<List<IValue>, Scope, IValue>)deleg, defaultName, first.Line, GetFileName(first));
+            var firstParameterType = method.Method.GetParameters()[0].ParameterType;
+            NetFunction netFunction;
+            if (typeof(IValue).IsAssignableFrom(firstParameterType))
+            {
+                var deleg = method.Method.CreateDelegate<Func<IValue, Scope, IValue>>();
+                netFunction = new NetFunction(deleg, defaultName, first.Line, GetFileName(first));
+            }
+            else
+            {
+                var deleg = method.Method.CreateDelegate<Func<List<IValue>, Scope, IValue>>();
+                netFunction = new NetFunction(deleg, defaultName, first.Line, GetFileName(first));
+            }
+            
             foreach (var globalname in method.NetAttributes)
             {
                 Scope[globalname.Name] = netFunction;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser.Nodes;
@@ -14,10 +13,7 @@ namespace Wul.StdLib
     class General
     {
         [NetFunction("identity")]
-        internal static IValue Identity(List<IValue> list, Scope scope)
-        {
-            return list.FirstOrDefault() ?? Value.Nil;
-        }
+        internal static IValue Identity(IValue first, Scope scope) => first;
 
         [MagicFunction("def")]
         internal static IValue Define(ListNode list, Scope scope)
@@ -201,13 +197,11 @@ namespace Wul.StdLib
         }
 
         [NetFunction("type")]
-        internal static IValue Type(List<IValue> list, Scope scope)
+        internal static IValue Type(IValue first, Scope scope)
         {
-            IValue first = list.First();
-
-            if (first.MetaType?.Type?.IsDefined ?? false)
+            if (first.MetaType?.Type?.IsDefined == true)
             {
-                return first.MetaType.Type.Invoke(list, scope).First();
+                return first.MetaType.Type.Invoke(Value.ListWith(first), scope).First();
             }
             else
             {
@@ -216,14 +210,14 @@ namespace Wul.StdLib
         }
 
         [NetFunction("exit")]
-        internal static IValue Exit(List<IValue> list, Scope scope)
+        internal static IValue Exit(IValue code, Scope scope) => Exit(code as Number);
+
+        //TODO ultimately I want to be able to annotate these cleaner functions directly
+        internal static Number Exit(Number code)
         {
-            Number code = list.FirstOrDefault() as Number;
-
-            double exitCode = code?.Value ?? 0; 
+            double exitCode = code?.Value ?? 0;
             Environment.Exit((int) exitCode);
-
-            return (Number) exitCode;
+            return exitCode;
         }
 
         [MagicFunction("time")]
@@ -273,15 +267,31 @@ namespace Wul.StdLib
             return value;
         }
 
-        [MultiNetFunction("unpack")]
-        private static List<IValue> Unpack(List<IValue> list, Scope scope)
+        [MultiMagicFunction("unpack")]
+        private static List<IValue> Unpack(ListNode list, Scope scope)
+        {
+            var first = list.Children[1];
+            //this is dumb, should be a separate function "unpack-recursive"
+            bool recursive = first is IdentifierNode i && i.Name == "recursive";
+            var evaluatedArguments = list.Children.Skip(recursive ? 2 : 1).Select(v => v.Eval(scope)).ToList();
+            return Unpack(evaluatedArguments, scope, recursive);
+        }
+
+        private static List<IValue> Unpack(List<IValue> list, Scope scope, bool recursive)
         {
             var result = new List<IValue>();
             foreach (var item in list)
             {
                 if (item is ListTable lt)
                 {
-                    result.AddRange(lt.AsList());
+                    if (recursive)
+                    {
+                        result.AddRange(Unpack(lt.AsList(), scope, recursive));
+                    }
+                    else
+                    {
+                        result.AddRange(lt.AsList());
+                    }
                 }
                 else
                 {

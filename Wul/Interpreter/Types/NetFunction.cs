@@ -24,6 +24,12 @@ namespace Wul.Interpreter.Types
             Body = body;
         }
 
+        public NetFunction(Func<IValue, Scope, IValue> body, string name, int line = 0, string fileName = null)
+            : this(name, line, fileName)
+        {
+            Body = (list, scope) => body(list.Count > 0 ? list[0] : Value.Nil, scope);
+        }
+
         public int Line { get; }
         public string Name { get; }
         public string FileName { get; }
