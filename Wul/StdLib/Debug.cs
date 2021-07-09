@@ -45,6 +45,7 @@ namespace Wul.StdLib
             string type = "unknown";
             string source = "";
             int line = 0;
+            int? numArgs = null;
 
             if (first is IFunction ifunc)
             {
@@ -52,6 +53,7 @@ namespace Wul.StdLib
                 line = ifunc.Line;
                 source = ifunc.FileName;
                 type = ifunc.GetType().Name;
+                numArgs = ifunc.ArgumentNames?.Count;
             }
             else if (first is WulType wt)
             {
@@ -66,7 +68,8 @@ namespace Wul.StdLib
                 Name = (WulString) name,
                 Type = (WulString) type,
                 Source = (WulString) source,
-                Line = (Number) line
+                Line = (Number) line,
+                ArgC = numArgs.HasValue ? (Number) numArgs.Value : null
             });
         }
 

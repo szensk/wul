@@ -91,9 +91,9 @@ namespace Wul.Interpreter.MetaTypes
 
         private IValue AreEqual(List<IValue> arguments, Scope s)
         {
-            ListTable left = (ListTable) arguments[0];
-            ListTable right = (ListTable) arguments[1];
-
+            ListTable left = arguments[0] as ListTable;
+            ListTable right = arguments[1] as ListTable;
+            if (left == null || right == null) return Bool.False;
             return left.AsList().SequenceEqual(right.AsList()) ? Bool.True : Bool.False;
         }
 
