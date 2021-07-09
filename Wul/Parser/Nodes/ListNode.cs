@@ -2,7 +2,6 @@
 
 namespace Wul.Parser.Nodes
 {
-
     public class ListNode : ParentSyntaxNode
     {
         public int Line { get; }
