@@ -1,0 +1,21 @@
+(defn is-even (n) (= 0 (% n 2)))
+(defn is-greater-than (n) (lambda (x) (> x n)))
+(defn starts-with (s c) (= (substring s 0 1) c))
+
+(defn which (li fn res) 
+    (if (is (rem li) nil) 
+        (then res) 
+        (else (let ist (fn (first li)) 
+            (which (rem li) fn (if ist
+                (then (.. res ((first li))))
+                (else res)
+            ))
+        ))
+    )
+)
+
+(defn where (li fn) (which li fn ()))
+
+(def l (list [1 10]))
+(print (where l (is-greater-than 8))) ; prints 9,10
+(print (where [1 10] is-even)) ; prints 2,4,6,8,10

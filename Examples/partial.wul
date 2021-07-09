@@ -1,0 +1,23 @@
+(defn partial (fn ...) (let part ... (lambda (...) (fn (unpack part ...)))))
+
+(defn add (x y z) (+ x y z))
+(def add2 (partial add 3 11))
+
+(print (add2 5)) ; prints 19
+
+(defn curried-n (narg fn)
+    (if (= narg 1)
+        (then fn)
+        (else 
+            (lambda (n) (curried-n (dec narg) (partial fn n)))
+        )
+    )
+)
+(defn curried (fn) (curried-n (at (debug.getinfo fn) 'ArgC') fn))
+
+(defmacro defn/curried (name args body)
+    (`def name (`curried (`lambda args body)))
+)
+
+(defn/curried add3 (a b c) (+ a b c))
+(print (((add3 3) 11) 5)) ; prints 19

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
@@ -239,6 +240,39 @@ namespace Wul.StdLib
             }
 
             return new ListTable(result);
+        }
+
+        private static int DefaultComparator(IValue x, IValue y, Scope scope)
+        {
+            var cmps = x.MetaType.Compare.Invoke(Value.ListWith(x,y), scope);
+            var cmp = cmps[0] as Number;
+            return cmp ?? 0;
+        }
+
+        private static int CustomComparator(IValue comparer, IValue x, IValue y, Scope scope)
+        {
+            var cmps = comparer.MetaType.Invoke.Invoke(Value.ListWith(comparer, x, y), scope);
+            var cmp = cmps[0] as Number;
+            return cmp ?? 0;
+        }
+
+        [NetFunction("sort")]
+        private static IValue Sort(List<IValue> list, Scope scope)
+        {
+            var lt = list[0] as ListTable;
+            Comparison<IValue> comparator;
+            if (list.Count > 1) 
+            {
+                var comparer = list[1];
+                comparator = (x,y) => CustomComparator(comparer, x, y, scope);
+            }
+            else 
+            {
+                comparator = (x,y) => DefaultComparator(x, y, scope);
+            }
+            var results = lt.AsList();
+            results.Sort(comparator);
+            return new ListTable(results);
         }
     }
 }
