@@ -8,12 +8,29 @@ namespace Wul.Interpreter
 {
     public class Binding
     {
+        protected Binding() { }
         public Binding(IValue value)
         {
             Value = value;
         }
 
-        public IValue Value { get; set; }
+        public virtual IValue Value { get; set; }
+    }
+
+    public class WeakBinding : Binding
+    {
+        public WeakBinding(IValue value)
+        {
+            Reference = new WeakReference<IValue>(value);
+        }
+
+        private WeakReference<IValue> Reference;
+
+        public override IValue Value
+        {
+            get => Reference.TryGetTarget(out var value) ? value : Types.Value.Nil;
+            set => Reference.SetTarget(value);
+        }
     }
 
     public class Scope
@@ -34,7 +51,7 @@ namespace Wul.Interpreter
             return new Scope(this);
         }
 
-        public IValue Get(string key)
+        private IValue Get(string key)
         {
             BoundVariables.TryGetValue(key, out Binding val);
             return val?.Value ?? Parent?.Get(key) ?? Value.Nil;
@@ -53,7 +70,7 @@ namespace Wul.Interpreter
         }
 
         //This actually declares a new binding
-        public void Set(string key, IValue value)
+        private void Set(string key, IValue value)
         {
             if (BoundVariables.TryGetValue(key, out Binding val))
             {
@@ -62,6 +79,18 @@ namespace Wul.Interpreter
             else
             {
                 BoundVariables[key] = new Binding(value);
+            }
+        }
+
+        public void SetWeak(string key, IValue value)
+        {
+            if (BoundVariables.TryGetValue(key, out Binding val))
+            {
+                val.Value = value;
+            }
+            else
+            {
+                BoundVariables[key] = new WeakBinding(value);
             }
         }
 

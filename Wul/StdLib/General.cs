@@ -318,7 +318,22 @@ namespace Wul.StdLib
             }
         }
 
-        //TODO Scope should be able to hold WeakReference<IValue> and Lazy<IValue>
-        //[NetFunction("weakref")]
+        //this might be useless, creates a named weak reference to a value
+        [MagicFunction("weakref")]
+        private static IValue WeakReference(ListNode list, Scope scope)
+        {
+            var name = ((IdentifierNode)list.Children[1]).Name;
+            var children = list.Children.Skip(2).ToArray();
+            var value = children[0].EvalOnce(scope);
+            if (ReferenceEquals(value, Value.Nil))
+            {
+                scope.Remove(name);
+            }
+            else
+            {
+                scope.SetWeak(name, value);
+            }
+            return value;
+        }
     }
 }

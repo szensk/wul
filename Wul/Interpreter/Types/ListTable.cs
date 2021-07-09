@@ -38,12 +38,12 @@ namespace Wul.Interpreter.Types
             MetaType = ListMetaType.Instance;
         }
 
-        public List<IValue> AsList()
+        public virtual List<IValue> AsList()
         {
             return _list;
         }
 
-        public IValue Get(IValue key)
+        public virtual IValue Get(IValue key)
         {
             int index = (Number) key;
             if (index >= Count || index < 0)
@@ -56,12 +56,12 @@ namespace Wul.Interpreter.Types
             }
         }
 
-        public void Add(IValue value)
+        public virtual void Add(IValue value)
         {
             _list.Add(value);
         }
 
-        protected void Remove(IValue key)
+        protected virtual void Remove(IValue key)
         {
             _list.RemoveAt((Number)key);
         }
@@ -77,7 +77,7 @@ namespace Wul.Interpreter.Types
                 int index = (Number) key;
                 while (index >= _list.Count)
                 {
-                    _list.Add(Value.Nil);
+                    Add(Value.Nil);
                 }
                 _list[index] = value;
             }
@@ -110,5 +110,10 @@ namespace Wul.Interpreter.Types
 
             set => Assign(key, value);
         }
+    }
+
+    public class WeakListTable : ListTable
+    {
+
     }
 }
