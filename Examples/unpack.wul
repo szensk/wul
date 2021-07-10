@@ -3,7 +3,6 @@
 (def l (1 2 3 4 5))
 (print (+ (unpack l))) ; returns 15
 
-
 (defn sum (l) (+ (unpack l)))
 (set-metamethod List + sum)
 (print (+ l)) ; returns 15
