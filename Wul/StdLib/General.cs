@@ -117,6 +117,7 @@ namespace Wul.StdLib
 
         [MagicFunction("lambda")]
         [MagicFunction("->")] //TODO sugar -> (+ $1 $2)
+        [MagicFunction("λ")]
         internal static IValue Lambda(ListNode list, Scope scope)
         {
             var children = list.Children.Skip(1).ToArray();
@@ -162,13 +163,13 @@ namespace Wul.StdLib
             if (!ReferenceEquals(result, Value.Nil) && !ReferenceEquals(result, Bool.False))
             {
                 var thenBlock =
-                    listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "then");
+                    listChildren.FirstOrDefault(l => l.Children.FirstOrDefault() is IdentifierNode { Name: "then" });
                 if (thenBlock != null) returnValue = thenBlock.EvalManyOnce(scope);
             }
             else
             {
                 var elseBlock =
-                    listChildren.FirstOrDefault(l => (l.Children.First() as IdentifierNode)?.Name == "else");
+                    listChildren.FirstOrDefault(l => l.Children.FirstOrDefault() is IdentifierNode { Name: "else" });
                 if (elseBlock != null) returnValue = elseBlock.EvalManyOnce(scope);
             }
 
@@ -271,10 +272,16 @@ namespace Wul.StdLib
         private static List<IValue> Unpack(ListNode list, Scope scope)
         {
             var first = list.Children[1];
-            //this is dumb, should be a separate function "unpack-recursive"
-            bool recursive = first is IdentifierNode i && i.Name == "recursive";
-            var evaluatedArguments = list.Children.Skip(recursive ? 2 : 1).Select(v => v.Eval(scope)).ToList();
-            return Unpack(evaluatedArguments, scope, recursive);
+            var evaluatedArguments = list.Children.Skip(1).Select(v => v.Eval(scope)).ToList();
+            return Unpack(evaluatedArguments, scope, recursive: false);
+        }
+
+        [MultiMagicFunction("unpack-recursive")]
+        private static List<IValue> UnpackRecursive(ListNode list, Scope scope)
+        {
+            var first = list.Children[1];
+            var evaluatedArguments = list.Children.Skip(1).Select(v => v.Eval(scope)).ToList();
+            return Unpack(evaluatedArguments, scope, recursive: true);
         }
 
         private static List<IValue> Unpack(List<IValue> list, Scope scope, bool recursive)
