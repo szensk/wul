@@ -17,9 +17,10 @@ namespace Wul.Interpreter.Types
 
     public class ListTable : IValue
     {
-        public static readonly ListTable EmptyList = new ListTable();
+        public static readonly ListTable EmptyList = new();
         private readonly List<IValue> _list;
 
+        //TODO constructors should be private
         public ListTable()
         {
             _list = new List<IValue>();

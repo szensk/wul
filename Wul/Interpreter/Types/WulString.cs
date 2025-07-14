@@ -17,6 +17,7 @@ namespace Wul.Interpreter.Types
     {
         public MetaType MetaType { get; set; }
 
+        //TODO this should be private
         public WulString(string value)
         {
             Value = value;
@@ -25,11 +26,13 @@ namespace Wul.Interpreter.Types
 
         public static explicit operator WulString(string str)
         {
+            if (str == string.Empty) return WulString.EmptyString;
             return new WulString(str);
         }
 
         public static explicit operator string(WulString ustr)
         {
+            if (ustr == WulString.EmptyString) return string.Empty;
             return ustr.Value;
         }
 
@@ -41,7 +44,7 @@ namespace Wul.Interpreter.Types
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             WulString other = obj as WulString;
             return other != null && Value.Equals(other.Value);
         }
@@ -49,6 +52,8 @@ namespace Wul.Interpreter.Types
         public string Value { get; }
 
         public WulType Type => StringType.Instance;
+
+        public static readonly WulString EmptyString = new(string.Empty);
 
         public SyntaxNode ToSyntaxNode(SyntaxNode parent)
         {
