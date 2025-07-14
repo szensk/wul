@@ -54,11 +54,8 @@ namespace Wul.Interpreter.MetaTypes
         private IValue Remaining(List<IValue> arguments, Scope s)
         {
             var first = (WulString)arguments[0];
-            if (first.Value.Length == 0)
-            {
-                return Value.Nil;
-            }
-
+            if (first.Value.Length == 0) return Value.Nil;
+            if (first.Value.Length == 1) return WulString.EmptyString;
             return new WulString(first.Value.Substring(1));
         }
 
@@ -66,7 +63,7 @@ namespace Wul.Interpreter.MetaTypes
         {
             WulString str = (WulString)arguments.First();
             Number index = (Number)arguments.Skip(1).First();
-
+            if (index >= str.Value.Length) return Value.Nil;
             return new WulString(str.Value[index].ToString());
         }
 

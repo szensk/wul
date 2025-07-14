@@ -46,6 +46,7 @@ namespace Wul.Interpreter.MetaTypes
             }
 
             var values = firstList.AsList().Skip(1).ToArray();
+            if (values.Length == 0) return ListTable.EmptyList;
             return new ListTable(values);
         }
 
