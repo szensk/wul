@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Wul.Interpreter;
 using Wul.Interpreter.Types;
 using Wul.Parser;
@@ -229,6 +230,7 @@ namespace Wul
 
         private static int Main(string[] args)
         {
+            Console.InputEncoding = UTF8Encoding.UTF8;
             Global.RegisterDefaultFunctions();
 
             var arguments = ParseArguments(args);
