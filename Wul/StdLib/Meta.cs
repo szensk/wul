@@ -133,5 +133,12 @@ namespace Wul.StdLib
             var str = (WulString) list[0];
             return new IdentifierNode(null, str.Value);
         }
+
+        [MultiNetFunction("run")]
+        internal static List<IValue> ParseAndEvaluate(List<IValue> list, Scope scope)
+        {
+            var str = (WulString)list[0];
+            return Helpers.LoadString(str.Value, scope);
+        }
     }
 }

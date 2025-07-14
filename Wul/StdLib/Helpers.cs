@@ -75,6 +75,12 @@ namespace Wul.StdLib
             return WulInterpreter.Interpret(program, scope);
         }
 
+        public static List<IValue> LoadString(string script, Scope scope)
+        {
+            ProgramNode program = Parse(script);
+            return WulInterpreter.Interpret(program, scope);
+        }
+
         public static WulString ToWulString(IValue value)
         {
             if (ReferenceEquals(value, Value.Nil)) return new WulString("nil");
@@ -86,6 +92,14 @@ namespace Wul.StdLib
         public static string ToString(IValue value)
         {
             return ToWulString(value).AsString();
+        }
+
+        public static Number ToNumber(IValue value)
+        {
+            if (ReferenceEquals(value, Value.Nil)) return (Number)double.NaN;
+            if (value is Number n) return n;
+            if (value is WulString s) return (Number)double.Parse(s.Value);
+            throw new Exception("AsNumber did not return a number");
         }
 
         public static IValue AssertNotNil(this IValue value)
