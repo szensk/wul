@@ -58,7 +58,7 @@ namespace Wul.StdLib
         [NetFunction("substring")]
         internal static IValue Substring(List<IValue> list, Scope scope)
         {
-            string value = ((WulString) list[0]).Value;
+            string value = ((WulString)list[0]).Value;
             Number start = list[1] as Number;
             Number length = list.Skip(2).FirstOrDefault() as Number;
 
@@ -69,15 +69,41 @@ namespace Wul.StdLib
         [NetFunction("lower")]
         internal static IValue Lower(List<IValue> list, Scope scope)
         {
-            string value = ((WulString) list[0]).Value;
+            string value = ((WulString)list[0]).Value;
             return new WulString(value.ToLower());
         }
 
         [NetFunction("upper")]
         internal static IValue Upper(List<IValue> list, Scope scope)
         {
-            string value = ((WulString) list[0]).Value;
+            string value = ((WulString)list[0]).Value;
             return new WulString(value.ToUpper());
+        }
+
+        [NetFunction("split")]
+        internal static IValue Split(List<IValue> list, Scope scope)
+        {
+            string value = ((WulString)list[0]).Value;
+            string splitOn = ((WulString)list[1]).Value;
+            var results = value.Split(splitOn);
+            return new ListTable(results.Select(n => (WulString)n));
+
+        }
+
+        [MultiNetFunction("number")]
+        internal static List<IValue> Numberify(List<IValue> list, Scope scope)
+        {
+            if (list.Count == 1)
+            {
+                IValue first = list.First();
+                return Value.ListWith(Helpers.ToNumber(first));
+            }
+            else if (list.Count > 1)
+            {
+                var results = list.Select(Helpers.ToNumber).Cast<IValue>();
+                return Value.ListWith(results.ToArray());
+            }
+            throw new Exception("no arguments supplied to string");
         }
     }
 }
