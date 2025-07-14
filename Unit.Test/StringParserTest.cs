@@ -134,5 +134,16 @@ namespace Unit.Test
 
             Assert.IsNull(node);
         }
+
+        [TestMethod]
+        public void StringParser_NestedInterpoalted()
+        {
+            StringParser parser = new StringParser();
+            string token = "'a \"\" b'";
+
+            StringNode node = (StringNode)parser.Parse(token);
+
+            Assert.AreEqual("a \"\" b", node.Value());
+        }
     }
 }
