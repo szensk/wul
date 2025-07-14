@@ -104,9 +104,9 @@ namespace Wul.StdLib
         internal static IValue Empty(List<IValue> list, Scope scope)
         {
             IValue first = list.First();
-
+            if (first == Value.Nil) return Bool.True;
+            
             Number count = (Number) first.MetaType.Count.Invoke(list, scope).First();
-
             return count == 0 ? Bool.True : Bool.False;
         }
 
@@ -169,27 +169,60 @@ namespace Wul.StdLib
             return new ListTable(result);
         }
 
-        private static IValue MapRange(List<IValue> list, Scope scope)
+        private static ListTable MapList(List<IValue> list, Scope scope)
         {
-            var rangeToMap = list[0] as Interpreter.Types.Range;
+            var listToMap = (ListTable)list[0];
             var callback = list[1];
             var func = callback.MetaType.Invoke;
             var macro = callback.MetaType.ApplyMacro;
 
-            List<IValue> result = new List<IValue>();
+            IEnumerable<IValue> result;
+            if (func.IsDefined)
+            {
+                result = listToMap.AsList()
+                    .Select(item => func.Invoke(Value.ListWith(callback, item), scope).First());
+            }
+            else if (macro.IsDefined)
+            {
+                result = listToMap.AsList()
+                    .Select(item => ApplyMacro(callback, scope, item));
+            }
+            else
+            {
+                result = listToMap.AsList().Select(item => callback);
+            }
 
-            while (rangeToMap != null)
+            return new ListTable(result);
+        }
+
+        private static ListTable MapEnumberable(List<IValue> list, Scope scope)
+        {
+            var enumerable = list[0];
+            var callback = list[1];
+            var func = callback.MetaType.Invoke;
+            var macro = callback.MetaType.ApplyMacro;
+            var rem = enumerable.MetaType.Remainder;
+            var first = enumerable.MetaType.At;
+
+            if (rem == null || !rem.IsDefined || first == null || !first.IsDefined) throw new Exception("Must be enumerable");
+
+            List<IValue> result = [];
+
+            while (enumerable != null && enumerable != Value.Nil && enumerable != ListTable.EmptyList && !(enumerable is WulString s && s.Value == string.Empty))
             {
                 IValue cbresult = callback;
                 if (func.IsDefined)
                 {
-                    cbresult = func.Invoke(Value.ListWith(callback, rangeToMap.First), scope).First();
-                } else if (macro.IsDefined)
+                    var firstElement = first.Invoke(Value.ListWith(enumerable, (Number)0), scope).First();
+                    cbresult = func.Invoke(Value.ListWith(callback, firstElement), scope).First();
+                } 
+                else if (macro.IsDefined)
                 {
-                    cbresult = ApplyMacro(callback, scope, rangeToMap.First);
+                    var firstElement = first.Invoke(Value.ListWith(enumerable, (Number)0), scope).First();
+                    cbresult = ApplyMacro(callback, scope, firstElement);
                 }
                 result.Add(cbresult);
-                rangeToMap = rangeToMap.Remainder;
+                enumerable = rem.Invoke(Value.ListWith(enumerable), scope).First();
             }
 
             return new ListTable(result);
@@ -216,30 +249,8 @@ namespace Wul.StdLib
         internal static IValue Map(List<IValue> list, Scope scope)
         {
             if (list[0] is MapTable) return MapMap(list, scope);
-            if (list[0] is Interpreter.Types.Range) return MapRange(list, scope);
-
-            var listToMap = (ListTable) list[0];
-            var callback = list[1];
-            var func = callback.MetaType.Invoke;
-            var macro = callback.MetaType.ApplyMacro;
-
-            IEnumerable<IValue> result;
-            if (func.IsDefined)
-            {
-                result = listToMap.AsList()
-                    .Select(item => func.Invoke(Value.ListWith(callback, item), scope).First());
-            }
-            else if (macro.IsDefined)
-            {
-                result = listToMap.AsList()
-                    .Select(item => ApplyMacro(callback, scope, item));
-            }
-            else
-            {
-                result = listToMap.AsList().Select(item => callback);
-            }
-
-            return new ListTable(result);
+            if (list[0] is ListTable) return MapList(list, scope);
+            else return MapEnumberable(list, scope);
         }
 
         private static int DefaultComparator(IValue x, IValue y, Scope scope)

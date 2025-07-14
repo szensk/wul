@@ -60,7 +60,7 @@ namespace Wul.StdLib
             MapTable map = new MapTable();
             for (int i = 0; i < mapList.Count; ++i)
             {
-                var key = (IdentifierNode)mapList[i];
+                var key = (IdentifierNode) mapList[i];
                 var val = key.EvalOnce(scope);
                 map.Add(key, val);
             }
