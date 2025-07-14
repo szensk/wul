@@ -164,6 +164,10 @@ namespace Wul.Parser.Parsers
                                 startIndex = currentIndex;
                                 currentInner = null;
                             }
+                            else if (startedString && !stringParser.StartStringTerminated(currentInner))
+                            {
+                                continue;
+                            }
                             else
                             {
                                 throw currentList.CreateParseException(lineCount, currentIndex, "garbage in list");

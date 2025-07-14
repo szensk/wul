@@ -13,14 +13,35 @@ namespace Wul.Parser.Parsers
 
         public bool StartsString(string token)
         {
-            int openQuoteIndex = token.IndexOf("\"", StringComparison.Ordinal);
-            int closeQuoteIndex = token.LastIndexOf("\"", StringComparison.Ordinal);
+            int openQuoteIndex = token.IndexOf('"');
+            int closeQuoteIndex = token.LastIndexOf('"');
             if (openQuoteIndex == -1)
             {
-                openQuoteIndex = token.IndexOf("'", StringComparison.Ordinal);
-                closeQuoteIndex = token.LastIndexOf("'", StringComparison.Ordinal);
+                openQuoteIndex = token.IndexOf('\'');
+                closeQuoteIndex = token.LastIndexOf('\'');
             }
             return openQuoteIndex != -1 && closeQuoteIndex == openQuoteIndex;
+        }
+
+        public bool StartStringTerminated(string token)
+        {
+            int openDoubleQuoteIndex = token.IndexOf('"');
+            int openSingleQuoteIndex = token.IndexOf('\'');
+            int closeDoubleQuoteIndex = token.LastIndexOf('"');
+            int closeSingleQuoteIndex = token.LastIndexOf('\'');
+
+            if (openDoubleQuoteIndex > -1 && (openSingleQuoteIndex == -1 || openDoubleQuoteIndex < openSingleQuoteIndex))
+            {
+                return closeDoubleQuoteIndex > openDoubleQuoteIndex;
+            }
+            if (openSingleQuoteIndex > -1 && (openDoubleQuoteIndex == -1 || openSingleQuoteIndex < openDoubleQuoteIndex))
+            {
+                return closeSingleQuoteIndex > openSingleQuoteIndex;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private static string Unescape(string text)
@@ -79,14 +100,15 @@ namespace Wul.Parser.Parsers
 
             bool interpolated = true;
 
-            int openQuoteIndex = token.IndexOf("\"", StringComparison.Ordinal);
-            int closeQuoteIndex = token.LastIndexOf("\"", StringComparison.Ordinal);
+            int openQuoteIndex = token.IndexOf('"');
+            int closeQuoteIndex = openQuoteIndex > -1 ? token.LastIndexOf('"') : -1;
 
-            if (openQuoteIndex == -1)
+            int regularOpenQuoteIndex = token.IndexOf('\'');
+            if (regularOpenQuoteIndex > -1 && (regularOpenQuoteIndex < openQuoteIndex || openQuoteIndex == -1))
             {
                 interpolated = false;
-                openQuoteIndex = token.IndexOf("'", StringComparison.Ordinal);
-                closeQuoteIndex = token.LastIndexOf("'", StringComparison.Ordinal);
+                openQuoteIndex = token.IndexOf('\'');
+                closeQuoteIndex = token.LastIndexOf('\'');
             }
 
             if (closeQuoteIndex == -1 || openQuoteIndex == closeQuoteIndex) return null;
