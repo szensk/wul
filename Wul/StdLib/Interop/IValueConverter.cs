@@ -6,12 +6,15 @@ namespace Wul.StdLib.Interop
     {
         IValue ConvertToIValue(TNetValue original);
         TNetValue ConvertFromIValue(IValue original);
+        int Priority { get; }
     }
 
     interface IValueConverter
     {
         IValue ConvertToIValue(object original);
         object ConvertFromIValue(IValue original);
+        int Priority { get; }
+
     }
 
     abstract class ValueConverter<TNetValue> : IValueConverter<TNetValue>, IValueConverter
@@ -29,5 +32,7 @@ namespace Wul.StdLib.Interop
         {
             return ConvertFromIValue(original);
         }
+
+        public virtual int Priority => 1;
     }
 }

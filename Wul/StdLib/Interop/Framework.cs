@@ -40,7 +40,7 @@ namespace Wul.StdLib.Interop
         {
             if (Converters != null) return;
 
-            Converters = new Dictionary<Type, IValueConverter>();
+            Converters = [];
             
             var types = Assembly.GetAssembly(typeof(Global)).GetTypes();
             var converterType = typeof(IValueConverter);
@@ -54,6 +54,8 @@ namespace Wul.StdLib.Interop
                 var instance = (IValueConverter) Activator.CreateInstance(converter);
                 Converters[netType] = instance;
             }
+
+            Converters = Converters.OrderByDescending(kvp => kvp.Value.Priority).ToDictionary();
         }
 
         private class MethodNotFoundException : Exception
@@ -142,7 +144,14 @@ namespace Wul.StdLib.Interop
             var methodInfo = FindMethodWithTypes(scope, name, argTypes);
             if (methodInfo != null)
             {
-                return methodInfo.Invoke(null, objectArguments);
+                if (methodInfo.IsStatic)
+                {
+                    return methodInfo.Invoke(null, objectArguments);
+                } 
+                else
+                {
+                    return methodInfo.Invoke(objectArguments[0], objectArguments.Skip(1).ToArray());
+                }
             }
             else
             {
@@ -208,13 +217,24 @@ namespace Wul.StdLib.Interop
 
         private static Func<List<IValue>, Scope, IValue> CreateNetFunction(MethodInfo methodInfo)
         {
-            IValue Local(List<IValue> list, Scope s)
+            if (methodInfo.IsStatic)
             {
-                object result = methodInfo.Invoke(null, list.Select(l => l.ToObject()).ToArray());
-                return ConvertToIValue(result);
+                IValue InvokeStatic(List<IValue> list, Scope s)
+                {
+                    object result = methodInfo.Invoke(null, list.Select(l => l.ToObject()).ToArray());
+                    return ConvertToIValue(result);
+                }
+                return InvokeStatic;
             }
-
-            return Local;
+            else
+            {
+                IValue InvokeMethod(List<IValue> list, Scope s)
+                {
+                    object result = methodInfo.Invoke(list[0].ToObject(), list.Skip(1).Select(l => l.ToObject()).ToArray());
+                    return ConvertToIValue(result);
+                }
+                return InvokeMethod;
+            }
         }
 
         //(::defn Math.Max System.Math.Max System.Decimal System.Decimal)

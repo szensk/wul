@@ -15,5 +15,7 @@ namespace Wul.StdLib.Interop
             if (original == Value.Nil) return null;
             return original.AsString();
         }
+
+        public override int Priority => 10;
     }
 }
