@@ -79,6 +79,26 @@ namespace Wul.Interpreter.Types
                           n.Value <= _start && n.Value >= _end && _increment < 0;
             return result ? Bool.True : Bool.False;
         }
+
+        public IValue NthElement(Number n)
+        {
+            if (_increment > 0)
+            {
+                double value = _start + ((double)n - 1) * _increment.Value;
+                if (value > _end) return Value.Nil;
+                return (Number) value;
+            }
+            else if (_increment < 0)
+            {
+                double value = _start + ((double)n - 1) * _increment.Value;
+                if (value < _end) return Value.Nil;
+                return (Number)value;
+            }
+            else
+            {
+                return Value.Nil;
+            }
+        }
         
         //TODO Set operations of ranges e.g. Union, Intersection, IsSubset
 

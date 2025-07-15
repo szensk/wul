@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Wul.Interpreter.Types;
+using Wul.StdLib;
 using Range = Wul.Interpreter.Types.Range;
 
 namespace Wul.Interpreter.MetaTypes
@@ -68,39 +69,34 @@ namespace Wul.Interpreter.MetaTypes
 
         private IValue RangeIndex(List<IValue> arguments, Scope s)
         {
-            Range range = arguments[0] as Range;
             IValue target = arguments[1];
+            if (arguments[0] is not Range range || target == null || !(target.MetaType?.At.IsDefined ?? false)) return Value.Nil;
 
-            if (range == null || target == null || !(target.MetaType?.At.IsDefined ?? false)) return Value.Nil;
+            var values = Helpers.IterateOverEnumerable(range, (index) => { return target.MetaType.At.Invoke([target, index], s).First(); }, s);
 
-            //TODO lazily transform range to list of indices
-            var indexes = range.AsList().AsList();
-            if (indexes.Count == 1)
-            {
-                return target.MetaType.At.Invoke(new List<IValue> { target, indexes[0] }, s).First();
-            }
-
-            List<IValue> values = new List<IValue>(indexes.Count);
-            List<IValue> atArguments = new List<IValue>(2) { target, null };
-            foreach (var index in indexes)
-            {
-                atArguments[1] = index;
-                values.Add(target.MetaType.At.Invoke(atArguments, s).First());
-            }
-            return new ListTable(values);
+            if (target is WulString)
+                return new WulString(string.Join(string.Empty, values.Select(s => ((WulString)s).Value)));
+            else
+                return new ListTable(values);
         }
 
         private IValue AtIndex(List<IValue> arguments, Scope s)
         {
             Range range = (Range) arguments[0];
-            Number index = (Number) arguments[1];
+            Number nindex = (Number) arguments[1];
+            int index = (int) nindex;
 
-            if ((int) index.Value != 0)
+            if (index == 0)
             {
-                throw new IndexOutOfRangeException("ranges can only be indexed by 0");
+                return range.First;
             }
 
-            return range.First;
+            if (range.Contains(index))
+            {
+                return range.NthElement(index);
+            }
+
+            throw new ArgumentException($"index out of range {range.First}");
         }
 
         private IValue Remaining(List<IValue> arguments, Scope s)
