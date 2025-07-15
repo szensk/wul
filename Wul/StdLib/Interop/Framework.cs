@@ -260,9 +260,19 @@ namespace Wul.StdLib.Interop
             int startIndex = 2;
             for (int i = startIndex; i < children; i++)
             {
-                var typeIdentifier = (IdentifierNode) args[i];
-                var types = AllTypes[typeIdentifier.Name];
-                var type = types.First();
+                Type type = null;
+                if (args[i] is IdentifierNode typeIdentifier)
+                {
+                    var types = AllTypes[typeIdentifier.Name];
+                    type = types.FirstOrDefault();
+                    argTypes[i - startIndex] = type;
+                }
+                if (type == null)
+                {
+                    IValue result = Helpers.EvalOnce(args[i], scope);
+                    var types = AllTypes[(result as IdentifierNode).Name];
+                    type = types.FirstOrDefault();
+                }
                 argTypes[i - startIndex] = type;
             }
 
