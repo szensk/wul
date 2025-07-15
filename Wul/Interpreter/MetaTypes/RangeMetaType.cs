@@ -72,7 +72,8 @@ namespace Wul.Interpreter.MetaTypes
             IValue target = arguments[1];
             if (arguments[0] is not Range range || target == null || !(target.MetaType?.At.IsDefined ?? false)) return Value.Nil;
 
-            var values = Helpers.IterateOverEnumerable(range, (index) => { return target.MetaType.At.Invoke([target, index], s).First(); }, s);
+            var values = range.IterateOverEnumerable(s)
+                .Select(index => target.MetaType.At.Invoke([target, index], s).First());
 
             if (target is WulString)
                 return new WulString(string.Join(string.Empty, values.Select(s => ((WulString)s).Value)));
@@ -91,12 +92,7 @@ namespace Wul.Interpreter.MetaTypes
                 return range.First;
             }
 
-            if (range.Contains(index))
-            {
-                return range.NthElement(index);
-            }
-
-            throw new ArgumentException($"index out of range {range.First}");
+            return range.NthElement(index);
         }
 
         private IValue Remaining(List<IValue> arguments, Scope s)

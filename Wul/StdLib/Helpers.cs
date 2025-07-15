@@ -131,6 +131,23 @@ namespace Wul.StdLib
 
             return result;
         }
+
+        public static IEnumerable<IValue> IterateOverEnumerable(this IValue enumerable, Scope scope)
+        {
+            var rem = enumerable.MetaType.Remainder;
+            var first = enumerable.MetaType.At;
+
+            if (rem == null || !rem.IsDefined || first == null || !first.IsDefined) throw new Exception("Must be enumerable");
+
+            while (enumerable != null && enumerable != Value.Nil && enumerable != ListTable.EmptyList && !(enumerable is WulString s && s.Value == string.Empty))
+            {
+                var firstElement = first.Invoke(Value.ListWith(enumerable, (Number)0), scope).First();
+                yield return firstElement;
+                enumerable = rem.Invoke(Value.ListWith(enumerable), scope).First();
+            }
+
+            yield break;
+        }
     }
 }
 

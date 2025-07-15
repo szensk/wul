@@ -84,13 +84,13 @@ namespace Wul.Interpreter.Types
         {
             if (_increment > 0)
             {
-                double value = _start + ((double)n - 1) * _increment.Value;
+                double value = _start + (double)n * _increment.Value;
                 if (value > _end) return Value.Nil;
                 return (Number) value;
             }
             else if (_increment < 0)
             {
-                double value = _start + ((double)n - 1) * _increment.Value;
+                double value = _start + (double)n * _increment.Value;
                 if (value < _end) return Value.Nil;
                 return (Number)value;
             }
