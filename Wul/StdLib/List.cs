@@ -59,6 +59,12 @@ namespace Wul.StdLib
             {
                 return r.Reverse;
             }
+            else if (first is Interpreter.Types.WulString s)
+            {
+                char[] chars = s.Value.ToCharArray();
+                Array.Reverse(chars);
+                return (WulString) new string(chars);
+            }
             else
             {
                 var len = (Number)Length(list, scope);
@@ -268,7 +274,7 @@ namespace Wul.StdLib
         }
 
         [NetFunction("sort")]
-        private static IValue Sort(List<IValue> list, Scope scope)
+        private static ListTable Sort(List<IValue> list, Scope scope)
         {
             var lt = list[0] as ListTable;
             Comparison<IValue> comparator;

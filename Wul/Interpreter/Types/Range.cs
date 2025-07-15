@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Wul.Interpreter.MetaTypes;
 using Wul.Parser.Nodes;
 
@@ -20,6 +21,10 @@ namespace Wul.Interpreter.Types
         private readonly double _start;
         private readonly double? _end;
         private readonly double? _increment;
+
+        public double Start => _start;
+        public double End => _end ?? _start;
+        public bool Backwards => _increment < 0;
 
         public Range(double start, double? end = null, double? increment = null)
         {

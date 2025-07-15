@@ -107,6 +107,30 @@ namespace Wul.StdLib
             if (ReferenceEquals(value, Value.Nil)) throw new Exception("nil not expected");
             return value;
         }
+
+        public static IEnumerable<T> IterateOverEnumerable<T>(this IValue enumerable, Func<IValue, T> callback, Scope scope)
+        {
+            var rem = enumerable.MetaType.Remainder;
+            var first = enumerable.MetaType.At;
+
+            if (rem == null || !rem.IsDefined || first == null || !first.IsDefined) throw new Exception("Must be enumerable");
+
+            List<T> result = [];
+
+            while (enumerable != null && enumerable != Value.Nil && enumerable != ListTable.EmptyList && !(enumerable is WulString s && s.Value == string.Empty))
+            {
+                if (callback != null)
+                {
+                    var firstElement = first.Invoke(Value.ListWith(enumerable, (Number)0), scope).First();
+                    T cbresult = callback(firstElement);
+                    result.Add(cbresult);
+
+                }
+                enumerable = rem.Invoke(Value.ListWith(enumerable), scope).First();
+            }
+
+            return result;
+        }
     }
 }
 

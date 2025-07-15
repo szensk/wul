@@ -61,10 +61,33 @@ namespace Wul.Interpreter.MetaTypes
 
         private IValue CharacterAtIndex(List<IValue> arguments, Scope s)
         {
-            WulString str = (WulString)arguments.First();
-            Number index = (Number)arguments.Skip(1).First();
-            if (index >= str.Value.Length) return Value.Nil;
-            return new WulString(str.Value[index].ToString());
+            WulString str = (WulString) arguments[0];
+            IValue firstArg = arguments[1];
+            if (firstArg is Number index)
+            {
+                if (index >= str.Value.Length) return Value.Nil;
+                return new WulString(str.Value[index].ToString());
+            }
+            else if (firstArg is WulString pattern)
+            {
+                //TODO should it find all matches?
+                var start = str.Value.IndexOf(pattern.Value);
+                if (start >= 0)
+                {
+                    return new Range(start, start + pattern.Value.Length - 1, 1);
+                }
+                return Value.Nil;
+            }
+            else if (firstArg is Range rng)
+            {
+                List<string> subsections = [];
+                var substrings = StdLib.Helpers.IterateOverEnumerable<string>(rng, (val) => str.Value.Substring((int)(Number)val, 1), s);
+                return (WulString) string.Join(string.Empty, substrings);
+            }
+            else
+            {
+                throw new System.ArgumentException("Index of a string must be one of: Number, String, Range");
+            }
         }
 
         private IValue Length(List<IValue> arguments, Scope s)

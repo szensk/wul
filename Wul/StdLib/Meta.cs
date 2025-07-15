@@ -15,7 +15,7 @@ namespace Wul.StdLib
         internal static IValue SetMetamethod(ListNode list, Scope scope)
         {
             IValue first = list.Children[1].Eval(scope);
-            IdentifierNode identifier = (IdentifierNode) list.Children[2];
+            IdentifierNode identifier = list.Children[2] is ListNode ln ? (IdentifierNode) Helpers.EvalOnce(ln, scope) : (IdentifierNode) list.Children[2];
             IValue function = list.Children[3].Eval(scope);
 
             string metaMethodName = identifier.Name;
