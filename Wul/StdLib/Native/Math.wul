@@ -1,0 +1,19 @@
+; wul standard library
+
+; arithmetic methods
+
+(::defn math.cos System.Math.Cos System.Double)
+(::defn math.sin System.Math.Sin System.Double)
+(::defn math.tan System.Math.Tan System.Double)
+(::defn math.abs System.Math.Abs System.Double)
+(::defn math.sqrt System.Math.Sqrt System.Double)
+
+(::defn math.max System.Math.Max System.Double System.Double)
+(::defn math.min System.Math.Min System.Double System.Double)
+
+(::defn math.round System.Math.Round System.Double)
+(::defn math.floor System.Math.Floor System.Double)
+(::defn math.ceil System.Math.Ceiling System.Double)
+
+(::defn math.log System.Math.Log System.Double)
+(::defn math.log10 System.Math.Log10 System.Double)

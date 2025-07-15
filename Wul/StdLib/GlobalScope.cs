@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Wul.Interpreter;
@@ -14,7 +15,7 @@ namespace Wul.StdLib
     {
         private static Scope _scope;
 
-        public static Scope Scope => _scope ?? (_scope = new Scope());
+        public static Scope Scope => _scope ??= new Scope();
 
         private class FunctionRegistration
         {
@@ -90,25 +91,55 @@ namespace Wul.StdLib
             }
         }
 
-        public static void RegisterDefaultFunctions()
+        public static void LoadWulStandardLibrary(Scope s)
         {
+            var assembly = Assembly.GetExecutingAssembly(); 
+            foreach (var resourceName in assembly.GetManifestResourceNames().Where(s => s.EndsWith(".wul")))
+            {
+                LoadWulStandardLibraryResource(assembly, resourceName, s);
+            }
+        }
+
+        public static void LoadWulStandardLibraryResource(Assembly assembly, string resourceName, Scope s)
+        {
+            try
+            {
+                using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+                if (stream == null) return;
+
+                // Read the resource content
+                using StreamReader reader = new(stream);
+                string content = reader.ReadToEnd();
+                Helpers.LoadString(content, s);
+            } 
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unable to load resource");
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+        }
+
+        public static void RegisterDefaultFunctions(Scope s = null)
+        {
+            s ??= Scope;
+
             //Types
-            Scope["Bool"] = BoolType.Instance;
-            Scope["Number"] = NumberType.Instance;
-            Scope["List"] = ListType.Instance;
-            Scope["Map"] = MapType.Instance;
-            Scope["String"] = StringType.Instance;
-            Scope["Function"] = FunctionType.Instance;
-            Scope["SyntaxNode"] = SyntaxNodeType.Instance;
-            Scope["Range"] = RangeType.Instance;
+            s["Bool"] = BoolType.Instance;
+            s["Number"] = NumberType.Instance;
+            s["List"] = ListType.Instance;
+            s["Map"] = MapType.Instance;
+            s["String"] = StringType.Instance;
+            s["Function"] = FunctionType.Instance;
+            s["SyntaxNode"] = SyntaxNodeType.Instance;
+            s["Range"] = RangeType.Instance;
             FunctionMetaType.SetMetaMethods();
 
             //Bools
-            Scope["true"] = Bool.True;
-            Scope["false"] = Bool.False;
+            s["true"] = Bool.True;
+            s["false"] = Bool.False;
 
             //Version
-            Scope["wul.version"] = (WulString) Wul.Version;
+            s["wul.version"] = (WulString) Wul.Version;
 
             var types = Assembly.GetAssembly(typeof(Global)).GetTypes();
 
@@ -144,6 +175,8 @@ namespace Wul.StdLib
                     RegisterNetFunction(method);
                 }
             }
+
+            LoadWulStandardLibrary(s);
         }
     }
 }

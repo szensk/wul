@@ -1,0 +1,5 @@
+; wul standard library
+
+; string methods
+(::defn string.replace System.String.Replace System.String System.String)
+(defn string.join () (.. (unpack-recursive $args)))
