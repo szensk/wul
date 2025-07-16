@@ -20,7 +20,7 @@ namespace Wul.Parser.Parsers
             return Parse(token, 1);
         }
 
-        private SyntaxNode Parse(string program, int lineCount)
+        private ProgramNode Parse(string program, int lineCount)
         {
             if (program == "")
             {

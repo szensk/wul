@@ -40,7 +40,7 @@ namespace Wul.Interpreter.MetaTypes
         private IValue DoAdd(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(a => a as Number).ToList();
-            if (!numbers.Any())
+            if (numbers.Count == 0)
             {
                 return Value.Nil;
             }
@@ -82,7 +82,7 @@ namespace Wul.Interpreter.MetaTypes
         private IValue DoMultiply(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
-            if (!numbers.Any())
+            if (numbers.Length == 0)
             {
                 return Value.Nil;
             }
@@ -102,7 +102,7 @@ namespace Wul.Interpreter.MetaTypes
         private IValue DoDivide(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
-            if (!numbers.Any())
+            if (numbers.Length == 0)
             {
                 return Value.Nil;
             }
@@ -119,7 +119,7 @@ namespace Wul.Interpreter.MetaTypes
         private IValue DoIntegerDivide(List<IValue> arguments, Scope s)
         {
             var numbers = arguments.Select(x => x as Number).ToArray();
-            if (!numbers.Any())
+            if (numbers.Length == 0)
             {
                 return Value.Nil;
             }

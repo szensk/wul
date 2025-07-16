@@ -135,11 +135,15 @@ namespace Wul
                 RunString(runString, replScope);
             }
 
+            bool autoParenthesize = false;
+
             while (true)
             {
                 string input = Console.ReadLine();
                 System.Diagnostics.Debug.WriteLine(input);
                 if (input == "exit" || input == "q") break;
+                if (input == "@@") { autoParenthesize = !autoParenthesize; continue; }
+                if (autoParenthesize) input = $"({input})";
                 RunString(input, replScope);
             }
             return ExitSuccess;
