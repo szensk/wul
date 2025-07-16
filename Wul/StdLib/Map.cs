@@ -13,6 +13,7 @@ namespace Wul.StdLib
         [NetFunction("dict")]
         internal static IValue Dictionary(List<IValue> list, Scope scope)
         {
+            if (list.Count == 0) return new MapTable();
             var mapList = ((ListTable) list[0]).AsList();
 
             if (mapList.Count % 2 != 0)

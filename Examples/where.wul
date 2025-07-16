@@ -3,7 +3,7 @@
 (defn starts-with (s c) (= (substring s 0 1) c))
 
 (defn which (li fn res) 
-    (if (is (rem li) nil) 
+    (if (empty? li) 
         (then res) 
         (else (let ist (fn (first li)) 
             (which (rem li) fn (if ist
