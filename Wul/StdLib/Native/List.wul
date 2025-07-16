@@ -4,6 +4,20 @@
 (defn list.append (l ...) (.. l ...))
 
 ; produce list of pairs for a map
-(defn pairs (m) 
-	(.. (map (keys m) (-> (key) (list key (at m key)))))
+(defn pairs (m cb) 
+	(let res (.. (map (keys m) (-> (key) (list key (at m key)))))
+		(if cb
+			(then (map res cb))
+			(else res)
+		) 
+	)
+)
+
+; zip together two lists
+(defn zip (l1 l2)
+	(let len1 (# l1)
+	(let len2 (# l2)
+	(let end (if (> len1 len2) (then len1) (else len2))
+		(map [0 (dec end)] (-> (idx) (list (at l1 idx) (at l2 idx))))
+	)))
 )
