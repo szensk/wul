@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Wul.Interpreter;
 using Wul.Interpreter.MetaTypes;
 using Wul.Interpreter.Types;
@@ -11,6 +12,13 @@ namespace Wul.StdLib
     [StdLib]
     internal class Meta
     {
+
+        private static MetaType NewEmptyMetaType()
+        {
+
+            return EmptyMetaType.Instance.Clone();
+        }
+
         [MagicFunction("set-metamethod")]
         internal static IValue SetMetamethod(ListNode list, Scope scope)
         {
@@ -28,7 +36,8 @@ namespace Wul.StdLib
             else
             {
                 //Set the metamethod on the value
-                var newMetaType = first.MetaType.Clone();
+                var metatype = first.MetaType ?? NewEmptyMetaType();
+                var newMetaType = metatype.Clone();
 
                 var metaMethod = newMetaType.Get(metaMethodName);
                 metaMethod.Method = ReferenceEquals(function, Value.Nil) ? null : (IFunction) function;

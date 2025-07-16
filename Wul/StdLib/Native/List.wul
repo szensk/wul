@@ -1,0 +1,4 @@
+; wul standard library
+
+; list methods
+(defn list.append (l ...) (.. l ...))

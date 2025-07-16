@@ -16,6 +16,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="StdLib\Native\List.wul" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="StdLib\Native\List.wul" />
     <EmbeddedResource Include="StdLib\Native\Math.wul" />
     <EmbeddedResource Include="StdLib\Native\String.wul" />
   </ItemGroup>
