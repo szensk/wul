@@ -9,8 +9,9 @@ namespace Wul.Parser.Nodes
             Value = value;
         }
 
-        public NumericNode(SyntaxNode parent, string match, bool hex = false) : base(parent)
+        public NumericNode(SyntaxNode parent, string match, bool hex = false, bool underscore = false) : base(parent)
         {
+            if (underscore) match = match.Replace("_", string.Empty);
             Value = hex ? Convert.ToInt32(match, 16) : double.Parse(match);
         }
 
