@@ -12,12 +12,7 @@ namespace Wul.StdLib
     [StdLib]
     internal class Meta
     {
-
-        private static MetaType NewEmptyMetaType()
-        {
-
-            return EmptyMetaType.Instance.Clone();
-        }
+        private static MetaType NewEmptyMetaType() => EmptyMetaType.Instance.Clone();
 
         [MagicFunction("set-metamethod")]
         internal static IValue SetMetamethod(ListNode list, Scope scope)

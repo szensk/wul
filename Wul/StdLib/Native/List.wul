@@ -2,3 +2,8 @@
 
 ; list methods
 (defn list.append (l ...) (.. l ...))
+
+; produce list of pairs for a map
+(defn pairs (m) 
+	(.. (map (keys m) (-> (key) (list key (at m key)))))
+)
