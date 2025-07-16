@@ -106,7 +106,8 @@ namespace Wul.StdLib.Interop
                         methodInfo = type.GetMethod(methodName, argTypes);
                         if (methodInfo == null)
                         {
-                            methodInfo = type.GetMethod(methodName, argTypes);
+                            var considerIntTypes = argTypes.Select(type => type == typeof(double) ? typeof(int) : type).ToArray();
+                            methodInfo = type.GetMethod(methodName, considerIntTypes);
                         }
                     }
                     catch

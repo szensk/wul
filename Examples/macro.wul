@@ -7,4 +7,4 @@
 	)
 )
 
-(print (timex (:: Threading.Thread.Sleep 100)))
+(print (timex (:: Threading.Thread.Sleep (int 100))))
