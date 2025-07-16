@@ -81,7 +81,7 @@ namespace Wul.Interpreter.MetaTypes
             else if (firstArg is Range rng)
             {
                 List<string> subsections = [];
-                var substrings = StdLib.Helpers.IterateOverEnumerable<string>(rng, (val) => str.Value.Substring((int)(Number)val, 1), s);
+                var substrings = StdLib.Helpers.IterateOverEnumerable(rng, s).Select((val) => str.Value.Substring((int)(Number)val, 1));
                 return (WulString) string.Join(string.Empty, substrings);
             }
             else

@@ -214,7 +214,7 @@ namespace Wul.StdLib
 
             List<IValue> result = [];
 
-            while (enumerable != null && enumerable != Value.Nil && enumerable != ListTable.EmptyList && !(enumerable is WulString s && s.Value == string.Empty))
+            while (enumerable != null && Empty(Value.ListWith(enumerable), scope) != Bool.True)
             {
                 IValue cbresult = callback;
                 if (func.IsDefined)
