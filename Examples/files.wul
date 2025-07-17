@@ -1,0 +1,18 @@
+(using System)
+(using System.IO)
+
+(::defn pwd Directory.GetCurrentDirectory)
+(::defn cat File.ReadAllText System.String) ; BUG: should be able to use 'String' here
+(::defn lines File.ReadAllLines System.String)
+(::defn path.combine Path.Combine System.String System.String)
+
+(defn ls (dir) (:: Directory.GetFiles (or dir (pwd))))
+(defn tail (l n) (let ln (# l) (let n (math.min ln n) ([(- ln n) (dec ln)] l))))
+
+(let path 'files.wul'
+(let n 6
+    (print "Last {n} lines of {(path.combine (pwd) path)}:")
+    (map (tail (lines path) n) print)
+    ;(map (tail (split (cat path) '\n') n) print)
+    (pipe cat path : split '\n' : tail n : print) ; TODO: this should map to the above
+))
