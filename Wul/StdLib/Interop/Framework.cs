@@ -83,6 +83,21 @@ namespace Wul.StdLib.Interop
             return new NetObject(o);
         }
 
+        private static Type FindTypeWithUsings(string typeName, Scope scope)
+        {
+            var usings = new List<string> { "" };
+            usings.AddRange(scope.Usings);
+
+            foreach (string use in usings)
+            {
+                string fullName = string.IsNullOrEmpty(use) ? typeName : use + "." + typeName;
+
+                if (AllTypes.Contains(fullName)) return AllTypes[fullName].FirstOrDefault();
+            }
+
+            return null;
+        }
+
         private static MethodInfo FindMethodWithTypes(Scope scope, string name, params Type[] argTypes)
         {
             MethodInfo methodInfo = null;
@@ -160,10 +175,9 @@ namespace Wul.StdLib.Interop
             }
         }
 
-        private static object NewObject(string className, params object[] arguments)
+        private static object NewObject(string className, Scope scope, params object[] arguments)
         {
-            var types = AllTypes[className];
-            var type = types.FirstOrDefault();
+            var type = FindTypeWithUsings(className, scope);
             if (type == null)
             {
                 throw new Exception($"Cannot find type {className}");
@@ -206,11 +220,11 @@ namespace Wul.StdLib.Interop
             {
                 object[] evaluatedArguments = children.Skip(1).Select(s => s.Eval(scope).ToObject()).ToArray();
 
-                result = NewObject(name, evaluatedArguments);
+                result = NewObject(name, scope, evaluatedArguments);
             }
             else
             {
-                result = NewObject(name);
+                result = NewObject(name, scope);
             }
 
             return result == null ? (IValue) Value.Nil : new NetObject(result);
@@ -264,15 +278,12 @@ namespace Wul.StdLib.Interop
                 Type type = null;
                 if (args[i] is IdentifierNode typeIdentifier)
                 {
-                    var types = AllTypes[typeIdentifier.Name];
-                    type = types.FirstOrDefault();
-                    argTypes[i - startIndex] = type;
+                    type = FindTypeWithUsings(typeIdentifier.Name, scope);
                 }
                 if (type == null)
                 {
                     IValue result = Helpers.EvalOnce(args[i], scope);
-                    var types = AllTypes[(result as IdentifierNode).Name];
-                    type = types.FirstOrDefault();
+                    type = FindTypeWithUsings((result as IdentifierNode).Name, scope);
                 }
                 argTypes[i - startIndex] = type;
             }
